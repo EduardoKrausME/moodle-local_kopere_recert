@@ -17,12 +17,12 @@
 /**
  * simulation_rollback.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\kopere_recertification;
+namespace local_kopere_recert\recertification;
 
 use moodle_exception;
 
@@ -30,16 +30,17 @@ use moodle_exception;
  * Internal exception used to force rollback after a successful simulation.
  */
 class simulation_rollback extends moodle_exception {
+    /** Simulation report preserved by the rollback exception. */
     private array $report = [];
 
     /**
      * Creates a new simulation rollback instance.
      *
-     * @param array $report Report.
+     * @param array $report Simulation report.
      */
     public function __construct(array $report = []) {
         $this->report = $report;
-        parent::__construct('simulationrollback', 'local_kopere_recertification');
+        parent::__construct('simulationrollback', 'local_kopere_recert');
     }
 
     /**

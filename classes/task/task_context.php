@@ -17,39 +17,75 @@
 /**
  * task_context.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 /**
  * Immutable execution context passed to generic tasks and subplugin providers.
  */
 class task_context {
+    /** User ID. */
+    public readonly int $userid;
+
+    /** Course ID. */
+    public readonly int $courseid;
+
+    /** Course module ID. */
+    public readonly ?int $cmid;
+
+    /** Activity instance ID. */
+    public readonly ?int $instanceid;
+
+    /** Moodle context ID. */
+    public readonly int $contextid;
+
+    /** Recertification cycle ID. */
+    public readonly int $cycleid;
+
+    /**
+     * Recertification ID alias kept for SQL placeholder compatibility.
+     *
+     * @phpcsSuppress moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
+     */
+    public readonly int $kopere_recertid;
+
+    /** Whether the operation is running in simulation mode. */
+    public readonly bool $simulation;
+
     /**
      * Creates a new task context instance.
      *
      * @param int $userid User ID.
      * @param int $courseid Course ID.
-     * @param ?int $cmid Course module ID.
-     * @param ?int $instanceid Activity instance ID.
+     * @param int|null $cmid Course module ID.
+     * @param int|null $instanceid Activity instance ID.
      * @param int $contextid Context ID.
      * @param int $cycleid Recertification cycle ID.
-     * @param int $kopere_recertificationid Recertification ID alias.
+     * @param int $recertificationid Recertification ID alias.
      * @param bool $simulation Whether the operation is running in simulation mode.
      */
     public function __construct(
-        public readonly int $userid,
-        public readonly int $courseid,
-        public readonly ?int $cmid,
-        public readonly ?int $instanceid,
-        public readonly int $contextid,
-        public readonly int $cycleid,
-        public readonly int $kopere_recertificationid,
-        public readonly bool $simulation = false,
+        int $userid,
+        int $courseid,
+        ?int $cmid,
+        ?int $instanceid,
+        int $contextid,
+        int $cycleid,
+        int $recertificationid,
+        bool $simulation = false
     ) {
+        $this->userid = $userid;
+        $this->courseid = $courseid;
+        $this->cmid = $cmid;
+        $this->instanceid = $instanceid;
+        $this->contextid = $contextid;
+        $this->cycleid = $cycleid;
+        $this->kopere_recertid = $recertificationid;
+        $this->simulation = $simulation;
     }
 
     /**
@@ -65,7 +101,7 @@ class task_context {
             'instanceid' => $this->instanceid ?? 0,
             'contextid' => $this->contextid,
             'cycleid' => $this->cycleid,
-            'kopere_recertificationid' => $this->kopere_recertificationid,
+            'kopere_recertid' => $this->kopere_recertid,
         ];
     }
 }

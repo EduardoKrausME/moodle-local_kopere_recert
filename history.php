@@ -17,12 +17,12 @@
 /**
  * history.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_kopere_recertification\form\history_filter_form;
+use local_kopere_recert\form\history_filter_form;
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/formslib.php');
@@ -42,18 +42,18 @@ if ($courseid) {
 }
 
 if ($userid === (int)$USER->id) {
-    if ($courseid && !has_capability('local/kopere_recertification:viewownhistory', $context)
-            && !has_capability('local/kopere_recertification:viewallhistory', $context)) {
-        require_capability('local/kopere_recertification:viewownhistory', $context);
+    if ($courseid && !has_capability('local/kopere_recert:viewownhistory', $context)
+            && !has_capability('local/kopere_recert:viewallhistory', $context)) {
+        require_capability('local/kopere_recert:viewownhistory', $context);
     }
 } else {
     if (!$courseid) {
-        throw new moodle_exception('courseidrequired', 'local_kopere_recertification');
+        throw new moodle_exception('courseidrequired', 'local_kopere_recert');
     }
-    require_capability('local/kopere_recertification:viewallhistory', $context);
+    require_capability('local/kopere_recert:viewallhistory', $context);
 }
 
-$canselectuser = $courseid > 0 && has_capability('local/kopere_recertification:viewallhistory', $context);
+$canselectuser = $courseid > 0 && has_capability('local/kopere_recert:viewallhistory', $context);
 $filterform = new history_filter_form(null, [
     'courseid' => $courseid,
     'userid' => $userid,
@@ -65,7 +65,7 @@ if ($filterdata = $filterform->get_data()) {
     if (!$targetcourseid && $targetuserid !== (int)$USER->id) {
         $targetuserid = (int)$USER->id;
     }
-    redirect(new moodle_url('/local/kopere_recertification/history.php', [
+    redirect(new moodle_url('/local/kopere_recert/history.php', [
         'courseid' => $targetcourseid ?: null,
         'userid' => $targetuserid,
     ]));
@@ -77,22 +77,22 @@ if ($courseid) {
     $where .= ' AND courseid = :courseid';
     $params['courseid'] = $courseid;
 }
-$cycles = $DB->get_records_select('local_recert_cycle', $where, $params, 'courseid ASC, number DESC');
+$cycles = $DB->get_records_select('local_kopere_recert_cycle', $where, $params, 'courseid ASC, number DESC');
 
 // When no course filter is supplied, enforce the history capability independently in every course.
 // A capability denied in one course must not be bypassed by the global history URL.
 if (!$courseid) {
     foreach ($cycles as $id => $cycle) {
         $cyclecontext = context_course::instance((int)$cycle->courseid);
-        if (!has_capability('local/kopere_recertification:viewownhistory', $cyclecontext)
-                && !has_capability('local/kopere_recertification:viewallhistory', $cyclecontext)) {
+        if (!has_capability('local/kopere_recert:viewownhistory', $cyclecontext)
+                && !has_capability('local/kopere_recert:viewallhistory', $cyclecontext)) {
             unset($cycles[$id]);
         }
     }
 }
 
 if ($cycleid && !isset($cycles[$cycleid])) {
-    throw new moodle_exception('invalidcycle', 'local_kopere_recertification');
+    throw new moodle_exception('invalidcycle', 'local_kopere_recert');
 }
 
 if (!$cycleid && $cycles) {
@@ -103,23 +103,23 @@ $selected = null;
 $history = [];
 if ($cycleid) {
     $selected = $cycles[$cycleid];
-    $history = $DB->get_records('local_recert_history', ['cycleid' => $cycleid], 'sortorder ASC, id ASC');
+    $history = $DB->get_records('local_kopere_recert_history', ['cycleid' => $cycleid], 'sortorder ASC, id ASC');
 }
 
 $PAGE->set_context($courseid ? $context : context_system::instance());
-$PAGE->set_url(new moodle_url('/local/kopere_recertification/history.php', [
+$PAGE->set_url(new moodle_url('/local/kopere_recert/history.php', [
     'courseid' => $courseid ?: null,
     'userid' => $userid,
     'cycleid' => $cycleid ?: null,
 ]));
-$PAGE->set_title(get_string('history', 'local_kopere_recertification'));
-$PAGE->set_heading(get_string('history', 'local_kopere_recertification'));
+$PAGE->set_title(get_string('history', 'local_kopere_recert'));
+$PAGE->set_heading(get_string('history', 'local_kopere_recert'));
 
 $cycleoptions = [];
 foreach ($cycles as $cycle) {
     $course = get_course($cycle->courseid);
     $cycleoptions[] = [
-        'url' => (new moodle_url('/local/kopere_recertification/history.php', [
+        'url' => (new moodle_url('/local/kopere_recert/history.php', [
             'courseid' => $courseid ?: $cycle->courseid,
             'userid' => $userid,
             'cycleid' => $cycle->id,
@@ -131,14 +131,14 @@ foreach ($cycles as $cycle) {
 $items = [];
 foreach ($history as $row) {
     $files = [];
-    $filemetadata = $DB->get_records('local_recert_file', ['historyid' => $row->id], 'filepath ASC, filename ASC');
+    $filemetadata = $DB->get_records('local_kopere_recert_file', ['historyid' => $row->id], 'filepath ASC, filename ASC');
     $historycontext = context_course::instance((int)$row->courseid);
     foreach ($filemetadata as $filemeta) {
         $files[] = [
             'name' => $filemeta->filename,
             'url' => moodle_url::make_pluginfile_url(
                 $historycontext->id,
-                'local_kopere_recertification',
+                'local_kopere_recert',
                 'historyfiles',
                 (int)$row->id,
                 $filemeta->filepath,
@@ -164,7 +164,7 @@ foreach ($history as $row) {
 
 echo $OUTPUT->header();
 $filterform->display();
-echo $OUTPUT->render_from_template('local_kopere_recertification/history', [
+echo $OUTPUT->render_from_template('local_kopere_recert/history', [
     'cycles' => $cycleoptions,
     'hascycle' => (bool)$selected,
     'cyclename' => $selected->name ?? '',

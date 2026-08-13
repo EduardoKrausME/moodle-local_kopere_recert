@@ -17,12 +17,12 @@
 /**
  * provider.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\privacy;
+namespace local_kopere_recert\privacy;
 
 use context;
 use context_course;
@@ -37,7 +37,7 @@ use core_privacy\local\request\writer;
 use stdClass;
 
 /**
- * Privacy API provider for kopere_recertification cycles, history, files, logs, and notices.
+ * Privacy API provider for kopere_recert cycles, history, files, logs, and notices.
  */
 class provider implements
     \core_privacy\local\metadata\provider,
@@ -51,30 +51,30 @@ class provider implements
      * @return collection Updated privacy metadata collection.
      */
     public static function get_metadata(collection $collection): collection {
-        $collection->add_database_table('local_recert_cycle', [
-            'userid' => 'privacy:metadata:local_recert_cycle:userid',
-            'courseid' => 'privacy:metadata:local_recert_cycle:courseid',
-            'createdby' => 'privacy:metadata:local_recert_cycle:createdby',
-            'reason' => 'privacy:metadata:local_recert_cycle:reason',
-        ], 'privacy:metadata:local_recert_cycle');
+        $collection->add_database_table('local_kopere_recert_cycle', [
+            'userid' => 'privacy:metadata:local_kopere_recert_cycle:userid',
+            'courseid' => 'privacy:metadata:local_kopere_recert_cycle:courseid',
+            'createdby' => 'privacy:metadata:local_kopere_recert_cycle:createdby',
+            'reason' => 'privacy:metadata:local_kopere_recert_cycle:reason',
+        ], 'privacy:metadata:local_kopere_recert_cycle');
 
-        $collection->add_database_table('local_recert_history', [
-            'userid' => 'privacy:metadata:local_recert_history:userid',
-            'html' => 'privacy:metadata:local_recert_history:html',
-            'datajson' => 'privacy:metadata:local_recert_history:datajson',
-        ], 'privacy:metadata:local_recert_history');
+        $collection->add_database_table('local_kopere_recert_history', [
+            'userid' => 'privacy:metadata:local_kopere_recert_history:userid',
+            'html' => 'privacy:metadata:local_kopere_recert_history:html',
+            'datajson' => 'privacy:metadata:local_kopere_recert_history:datajson',
+        ], 'privacy:metadata:local_kopere_recert_history');
 
-        $collection->add_database_table('local_recert_file', [
-            'userid' => 'privacy:metadata:local_recert_file:userid',
-        ], 'privacy:metadata:local_recert_file');
+        $collection->add_database_table('local_kopere_recert_file', [
+            'userid' => 'privacy:metadata:local_kopere_recert_file:userid',
+        ], 'privacy:metadata:local_kopere_recert_file');
 
-        $collection->add_database_table('local_recert_log', [
-            'message' => 'privacy:metadata:local_recert_log:message',
-        ], 'privacy:metadata:local_recert_log');
+        $collection->add_database_table('local_kopere_recert_log', [
+            'message' => 'privacy:metadata:local_kopere_recert_log:message',
+        ], 'privacy:metadata:local_kopere_recert_log');
 
-        $collection->add_database_table('local_recert_notice_log', [
-            'userid' => 'privacy:metadata:local_recert_notice_log:userid',
-        ], 'privacy:metadata:local_recert_notice_log');
+        $collection->add_database_table('local_kopere_recert_notice_log', [
+            'userid' => 'privacy:metadata:local_kopere_recert_notice_log:userid',
+        ], 'privacy:metadata:local_kopere_recert_notice_log');
 
         return $collection;
     }
@@ -89,7 +89,7 @@ class provider implements
         $contextlist = new contextlist();
         $sql = "SELECT DISTINCT ctx.id
                   FROM {context} ctx
-                  JOIN {local_recert_cycle} c ON c.courseid = ctx.instanceid
+                  JOIN {local_kopere_recert_cycle} c ON c.courseid = ctx.instanceid
                  WHERE ctx.contextlevel = :contextlevel
                    AND (c.userid = :ownerid OR c.createdby = :creatorid)";
         $contextlist->add_from_sql($sql, [
@@ -113,13 +113,13 @@ class provider implements
 
         $userlist->add_from_sql(
             'userid',
-            "SELECT userid FROM {local_recert_cycle} WHERE courseid = :courseid",
+            "SELECT userid FROM {local_kopere_recert_cycle} WHERE courseid = :courseid",
             ['courseid' => $context->instanceid]
         );
         $userlist->add_from_sql(
             'userid',
             "SELECT createdby AS userid
-               FROM {local_recert_cycle}
+               FROM {local_kopere_recert_cycle}
               WHERE courseid = :courseid
                 AND createdby IS NOT NULL",
             ['courseid' => $context->instanceid]
@@ -140,7 +140,7 @@ class provider implements
                 continue;
             }
 
-            $cycles = $DB->get_records('local_recert_cycle', [
+            $cycles = $DB->get_records('local_kopere_recert_cycle', [
                 'courseid' => $context->instanceid,
                 'userid' => $userid,
             ], 'number ASC');
@@ -151,7 +151,7 @@ class provider implements
 
             // createdby is also personal data. Export administrative actions without exposing
             // another user's archived history in the creator's privacy export.
-            $created = $DB->get_records('local_recert_cycle', [
+            $created = $DB->get_records('local_kopere_recert_cycle', [
                 'courseid' => $context->instanceid,
                 'createdby' => $userid,
             ], 'timecreated ASC');
@@ -160,7 +160,7 @@ class provider implements
                     continue;
                 }
                 writer::with_context($context)->export_data([
-                    get_string('pluginname', 'local_kopere_recertification'),
+                    get_string('pluginname', 'local_kopere_recert'),
                     'created-cycles',
                     'cycle-' . $cycle->id,
                 ], (object)[
@@ -177,7 +177,7 @@ class provider implements
     }
 
     /**
-     * Exports one user-owned kopere_recertification cycle and its related data.
+     * Exports one user-owned kopere_recert cycle and its related data.
      *
      * @param context_course $context Execution context.
      * @param stdClass $cycle Cycle.
@@ -186,7 +186,7 @@ class provider implements
         global $DB;
 
         $cyclepath = [
-            get_string('pluginname', 'local_kopere_recertification'),
+            get_string('pluginname', 'local_kopere_recert'),
             'cycle-' . $cycle->number,
         ];
 
@@ -205,7 +205,7 @@ class provider implements
             'timecreated' => self::datetime($cycle->timecreated),
         ]);
 
-        $histories = $DB->get_records('local_recert_history', [
+        $histories = $DB->get_records('local_kopere_recert_history', [
             'cycleid' => $cycle->id,
             'userid' => $cycle->userid,
         ], 'sortorder ASC, id ASC');
@@ -224,7 +224,7 @@ class provider implements
                 'datajson' => $history->datajson,
             ]);
 
-            $filemetadata = $DB->get_records('local_recert_file', ['historyid' => $history->id], 'id ASC');
+            $filemetadata = $DB->get_records('local_kopere_recert_file', ['historyid' => $history->id], 'id ASC');
             foreach ($filemetadata as $filemeta) {
                 writer::with_context($context)->export_data(array_merge($historypath, [
                     'files',
@@ -244,13 +244,13 @@ class provider implements
 
             writer::with_context($context)->export_area_files(
                 $historypath,
-                'local_kopere_recertification',
+                'local_kopere_recert',
                 'historyfiles',
                 $history->id
             );
         }
 
-        $logs = $DB->get_records('local_recert_log', ['cycleid' => $cycle->id], 'id ASC');
+        $logs = $DB->get_records('local_kopere_recert_log', ['cycleid' => $cycle->id], 'id ASC');
         foreach ($logs as $log) {
             writer::with_context($context)->export_data(array_merge($cyclepath, ['logs', 'log-' . $log->id]), (object)[
                 'action' => $log->action,
@@ -263,7 +263,7 @@ class provider implements
             ]);
         }
 
-        $noticelogs = $DB->get_records('local_recert_notice_log', ['cycleid' => $cycle->id], 'id ASC');
+        $noticelogs = $DB->get_records('local_kopere_recert_notice_log', ['cycleid' => $cycle->id], 'id ASC');
         foreach ($noticelogs as $noticelog) {
             writer::with_context($context)->export_data(array_merge($cyclepath, [
                 'notifications',
@@ -287,7 +287,7 @@ class provider implements
             return;
         }
 
-        $cycleids = $DB->get_fieldset_select('local_recert_cycle', 'id', 'courseid = :courseid', [
+        $cycleids = $DB->get_fieldset_select('local_kopere_recert_cycle', 'id', 'courseid = :courseid', [
             'courseid' => $context->instanceid,
         ]);
         self::delete_cycles($cycleids, $context);
@@ -307,7 +307,7 @@ class provider implements
                 continue;
             }
             $cycleids = $DB->get_fieldset_select(
-                'local_recert_cycle',
+                'local_kopere_recert_cycle',
                 'id',
                 'courseid = :courseid AND userid = :userid',
                 ['courseid' => $context->instanceid, 'userid' => $userid]
@@ -316,7 +316,7 @@ class provider implements
 
             // Do not delete another user's cycle merely because this user created it.
             $DB->set_field_select(
-                'local_recert_cycle',
+                'local_kopere_recert_cycle',
                 'createdby',
                 null,
                 'courseid = :courseid AND createdby = :createdby',
@@ -346,7 +346,7 @@ class provider implements
         [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'owner');
         $params['courseid'] = $context->instanceid;
         $cycleids = $DB->get_fieldset_select(
-            'local_recert_cycle',
+            'local_kopere_recert_cycle',
             'id',
             "courseid = :courseid AND userid {$insql}",
             $params
@@ -356,7 +356,7 @@ class provider implements
         [$creatorinsql, $creatorparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'creator');
         $creatorparams['courseid'] = $context->instanceid;
         $DB->set_field_select(
-            'local_recert_cycle',
+            'local_kopere_recert_cycle',
             'createdby',
             null,
             "courseid = :courseid AND createdby {$creatorinsql}",
@@ -378,18 +378,18 @@ class provider implements
         }
 
         [$insql, $params] = $DB->get_in_or_equal($cycleids, SQL_PARAMS_NAMED, 'cycle');
-        $historyids = $DB->get_fieldset_select('local_recert_history', 'id', "cycleid {$insql}", $params);
+        $historyids = $DB->get_fieldset_select('local_kopere_recert_history', 'id', "cycleid {$insql}", $params);
 
         $fs = get_file_storage();
         foreach ($historyids as $historyid) {
-            $fs->delete_area_files($context->id, 'local_kopere_recertification', 'historyfiles', $historyid);
+            $fs->delete_area_files($context->id, 'local_kopere_recert', 'historyfiles', $historyid);
         }
 
-        $DB->delete_records_select('local_recert_file', "cycleid {$insql}", $params);
-        $DB->delete_records_select('local_recert_log', "cycleid {$insql}", $params);
-        $DB->delete_records_select('local_recert_notice_log', "cycleid {$insql}", $params);
-        $DB->delete_records_select('local_recert_history', "cycleid {$insql}", $params);
-        $DB->delete_records_select('local_recert_cycle', "id {$insql}", $params);
+        $DB->delete_records_select('local_kopere_recert_file', "cycleid {$insql}", $params);
+        $DB->delete_records_select('local_kopere_recert_log', "cycleid {$insql}", $params);
+        $DB->delete_records_select('local_kopere_recert_notice_log', "cycleid {$insql}", $params);
+        $DB->delete_records_select('local_kopere_recert_history', "cycleid {$insql}", $params);
+        $DB->delete_records_select('local_kopere_recert_cycle', "id {$insql}", $params);
     }
 
     /**

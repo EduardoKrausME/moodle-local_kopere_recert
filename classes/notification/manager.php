@@ -17,12 +17,12 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\notification;
+namespace local_kopere_recert\notification;
 
 use core\message\message;
 use core_user;
@@ -32,11 +32,11 @@ use stdClass;
 use Throwable;
 
 /**
- * Builds, sends, and deduplicates Moodle kopere_recertification notifications.
+ * Builds, sends, and deduplicates Moodle kopere_recert notifications.
  */
 class manager {
     /**
-     * Sends one Moodle message for a kopere_recertification event.
+     * Sends one Moodle message for a kopere_recert event.
      *
      * @param int $cycleid Recertification cycle ID.
      * @param string $eventtype Notification event type.
@@ -46,14 +46,14 @@ class manager {
     public function send_event(int $cycleid, string $eventtype, ?int $noticeid = null): bool {
         global $DB;
 
-        $cycle = $DB->get_record('local_recert_cycle', ['id' => $cycleid], '*', MUST_EXIST);
+        $cycle = $DB->get_record('local_kopere_recert_cycle', ['id' => $cycleid], '*', MUST_EXIST);
         $user = $DB->get_record('user', ['id' => $cycle->userid], '*', MUST_EXIST);
         $course = $DB->get_record('course', ['id' => $cycle->courseid], '*', MUST_EXIST);
 
         $notice = null;
         if ($noticeid) {
-            $notice = $DB->get_record('local_recert_notice', ['id' => $noticeid, 'courseid' => $cycle->courseid], '*', MUST_EXIST);
-            if ($DB->record_exists('local_recert_notice_log', ['cycleid' => $cycleid, 'noticeid' => $noticeid])) {
+            $notice = $DB->get_record('local_kopere_recert_notice', ['id' => $noticeid, 'courseid' => $cycle->courseid], '*', MUST_EXIST);
+            if ($DB->record_exists('local_kopere_recert_notice_log', ['cycleid' => $cycleid, 'noticeid' => $noticeid])) {
                 return false;
             }
         }
@@ -61,10 +61,10 @@ class manager {
         $provider = $this->provider_for_event($eventtype);
         $subject = $notice && trim((string)$notice->subject) !== ''
             ? $notice->subject
-            : get_string('notification_subject_' . $eventtype, 'local_kopere_recertification', $course->fullname);
+            : get_string('notification_subject_' . $eventtype, 'local_kopere_recert', $course->fullname);
         $body = $notice && trim((string)$notice->body) !== ''
             ? $notice->body
-            : get_string('notification_body_' . $eventtype, 'local_kopere_recertification', (object)[
+            : get_string('notification_body_' . $eventtype, 'local_kopere_recert', (object)[
                 'course' => $course->fullname,
                 'cycle' => $cycle->name,
             ]);
@@ -73,7 +73,7 @@ class manager {
         $subject = $this->replace_placeholders($subject, $cycle, $user, $course);
 
         $message = new message();
-        $message->component = 'local_kopere_recertification';
+        $message->component = 'local_kopere_recert';
         $message->name = $provider;
         $message->userfrom = core_user::get_noreply_user();
         $message->userto = $user;
@@ -83,17 +83,17 @@ class manager {
         $message->fullmessagehtml = format_text($body, FORMAT_HTML, ['trusted' => true]);
         $message->smallmessage = shorten_text(strip_tags($body), 200);
         $message->notification = 1;
-        $message->contexturl = (new moodle_url('/local/kopere_recertification/history.php', [
+        $message->contexturl = (new moodle_url('/local/kopere_recert/history.php', [
             'courseid' => $cycle->courseid,
             'userid' => $cycle->userid,
             'cycleid' => $cycleid,
         ]))->out(false);
-        $message->contexturlname = get_string('history', 'local_kopere_recertification');
+        $message->contexturlname = get_string('history', 'local_kopere_recert');
 
         $reservednotice = false;
         if ($notice) {
             try {
-                $DB->insert_record('local_recert_notice_log', (object)[
+                $DB->insert_record('local_kopere_recert_notice_log', (object)[
                     'cycleid' => $cycleid,
                     'noticeid' => $notice->id,
                     'userid' => $cycle->userid,
@@ -110,7 +110,7 @@ class manager {
             $messageid = message_send($message);
             if (!$messageid) {
                 if ($reservednotice) {
-                    $DB->delete_records('local_recert_notice_log', [
+                    $DB->delete_records('local_kopere_recert_notice_log', [
                         'cycleid' => $cycleid,
                         'noticeid' => $notice->id,
                     ]);
@@ -118,17 +118,17 @@ class manager {
                 return false;
             }
             if ($reservednotice) {
-                $log = $DB->get_record('local_recert_notice_log', [
+                $log = $DB->get_record('local_kopere_recert_notice_log', [
                     'cycleid' => $cycleid,
                     'noticeid' => $notice->id,
                 ], '*', MUST_EXIST);
                 $log->sentat = time();
-                $DB->update_record('local_recert_notice_log', $log);
+                $DB->update_record('local_kopere_recert_notice_log', $log);
             }
             return true;
         } catch (Throwable $e) {
             if ($reservednotice) {
-                $DB->delete_records('local_recert_notice_log', [
+                $DB->delete_records('local_kopere_recert_notice_log', [
                     'cycleid' => $cycleid,
                     'noticeid' => $notice->id,
                 ]);
@@ -138,7 +138,7 @@ class manager {
     }
 
     /**
-     * Sends all configured notices associated with a kopere_recertification event.
+     * Sends all configured notices associated with a kopere_recert event.
      *
      * @param int $cycleid Recertification cycle ID.
      * @param string $eventtype Notification event type.
@@ -147,8 +147,8 @@ class manager {
     public function send_configured_event(int $cycleid, string $eventtype, bool $fallback = true): void {
         global $DB;
 
-        $cycle = $DB->get_record('local_recert_cycle', ['id' => $cycleid], '*', MUST_EXIST);
-        $notices = $DB->get_records('local_recert_notice', [
+        $cycle = $DB->get_record('local_kopere_recert_cycle', ['id' => $cycleid], '*', MUST_EXIST);
+        $notices = $DB->get_records('local_kopere_recert_notice', [
             'courseid' => $cycle->courseid,
             'eventtype' => $eventtype,
             'enabled' => 1,
@@ -172,13 +172,13 @@ class manager {
     public function send_due_notices(stdClass $cycle, int $now): void {
         global $DB;
 
-        $notices = $DB->get_records('local_recert_notice', [
+        $notices = $DB->get_records('local_kopere_recert_notice', [
             'courseid' => $cycle->courseid,
             'enabled' => 1,
         ], 'offsetdays DESC, id ASC');
 
         foreach ($notices as $notice) {
-            if (!in_array($notice->eventtype, ['expiration_warning', 'kopere_recertification_available', 'kopere_recertification_due', 'kopere_recertification_expired'], true)) {
+            if (!in_array($notice->eventtype, ['expiration_warning', 'kopere_recert_available', 'kopere_recert_due', 'kopere_recert_expired'], true)) {
                 continue;
             }
 
@@ -186,7 +186,7 @@ class manager {
             if ($sendat > $now) {
                 continue;
             }
-            if ($DB->record_exists('local_recert_notice_log', ['cycleid' => $cycle->id, 'noticeid' => $notice->id])) {
+            if ($DB->record_exists('local_kopere_recert_notice_log', ['cycleid' => $cycle->id, 'noticeid' => $notice->id])) {
                 continue;
             }
 
@@ -202,12 +202,12 @@ class manager {
      */
     private function provider_for_event(string $eventtype): string {
         return match ($eventtype) {
-            'kopere_recertification_available' => 'kopere_recertification_available',
-            'expiration_warning', 'kopere_recertification_due' => 'kopere_recertification_warning',
-            'kopere_recertification_created', 'kopere_recertification_started' => 'kopere_recertification_started',
-            'kopere_recertification_expired' => 'kopere_recertification_expired',
-            'kopere_recertification_completed' => 'kopere_recertification_completed',
-            default => 'kopere_recertification_warning',
+            'kopere_recert_available' => 'kopere_recert_available',
+            'expiration_warning', 'kopere_recert_due' => 'kopere_recert_warning',
+            'kopere_recert_created', 'kopere_recert_started' => 'kopere_recert_started',
+            'kopere_recert_expired' => 'kopere_recert_expired',
+            'kopere_recert_completed' => 'kopere_recert_completed',
+            default => 'kopere_recert_warning',
         };
     }
 

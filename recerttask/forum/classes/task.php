@@ -25,15 +25,15 @@
 namespace recerttask_forum;
 
 use context_module;
-use local_kopere_recertification\task\cleanup_result;
-use local_kopere_recertification\task\file_descriptor;
-use local_kopere_recertification\task\history_result;
-use local_kopere_recertification\task\task_context;
-use local_kopere_recertification\task\task_plugin_interface;
+use local_kopere_recert\task\cleanup_result;
+use local_kopere_recert\task\file_descriptor;
+use local_kopere_recert\task\history_result;
+use local_kopere_recert\task\task_context;
+use local_kopere_recert\task\task_plugin_interface;
 use moodle_exception;
 
 /**
- * Specialized kopere_recertification task provider for forums.
+ * Specialized kopere_recert task provider for forums.
  */
 final class task implements task_plugin_interface {
     /**
@@ -78,7 +78,7 @@ final class task implements task_plugin_interface {
     public static function get_system_order(): int { return 0; }
 
     /**
-     * Builds the historical snapshot for the current kopere_recertification context.
+     * Builds the historical snapshot for the current kopere_recert context.
      *
      * @param task_context $context Execution context.
      * @return history_result Structured history result.
@@ -196,7 +196,7 @@ final class task implements task_plugin_interface {
             if ($otherposts > 0) {
                 throw new moodle_exception(
                     'forumdiscussionhasotherusers',
-                    'local_kopere_recertification',
+                    'local_kopere_recert',
                     '',
                     (object)['discussionid' => $post->discussion, 'count' => $otherposts]
                 );
@@ -208,7 +208,7 @@ final class task implements task_plugin_interface {
             ]);
             $discussion = $DB->get_record('forum_discussions', ['id' => $post->discussion], '*', MUST_EXIST);
             if (!forum_delete_discussion($discussion, false, $course, $cm, $forum)) {
-                throw new moodle_exception('forumcleanupfailed', 'local_kopere_recertification');
+                throw new moodle_exception('forumcleanupfailed', 'local_kopere_recert');
             }
             $count += $ownedcount;
         }
@@ -234,14 +234,14 @@ final class task implements task_plugin_interface {
                     continue;
                 }
                 if (!forum_delete_post($post, false, $course, $cm, $forum, true)) {
-                    throw new moodle_exception('forumcleanupfailed', 'local_kopere_recertification');
+                    throw new moodle_exception('forumcleanupfailed', 'local_kopere_recert');
                 }
                 $count++;
                 $progress = true;
             }
 
             if (!$progress) {
-                throw new moodle_exception('forumreplyhaschildren', 'local_kopere_recertification');
+                throw new moodle_exception('forumreplyhaschildren', 'local_kopere_recert');
             }
         }
 

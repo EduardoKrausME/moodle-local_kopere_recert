@@ -17,12 +17,12 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\files;
+namespace local_kopere_recert\files;
 
 use coding_exception;
 use context;
@@ -31,8 +31,8 @@ use dml_exception;
 use file_exception;
 use file_storage;
 use invalid_parameter_exception;
-use local_kopere_recertification\task\file_descriptor;
-use local_kopere_recertification\task\task_context;
+use local_kopere_recert\task\file_descriptor;
+use local_kopere_recert\task\task_context;
 use stored_file_creation_exception;
 
 /**
@@ -82,7 +82,7 @@ class manager {
 
                 $filerecord = [
                     'contextid' => $targetcontext->id,
-                    'component' => 'local_kopere_recertification',
+                    'component' => 'local_kopere_recert',
                     'filearea' => 'historyfiles',
                     'itemid' => $historyid,
                     'filepath' => $file->get_filepath(),
@@ -90,7 +90,7 @@ class manager {
                 ];
                 $newfile = $fs->create_file_from_storedfile($filerecord, $file);
 
-                $DB->insert_record('local_recert_file', (object)[
+                $DB->insert_record('local_kopere_recert_file', (object)[
                     'cycleid' => $context->cycleid,
                     'historyid' => $historyid,
                     'userid' => $context->userid,

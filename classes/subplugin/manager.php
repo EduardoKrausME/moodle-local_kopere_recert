@@ -17,16 +17,16 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\subplugin;
+namespace local_kopere_recert\subplugin;
 
 use coding_exception;
 use core_plugin_manager;
-use local_kopere_recertification\task\task_plugin_interface;
+use local_kopere_recert\task\task_plugin_interface;
 
 /**
  * Discovers recerttask subplugins and resolves the component each provider represents.
@@ -53,7 +53,7 @@ class manager {
             }
             $classname = '\\recerttask_' . $name . '\\task';
             if (!class_exists($classname)) {
-                debugging("Missing kopere_recertification task class {$classname}", DEBUG_DEVELOPER);
+                debugging("Missing kopere_recert task class {$classname}", DEBUG_DEVELOPER);
                 continue;
             }
             $instance = new $classname();
@@ -63,7 +63,7 @@ class manager {
             }
             $component = $instance::get_component();
             if (isset($this->plugins[$component])) {
-                throw new coding_exception("Duplicate kopere_recertification component provider: {$component}");
+                throw new coding_exception("Duplicate kopere_recert component provider: {$component}");
             }
             $this->plugins[$component] = $instance;
         }

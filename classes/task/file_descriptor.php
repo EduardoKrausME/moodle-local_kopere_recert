@@ -17,34 +17,58 @@
 /**
  * file_descriptor.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 /**
  * Describes a Moodle File API source that must be preserved in history.
  */
 class file_descriptor {
+    /** Source context ID. */
+    public readonly int $contextid;
+
+    /** Source component. */
+    public readonly string $component;
+
+    /** Source file area. */
+    public readonly string $filearea;
+
+    /** Source item ID. */
+    public readonly int $itemid;
+
+    /** Source file path. */
+    public readonly string $filepath;
+
+    /** Optional source file name. */
+    public readonly ?string $filename;
+
     /**
      * Creates a new file descriptor instance.
      *
      * @param int $contextid Context ID.
      * @param string $component Moodle component name.
-     * @param string $filearea Filearea.
-     * @param int $itemid Itemid.
+     * @param string $filearea File area.
+     * @param int $itemid Item ID.
      * @param string $filepath File path.
-     * @param ?string $filename File name.
+     * @param string|null $filename File name.
      */
     public function __construct(
-        public readonly int $contextid,
-        public readonly string $component,
-        public readonly string $filearea,
-        public readonly int $itemid,
-        public readonly string $filepath = '/',
-        public readonly ?string $filename = null,
+        int $contextid,
+        string $component,
+        string $filearea,
+        int $itemid,
+        string $filepath = '/',
+        ?string $filename = null
     ) {
+        $this->contextid = $contextid;
+        $this->component = $component;
+        $this->filearea = $filearea;
+        $this->itemid = $itemid;
+        $this->filepath = $filepath;
+        $this->filename = $filename;
     }
 }

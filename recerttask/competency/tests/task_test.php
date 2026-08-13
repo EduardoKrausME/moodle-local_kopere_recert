@@ -25,10 +25,10 @@
 namespace recerttask_competency;
 
 use advanced_testcase;
-use local_kopere_recertification\task\task_plugin_interface;
+use local_kopere_recert\task\task_plugin_interface;
 
 /**
- * Tests kopere_recertification behavior for competency.
+ * Tests kopere_recert behavior for competency.
  */
 final class task_test extends advanced_testcase {
     /**

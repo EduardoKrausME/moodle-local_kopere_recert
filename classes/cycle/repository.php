@@ -17,22 +17,22 @@
 /**
  * repository.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\cycle;
+namespace local_kopere_recert\cycle;
 
 use dml_exception;
 use stdClass;
 
 /**
- * Persistence repository for kopere_recertification cycle records.
+ * Persistence repository for kopere_recert cycle records.
  */
 class repository {
     /**
-     * Loads a kopere_recertification cycle by ID.
+     * Loads a kopere_recert cycle by ID.
      *
      * @param int $cycleid Recertification cycle ID.
      * @return stdClass Result of the operation.
@@ -40,11 +40,11 @@ class repository {
      */
     public function get(int $cycleid): stdClass {
         global $DB;
-        return $DB->get_record('local_recert_cycle', ['id' => $cycleid], '*', MUST_EXIST);
+        return $DB->get_record('local_kopere_recert_cycle', ['id' => $cycleid], '*', MUST_EXIST);
     }
 
     /**
-     * Returns the open kopere_recertification cycle for a course and user, when one exists.
+     * Returns the open kopere_recert cycle for a course and user, when one exists.
      *
      * @param int $courseid Course ID.
      * @param int $userid User ID.
@@ -54,7 +54,7 @@ class repository {
     public function get_open(int $courseid, int $userid): ?stdClass {
         global $DB;
         return $DB->get_record_select(
-            'local_recert_cycle',
+            'local_kopere_recert_cycle',
             "courseid = :courseid AND userid = :userid AND status IN ('scheduled','pending','processing','active')",
             ['courseid' => $courseid, 'userid' => $userid],
             '*',
@@ -73,7 +73,7 @@ class repository {
     public function get_active(int $courseid, int $userid): ?stdClass {
         global $DB;
         $sql = "SELECT *
-                  FROM {local_recert_cycle}
+                  FROM {local_kopere_recert_cycle}
                  WHERE courseid = :courseid
                    AND userid = :userid
                    AND status IN ('pending', 'processing', 'active')
@@ -92,7 +92,7 @@ class repository {
     public function get_last_completed(int $courseid, int $userid): ?stdClass {
         global $DB;
         $sql = "SELECT *
-                  FROM {local_recert_cycle}
+                  FROM {local_kopere_recert_cycle}
                  WHERE courseid = :courseid
                    AND userid = :userid
                    AND status = 'completed'
@@ -111,14 +111,14 @@ class repository {
     public function get_next_number(int $courseid, int $userid): int {
         global $DB;
         $max = $DB->get_field_sql(
-            "SELECT MAX(number) FROM {local_recert_cycle} WHERE courseid = :courseid AND userid = :userid",
+            "SELECT MAX(number) FROM {local_kopere_recert_cycle} WHERE courseid = :courseid AND userid = :userid",
             ['courseid' => $courseid, 'userid' => $userid]
         );
         return ((int)$max) + 1;
     }
 
     /**
-     * Inserts a kopere_recertification cycle record.
+     * Inserts a kopere_recert cycle record.
      *
      * @param stdClass $record Database record.
      * @return int Resulting integer value.
@@ -126,11 +126,11 @@ class repository {
      */
     public function insert(stdClass $record): int {
         global $DB;
-        return (int)$DB->insert_record('local_recert_cycle', $record);
+        return (int)$DB->insert_record('local_kopere_recert_cycle', $record);
     }
 
     /**
-     * Updates a kopere_recertification cycle record.
+     * Updates a kopere_recert cycle record.
      *
      * @param stdClass $record Database record.
      * @throws dml_exception
@@ -138,6 +138,6 @@ class repository {
     public function update(stdClass $record): void {
         global $DB;
         $record->timemodified = time();
-        $DB->update_record('local_recert_cycle', $record);
+        $DB->update_record('local_kopere_recert_cycle', $record);
     }
 }

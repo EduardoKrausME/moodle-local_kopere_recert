@@ -1,197 +1,210 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/kopere_recertification/db" VERSION="2026081203" COMMENT="XMLDB file for local_kopere_recertification">
-  <TABLES>
-    <TABLE NAME="local_recert_cycle" COMMENT="Recertification cycles">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="number" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
-        <FIELD NAME="reason" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="source" TYPE="char" LENGTH="32" NOTNULL="true"/>
-        <FIELD NAME="status" TYPE="char" LENGTH="32" NOTNULL="true"/>
-        <FIELD NAME="previouscompletedat" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="dueat" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="availableat" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="startedat" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="completedat" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="errorcode" TYPE="char" LENGTH="100" NOTNULL="false"/>
-        <FIELD NAME="errormessage" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
-        <KEY NAME="user_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
-        <KEY NAME="createdby_fk" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="course_user_ix" UNIQUE="false" FIELDS="courseid,userid"/>
-        <INDEX NAME="course_user_num_uix" UNIQUE="true" FIELDS="courseid,userid,number"/>
-        <INDEX NAME="status_due_ix" UNIQUE="false" FIELDS="status,dueat"/>
-      </INDEXES>
-    </TABLE>
+<XMLDB PATH="local/kopere_recert/db" VERSION="2026081203" COMMENT="XMLDB file for local_kopere_recert">
+    <TABLES>
+        <TABLE NAME="local_recert_cycle" COMMENT="Recertification cycles">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="number" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="reason" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="source" TYPE="char" LENGTH="32" NOTNULL="true"/>
+                <FIELD NAME="status" TYPE="char" LENGTH="32" NOTNULL="true"/>
+                <FIELD NAME="previouscompletedat" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="dueat" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="availableat" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="startedat" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="completedat" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="errorcode" TYPE="char" LENGTH="100" NOTNULL="false"/>
+                <FIELD NAME="errormessage" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+                <KEY NAME="user_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+                <KEY NAME="createdby_fk" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="course_user_ix" UNIQUE="false" FIELDS="courseid,userid"/>
+                <INDEX NAME="course_user_num_uix" UNIQUE="true" FIELDS="courseid,userid,number"/>
+                <INDEX NAME="status_due_ix" UNIQUE="false" FIELDS="status,dueat"/>
+            </INDEXES>
+        </TABLE>
 
-    <TABLE NAME="local_recert_task" COMMENT="Global generic task definitions">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true"/>
-        <FIELD NAME="origin" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="generic"/>
-        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
-        <FIELD NAME="historyenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
-        <FIELD NAME="filesenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="cleanupenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="historytemplate" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="fileconfigjson" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="cleanupconfigjson" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
-      </FIELDS>
-      <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
-      <INDEXES><INDEX NAME="component_uix" UNIQUE="true" FIELDS="component"/></INDEXES>
-    </TABLE>
+        <TABLE NAME="local_recert_task" COMMENT="Global generic task definitions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true"/>
+                <FIELD NAME="origin" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="generic"/>
+                <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+                <FIELD NAME="historyenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+                <FIELD NAME="filesenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="cleanupenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="historytemplate" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="fileconfigjson" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="cleanupconfigjson" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="component_uix" UNIQUE="true" FIELDS="component"/>
+            </INDEXES>
+        </TABLE>
 
-    <TABLE NAME="local_recert_history" COMMENT="Permanent kopere_recertification history">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true"/>
-        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="activityname" TYPE="char" LENGTH="255" NOTNULL="true"/>
-        <FIELD NAME="activitytype" TYPE="char" LENGTH="100" NOTNULL="true"/>
-        <FIELD NAME="completedat" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="grade" TYPE="number" LENGTH="20" DECIMALS="10" NOTNULL="false"/>
-        <FIELD NAME="html" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="datajson" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
-        <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
-        <KEY NAME="user_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="cycle_ix" UNIQUE="false" FIELDS="cycleid"/>
-        <INDEX NAME="user_course_ix" UNIQUE="false" FIELDS="userid,courseid"/>
-        <INDEX NAME="cycle_sort_ix" UNIQUE="false" FIELDS="cycleid,sortorder"/>
-      </INDEXES>
-    </TABLE>
+        <TABLE NAME="local_recert_history" COMMENT="Permanent kopere_recert history">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true"/>
+                <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="activityname" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="activitytype" TYPE="char" LENGTH="100" NOTNULL="true"/>
+                <FIELD NAME="completedat" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="grade" TYPE="number" LENGTH="20" DECIMALS="10" NOTNULL="false"/>
+                <FIELD NAME="html" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="datajson" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
+                <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+                <KEY NAME="user_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="cycle_ix" UNIQUE="false" FIELDS="cycleid"/>
+                <INDEX NAME="user_course_ix" UNIQUE="false" FIELDS="userid,courseid"/>
+                <INDEX NAME="cycle_sort_ix" UNIQUE="false" FIELDS="cycleid,sortorder"/>
+            </INDEXES>
+        </TABLE>
 
-    <TABLE NAME="local_recert_file" COMMENT="Copied history file metadata">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="historyid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="sourcecomponent" TYPE="char" LENGTH="100" NOTNULL="true"/>
-        <FIELD NAME="sourcefilearea" TYPE="char" LENGTH="100" NOTNULL="true"/>
-        <FIELD NAME="sourceitemid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="sourcecontextid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="filepath" TYPE="char" LENGTH="255" NOTNULL="true"/>
-        <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true"/>
-        <FIELD NAME="mimetype" TYPE="char" LENGTH="100" NOTNULL="false"/>
-        <FIELD NAME="filesize" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="contenthash" TYPE="char" LENGTH="40" NOTNULL="true"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
-        <KEY NAME="history_fk" TYPE="foreign" FIELDS="historyid" REFTABLE="local_recert_history" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES><INDEX NAME="history_ix" UNIQUE="false" FIELDS="historyid"/></INDEXES>
-    </TABLE>
+        <TABLE NAME="local_recert_file" COMMENT="Copied history file metadata">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="historyid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="sourcecomponent" TYPE="char" LENGTH="100" NOTNULL="true"/>
+                <FIELD NAME="sourcefilearea" TYPE="char" LENGTH="100" NOTNULL="true"/>
+                <FIELD NAME="sourceitemid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="sourcecontextid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="filepath" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="mimetype" TYPE="char" LENGTH="100" NOTNULL="false"/>
+                <FIELD NAME="filesize" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="contenthash" TYPE="char" LENGTH="40" NOTNULL="true"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
+                <KEY NAME="history_fk" TYPE="foreign" FIELDS="historyid" REFTABLE="local_recert_history"
+                     REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="history_ix" UNIQUE="false" FIELDS="historyid"/>
+            </INDEXES>
+        </TABLE>
 
-    <TABLE NAME="local_recert_course" COMMENT="Course kopere_recertification configuration">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="triggertype" TYPE="char" LENGTH="40" NOTNULL="true" DEFAULT="completion"/>
-        <FIELD NAME="intervaldays" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="fixedmonth" TYPE="int" LENGTH="2" NOTNULL="false"/>
-        <FIELD NAME="fixedday" TYPE="int" LENGTH="2" NOTNULL="false"/>
-        <FIELD NAME="referencecmid" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="resetcompetencies" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="selfenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="selfreferencetype" TYPE="char" LENGTH="40" NOTNULL="true" DEFAULT="enrolment"/>
-        <FIELD NAME="selfafterdays" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="configjson" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES><INDEX NAME="course_uix" UNIQUE="true" FIELDS="courseid"/></INDEXES>
-    </TABLE>
+        <TABLE NAME="local_recert_course" COMMENT="Course kopere_recert configuration">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="triggertype" TYPE="char" LENGTH="40" NOTNULL="true" DEFAULT="completion"/>
+                <FIELD NAME="intervaldays" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="fixedmonth" TYPE="int" LENGTH="2" NOTNULL="false"/>
+                <FIELD NAME="fixedday" TYPE="int" LENGTH="2" NOTNULL="false"/>
+                <FIELD NAME="referencecmid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="resetcompetencies" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="selfenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="selfreferencetype" TYPE="char" LENGTH="40" NOTNULL="true" DEFAULT="enrolment"/>
+                <FIELD NAME="selfafterdays" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="configjson" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="course_uix" UNIQUE="true" FIELDS="courseid"/>
+            </INDEXES>
+        </TABLE>
 
-    <TABLE NAME="local_recert_notice" COMMENT="Course notification definitions">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="eventtype" TYPE="char" LENGTH="50" NOTNULL="true"/>
-        <FIELD NAME="offsetdays" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
-        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
-        <FIELD NAME="subject" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="body" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES><INDEX NAME="course_event_ix" UNIQUE="false" FIELDS="courseid,eventtype"/></INDEXES>
-    </TABLE>
+        <TABLE NAME="local_recert_notice" COMMENT="Course notification definitions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="eventtype" TYPE="char" LENGTH="50" NOTNULL="true"/>
+                <FIELD NAME="offsetdays" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+                <FIELD NAME="subject" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="body" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="course_event_ix" UNIQUE="false" FIELDS="courseid,eventtype"/>
+            </INDEXES>
+        </TABLE>
 
-    <TABLE NAME="local_recert_notice_log" COMMENT="Sent notification deduplication log">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="noticeid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="sentat" TYPE="int" LENGTH="10" NOTNULL="true"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
-        <KEY NAME="notice_fk" TYPE="foreign" FIELDS="noticeid" REFTABLE="local_recert_notice" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="cycle_notice_uix" UNIQUE="true" FIELDS="cycleid,noticeid"/>
-      </INDEXES>
-    </TABLE>
+        <TABLE NAME="local_recert_notice_log" COMMENT="Sent notification deduplication log">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="noticeid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="sentat" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
+                <KEY NAME="notice_fk" TYPE="foreign" FIELDS="noticeid" REFTABLE="local_recert_notice" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="cycle_notice_uix" UNIQUE="true" FIELDS="cycleid,noticeid"/>
+            </INDEXES>
+        </TABLE>
 
-    <TABLE NAME="local_recert_log" COMMENT="Detailed execution log">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
-        <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="action" TYPE="char" LENGTH="40" NOTNULL="true"/>
-        <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="false"/>
-        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="false"/>
-        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true"/>
-        <FIELD NAME="message" TYPE="text" NOTNULL="false"/>
-        <FIELD NAME="duration" TYPE="number" LENGTH="20" DECIMALS="6" NOTNULL="false"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES><INDEX NAME="cycle_action_ix" UNIQUE="false" FIELDS="cycleid,action"/></INDEXES>
-    </TABLE>
-  </TABLES>
+        <TABLE NAME="local_recert_log" COMMENT="Detailed execution log">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="action" TYPE="char" LENGTH="40" NOTNULL="true"/>
+                <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="false"/>
+                <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true"/>
+                <FIELD NAME="message" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="duration" TYPE="number" LENGTH="20" DECIMALS="6" NOTNULL="false"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="cycle_action_ix" UNIQUE="false" FIELDS="cycleid,action"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
 </XMLDB>

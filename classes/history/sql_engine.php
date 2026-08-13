@@ -17,12 +17,12 @@
 /**
  * sql_engine.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\history;
+namespace local_kopere_recert\history;
 
 use invalid_parameter_exception;
 use moodle_exception;
@@ -31,18 +31,22 @@ use moodle_exception;
  * Executes validated read-only SQL used by historical Mustache helpers.
  */
 class sql_engine {
+    /** Read-only SQL validator. */
+    private readonly sql_validator $validator;
+
     /**
-     * Creates a new sql engine instance.
+     * Creates a new SQL engine instance.
      *
-     * @param sql_validator $validator Validator.
+     * @param sql_validator|null $validator Read-only SQL validator.
      */
-    public function __construct(private readonly sql_validator $validator = new sql_validator()) {
+    public function __construct(?sql_validator $validator = null) {
+        $this->validator = $validator ?? new sql_validator();
     }
 
     /**
      * Executes a read-only query and returns its single scalar value.
      *
-     * @param string $sql SQL statement to validate or execute.
+     * @param string $sql SQL statement to validate and execute.
      * @param array $params Bound SQL parameters.
      * @return string Scalar query value, or an empty string when no record exists.
      */
@@ -68,20 +72,21 @@ class sql_engine {
             return '';
         }
         if (count($rows) !== 1) {
-            throw new moodle_exception('sqlechomultiplerows', 'local_kopere_recertification');
+            throw new moodle_exception('sqlechomultiplerows', 'local_kopere_recert');
         }
 
-        $values = array_values((array)$rows[0]);
+        $values = array_values((array) $rows[0]);
         if (count($values) !== 1) {
-            throw new moodle_exception('sqlechomultiplecolumns', 'local_kopere_recertification');
+            throw new moodle_exception('sqlechomultiplecolumns', 'local_kopere_recert');
         }
-        return (string)$values[0];
+
+        return (string) $values[0];
     }
 
     /**
      * Executes a read-only query and renders the result as an escaped HTML table.
      *
-     * @param string $sql SQL statement to validate or execute.
+     * @param string $sql SQL statement to validate and execute.
      * @param array $params Bound SQL parameters.
      * @return string Escaped HTML table.
      */
@@ -96,13 +101,13 @@ class sql_engine {
 
         try {
             foreach ($recordset as $record) {
-                $row = (array)$record;
+                $row = (array) $record;
                 if ($headers === null) {
                     $headers = array_keys($row);
                 }
                 $rowshtml .= '<tr>';
                 foreach ($headers as $header) {
-                    $rowshtml .= '<td>' . s((string)($row[$header] ?? '')) . '</td>';
+                    $rowshtml .= '<td>' . s((string) ($row[$header] ?? '')) . '</td>';
                 }
                 $rowshtml .= '</tr>';
             }
@@ -110,7 +115,7 @@ class sql_engine {
             $recordset->close();
         }
 
-        $html = '<table class="generaltable local-kopere_recertification-sqltable">';
+        $html = '<table class="generaltable local-kopere_recert-sqltable">';
         if ($headers !== null) {
             $html .= '<thead><tr>';
             foreach ($headers as $header) {
@@ -119,19 +124,26 @@ class sql_engine {
             $html .= '</tr></thead>';
         }
         $html .= '<tbody>' . $rowshtml . '</tbody></table>';
+
         return $html;
     }
 
     /**
      * Filters bound parameters to those referenced by the SQL statement.
      *
-     * @param string $sql SQL statement to validate or execute.
+     * @param string $sql SQL statement to inspect.
      * @param array $params Bound SQL parameters.
-     * @return array Structured result data.
+     * @return array Filtered bound parameters.
      */
     private function filter_params(string $sql, array $params): array {
         $allowed = [
-            'userid', 'courseid', 'cmid', 'instanceid', 'contextid', 'cycleid', 'kopere_recertificationid',
+            'userid',
+            'courseid',
+            'cmid',
+            'instanceid',
+            'contextid',
+            'cycleid',
+            'kopere_recertid',
         ];
         preg_match_all('/(?<!:):([a-z][a-z0-9_]*)/i', $sql, $matches);
         $names = array_values(array_unique(array_map('strtolower', $matches[1] ?? [])));

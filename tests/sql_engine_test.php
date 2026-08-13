@@ -17,21 +17,24 @@
 /**
  * sql_engine_test.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification;
+namespace local_kopere_recert;
 
 use advanced_testcase;
 use invalid_parameter_exception;
-use local_kopere_recertification\history\sql_engine;
-use local_kopere_recertification\history\sql_validator;
+use local_kopere_recert\history\sql_engine;
+use local_kopere_recert\history\sql_validator;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
- * Tests kopere_recertification behavior for sql engine.
+ * Tests the read-only SQL engine and validator used by history templates.
  */
+#[CoversClass(sql_engine::class)]
+#[CoversClass(sql_validator::class)]
 final class sql_engine_test extends advanced_testcase {
     /**
      * Tests that select is allowed.
@@ -42,7 +45,7 @@ final class sql_engine_test extends advanced_testcase {
     }
 
     /**
-     * Tests that safe cte is allowed.
+     * Tests that safe CTE is allowed.
      */
     public function test_safe_cte_is_allowed(): void {
         (new sql_validator())->validate('WITH x AS (SELECT id FROM {user}) SELECT id FROM x');
@@ -83,19 +86,26 @@ final class sql_engine_test extends advanced_testcase {
             'SELECT id FROM {user} WHERE id = :userid',
             ['userid' => $user->id, 'courseid' => 999]
         );
-        $this->assertSame((string)$user->id, $value);
+        $this->assertSame((string) $user->id, $value);
     }
 
     /**
-     * Tests that sqltable escapes values.
+     * Tests that sqltable escapes raw values returned by the database.
      */
     public function test_sqltable_escapes_values(): void {
+        global $DB;
+
         $this->resetAfterTest();
-        $user = $this->getDataGenerator()->create_user(['firstname' => '<b>A</b>']);
+        $user = $this->getDataGenerator()->create_user(['firstname' => 'A']);
+
+        // Bypass the user creation API so the engine receives an actual raw HTML value from DML.
+        $DB->set_field('user', 'firstname', '<b>A</b>', ['id' => $user->id]);
+
         $html = (new sql_engine())->table(
             'SELECT id, firstname FROM {user} WHERE id = :userid',
             ['userid' => $user->id]
         );
+
         $this->assertStringContainsString('&lt;b&gt;A&lt;/b&gt;', $html);
         $this->assertStringNotContainsString('<b>A</b>', $html);
     }
@@ -107,7 +117,8 @@ final class sql_engine_test extends advanced_testcase {
         $this->resetAfterTest();
         $this->expectException(invalid_parameter_exception::class);
         (new sql_engine())->echo_value(
-            'SELECT id FROM {user} WHERE id = :evil', ['evil' => 1]
+            'SELECT id FROM {user} WHERE id = :evil',
+            ['evil' => 1]
         );
     }
 

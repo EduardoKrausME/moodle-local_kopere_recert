@@ -17,20 +17,20 @@
 /**
  * executor.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 use coding_exception;
 use invalid_parameter_exception;
-use local_kopere_recertification\cleanup\manager as cleanup_manager;
-use local_kopere_recertification\files\manager as files_manager;
-use local_kopere_recertification\history\manager as history_manager;
-use local_kopere_recertification\history\renderer_service;
-use local_kopere_recertification\log\manager as log_manager;
+use local_kopere_recert\cleanup\manager as cleanup_manager;
+use local_kopere_recert\files\manager as files_manager;
+use local_kopere_recert\history\manager as history_manager;
+use local_kopere_recert\history\renderer_service;
+use local_kopere_recert\log\manager as log_manager;
 use moodle_exception;
 
 /**
@@ -195,7 +195,7 @@ class executor {
                 $item->component,
                 $item->cmid,
                 $simulation ? 'simulated' : 'success',
-                get_string('filescopiedcount', 'local_kopere_recertification', $count),
+                get_string('filescopiedcount', 'local_kopere_recert', $count),
                 microtime(true) - $started
             );
         }
@@ -281,7 +281,7 @@ class executor {
         } else {
             $config = json_decode((string)($item->genericconfig->cleanupconfigjson ?? ''), true);
             if (!is_array($config)) {
-                throw new moodle_exception('invalidcleanupconfig', 'local_kopere_recertification');
+                throw new moodle_exception('invalidcleanupconfig', 'local_kopere_recert');
             }
             $configs = isset($config[0]) ? $config : [$config];
             $affected = 0;
@@ -301,7 +301,7 @@ class executor {
             $item->component,
             $item->cmid,
             $simulation ? 'simulated' : 'success',
-            get_string('recordsaffectedcount', 'local_kopere_recertification', $result->affected),
+            get_string('recordsaffectedcount', 'local_kopere_recert', $result->affected),
             microtime(true) - $started
         );
 

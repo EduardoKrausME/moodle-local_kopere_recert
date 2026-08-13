@@ -17,23 +17,23 @@
 /**
  * date_calculator.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\course;
+namespace local_kopere_recert\course;
 
 use coding_exception;
 use dml_exception;
 use invalid_parameter_exception;
-use local_kopere_recertification\cycle\repository as cycle_repository;
-use local_kopere_recertification\subplugin\manager as subplugin_manager;
+use local_kopere_recert\cycle\repository as cycle_repository;
+use local_kopere_recert\subplugin\manager as subplugin_manager;
 use moodle_exception;
 use stdClass;
 
 /**
- * Calculates kopere_recertification reference, availability, and due dates.
+ * Calculates kopere_recert reference, availability, and due dates.
  */
 class date_calculator {
     /**
@@ -66,7 +66,7 @@ class date_calculator {
         $courseid = (int)$config->courseid;
         $interval = max(0, (int)($config->intervaldays ?? 0)) * DAYSECS;
         if ($config->triggertype !== 'fixeddate' && $interval <= 0) {
-            throw new moodle_exception('intervalmustbepositive', 'local_kopere_recertification');
+            throw new moodle_exception('intervalmustbepositive', 'local_kopere_recert');
         }
 
         switch ($config->triggertype) {
@@ -95,7 +95,7 @@ class date_calculator {
                 $dueat = $reference + $interval;
                 break;
 
-            case 'lastkopere_recertification':
+            case 'lastkopere_recert':
                 $last = $this->cycles->get_last_completed($courseid, $userid);
                 if (!$last || empty($last->completedat)) {
                     return null;
@@ -118,12 +118,12 @@ class date_calculator {
             case 'certificate':
                 $cmid = (int)($config->referencecmid ?? 0);
                 if (!$cmid) {
-                    throw new moodle_exception('missingcertificatereference', 'local_kopere_recertification');
+                    throw new moodle_exception('missingcertificatereference', 'local_kopere_recert');
                 }
                 $cm = get_coursemodule_from_id('', $cmid, $courseid, false, MUST_EXIST);
                 $provider = $this->subplugins->get_for_component('mod_' . $cm->modname);
                 if (!$provider || !$provider instanceof reference_date_provider_interface) {
-                    throw new moodle_exception('certificatereferenceunavailable', 'local_kopere_recertification');
+                    throw new moodle_exception('certificatereferenceunavailable', 'local_kopere_recert');
                 }
                 $reference = $provider->get_reference_date($userid, $courseid, $cmid, (int)$cm->instance);
                 if (!$reference) {
@@ -133,7 +133,7 @@ class date_calculator {
                 break;
 
             default:
-                throw new invalid_parameter_exception('Unknown kopere_recertification trigger type.');
+                throw new invalid_parameter_exception('Unknown kopere_recert trigger type.');
         }
 
         return [
@@ -164,7 +164,7 @@ class date_calculator {
     }
 
     /**
-     * Calculates when advance kopere_recertification notices become available.
+     * Calculates when advance kopere_recert notices become available.
      *
      * @param stdClass $config Configuration record.
      * @param int $dueat Recertification due timestamp.
@@ -174,7 +174,7 @@ class date_calculator {
     private function calculate_available_at(stdClass $config, int $dueat): int {
         global $DB;
         $maxoffset = $DB->get_field_sql(
-            "SELECT MAX(offsetdays) FROM {local_recert_notice} WHERE courseid = :courseid AND enabled = 1",
+            "SELECT MAX(offsetdays) FROM {local_kopere_recert_notice} WHERE courseid = :courseid AND enabled = 1",
             ['courseid' => $config->courseid]
         );
         return $dueat - max(0, (int)$maxoffset) * DAYSECS;

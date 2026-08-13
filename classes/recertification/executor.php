@@ -17,75 +17,89 @@
 /**
  * executor.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\kopere_recertification;
+namespace local_kopere_recert\recertification;
 
 use core\lock\lock_config;
-use local_kopere_recertification\cycle\manager as cycle_manager;
-use local_kopere_recertification\cycle\repository;
-use local_kopere_recertification\event\kopere_recertification_failed;
-use local_kopere_recertification\event\kopere_recertification_started;
-use local_kopere_recertification\notification\manager as notification_manager;
-use local_kopere_recertification\task\executor as task_executor;
-use local_kopere_recertification\task\manager as task_manager;
+use local_kopere_recert\cycle\manager as cycle_manager;
+use local_kopere_recert\cycle\repository;
+use local_kopere_recert\event\kopere_recert_failed;
+use local_kopere_recert\event\kopere_recert_started;
+use local_kopere_recert\notification\manager as notification_manager;
+use local_kopere_recert\task\executor as task_executor;
+use local_kopere_recert\task\manager as task_manager;
 use moodle_exception;
 use Throwable;
 
 /**
- * Coordinates the transactional execution of one kopere_recertification cycle.
+ * Coordinates the transactional execution of one recertification cycle.
  */
 class executor {
+    /** Cycle lifecycle manager. */
+    private readonly cycle_manager $cycles;
+
+    /** Task plan manager. */
+    private readonly task_manager $tasks;
+
+    /** Task execution service. */
+    private readonly task_executor $executor;
+
+    /** Notification service. */
+    private readonly notification_manager $notifications;
+
     /**
      * Creates a new executor instance.
      *
-     * @param cycle_manager $cycles Cycles.
-     * @param task_manager $tasks Tasks.
-     * @param task_executor $executor Executor.
-     * @param notification_manager $notifications Notifications.
+     * @param cycle_manager|null $cycles Cycle lifecycle manager.
+     * @param task_manager|null $tasks Task plan manager.
+     * @param task_executor|null $executor Task execution service.
+     * @param notification_manager|null $notifications Notification service.
      */
     public function __construct(
-        private readonly cycle_manager $cycles = new cycle_manager(),
-        private readonly task_manager $tasks = new task_manager(),
-        private readonly task_executor $executor = new task_executor(),
-        private readonly notification_manager $notifications = new notification_manager(),
+        ?cycle_manager $cycles = null,
+        ?task_manager $tasks = null,
+        ?task_executor $executor = null,
+        ?notification_manager $notifications = null
     ) {
+        $this->cycles = $cycles ?? new cycle_manager();
+        $this->tasks = $tasks ?? new task_manager();
+        $this->executor = $executor ?? new task_executor();
+        $this->notifications = $notifications ?? new notification_manager();
     }
 
     /**
-     * Executes this kopere_recertification operation.
+     * Executes this recertification operation.
      *
      * @param int $cycleid Recertification cycle ID.
-     * @return array Structured result data.
+     * @return array Execution result.
      */
     public function execute(int $cycleid): array {
         global $DB;
 
         $cycle = (new repository())->get($cycleid);
-        $lockfactory = lock_config::get_lock_factory('local_kopere_recertification');
-        $lockkey = "local_kopere_recertification:{$cycle->courseid}:{$cycle->userid}";
+        $lockfactory = lock_config::get_lock_factory('local_kopere_recert');
+        $lockkey = "local_kopere_recert:{$cycle->courseid}:{$cycle->userid}";
         $lock = $lockfactory->get_lock($lockkey, 0);
         if (!$lock) {
-            throw new moodle_exception('kopere_recertificationlocked', 'local_kopere_recertification');
+            throw new moodle_exception('kopere_recertlocked', 'local_kopere_recert');
         }
 
         try {
-            // Re-read after acquiring the lock. A stale/duplicate Ad-hoc Task must never reset a cycle
-            // which has already become active, completed or cancelled. Failed cycles may be retried
-            // because their destructive transaction was rolled back before the failure state was stored.
+            // Re-read after acquiring the lock so stale Ad-hoc Tasks cannot reset an already processed cycle.
             $cycle = (new repository())->get($cycleid);
             if (!in_array($cycle->status, [cycle_manager::STATUS_PENDING, cycle_manager::STATUS_FAILED], true)) {
-                (new \local_kopere_recertification\log\manager())->add(
+                (new \local_kopere_recert\log\manager())->add(
                     $cycleid,
                     null,
                     'completion',
                     null,
                     null,
                     'warning',
-                    get_string('execution_skipped_cycle_status', 'local_kopere_recertification', $cycle->status)
+                    get_string('execution_skipped_cycle_status', 'local_kopere_recert', $cycle->status)
                 );
                 return ['skipped' => true, 'status' => $cycle->status];
             }
@@ -93,38 +107,34 @@ class executor {
             $transaction = $DB->start_delegated_transaction();
             try {
                 $this->cycles->mark_processing($cycleid);
-                $plan = $this->tasks->build_plan((int)$cycle->courseid);
+                $plan = $this->tasks->build_plan((int) $cycle->courseid);
 
                 $historyids = $this->executor->create_all_histories(
                     $plan,
-                    (int)$cycle->userid,
-                    (int)$cycle->courseid,
+                    (int) $cycle->userid,
+                    (int) $cycle->courseid,
                     $cycleid,
                     false
                 );
-
                 $files = $this->executor->copy_all_files(
                     $plan,
-                    (int)$cycle->userid,
-                    (int)$cycle->courseid,
+                    (int) $cycle->userid,
+                    (int) $cycle->courseid,
                     $cycleid,
                     $historyids,
                     false
                 );
-
-                // Validation boundary: reaching this point means all history and file operations succeeded.
                 $activitycleanup = $this->executor->cleanup_all_activities(
                     $plan,
-                    (int)$cycle->userid,
-                    (int)$cycle->courseid,
+                    (int) $cycle->userid,
+                    (int) $cycle->courseid,
                     $cycleid,
                     false
                 );
-
                 $systemcleanup = $this->executor->cleanup_all_system(
                     $plan,
-                    (int)$cycle->userid,
-                    (int)$cycle->courseid,
+                    (int) $cycle->userid,
+                    (int) $cycle->courseid,
                     $cycleid,
                     false
                 );
@@ -132,11 +142,19 @@ class executor {
                 $this->cycles->mark_active($cycleid);
                 $transaction->allow_commit();
 
-                kopere_recertification_started::create_from_cycle($cycleid)->trigger();
+                kopere_recert_started::create_from_cycle($cycleid)->trigger();
                 try {
-                    $this->notifications->send_configured_event($cycleid, 'kopere_recertification_started');
+                    $this->notifications->send_configured_event($cycleid, 'kopere_recert_started');
                 } catch (Throwable $e) {
-                    (new \local_kopere_recertification\log\manager())->add($cycleid, null, 'notification', null, null, 'failed', $e->getMessage());
+                    (new \local_kopere_recert\log\manager())->add(
+                        $cycleid,
+                        null,
+                        'notification',
+                        null,
+                        null,
+                        'failed',
+                        $e->getMessage()
+                    );
                 }
 
                 return [
@@ -149,9 +167,9 @@ class executor {
                 $transaction->rollback($e);
             }
         } catch (Throwable $e) {
-            // This runs after the rollback, therefore the failure marker and log survive.
+            // This runs after rollback, therefore the failure marker and execution log survive.
             $this->cycles->mark_failed($cycleid, $e);
-            (new \local_kopere_recertification\log\manager())->add(
+            (new \local_kopere_recert\log\manager())->add(
                 $cycleid,
                 null,
                 'completion',
@@ -160,7 +178,7 @@ class executor {
                 'failed',
                 $e->getMessage()
             );
-            kopere_recertification_failed::create_from_cycle($cycleid, $e)->trigger();
+            kopere_recert_failed::create_from_cycle($cycleid, $e)->trigger();
             throw $e;
         } finally {
             $lock->release();

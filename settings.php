@@ -17,7 +17,7 @@
 /**
  * settings.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,34 +26,34 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
     $ADMIN->add('localplugins', new admin_category(
-        'local_kopere_recertification_cat',
-        get_string('pluginname', 'local_kopere_recertification')
+        'local_kopere_recert_cat',
+        get_string('pluginname', 'local_kopere_recert')
     ));
-    $ADMIN->add('local_kopere_recertification_cat', new admin_externalpage(
-        'local_kopere_recertification_tasks',
-        get_string('tasks', 'local_kopere_recertification'),
-        new moodle_url('/local/kopere_recertification/tasks.php'),
-        'local/kopere_recertification:managetasks'
+    $ADMIN->add('local_kopere_recert_cat', new admin_externalpage(
+        'local_kopere_recert_tasks',
+        get_string('tasks', 'local_kopere_recert'),
+        new moodle_url('/local/kopere_recert/tasks.php'),
+        'local/kopere_recert:managetasks'
     ));
     $settings = new admin_settingpage(
-        'local_kopere_recertification_settings',
-        get_string('settings', 'local_kopere_recertification')
+        'local_kopere_recert_settings',
+        get_string('settings', 'local_kopere_recert')
     );
-    $ADMIN->add('local_kopere_recertification_cat', $settings);
+    $ADMIN->add('local_kopere_recert_cat', $settings);
     $settings->add(new admin_setting_configcheckbox(
-        'local_kopere_recertification/showkopereemailrecommendation',
-        get_string('showkopereemailrecommendation', 'local_kopere_recertification'),
-        get_string('showkopereemailrecommendation_desc', 'local_kopere_recertification'),
+        'local_kopere_recert/showkopereemailrecommendation',
+        get_string('showkopereemailrecommendation', 'local_kopere_recert'),
+        get_string('showkopereemailrecommendation_desc', 'local_kopere_recert'),
         1
     ));
 
     $messageplugins = core_component::get_plugin_list('message');
-    if (!isset($messageplugins['kopereemail']) && get_config('local_kopere_recertification', 'showkopereemailrecommendation')) {
+    if (!isset($messageplugins['kopereemail']) && get_config('local_kopere_recert', 'showkopereemailrecommendation')) {
         $url = new moodle_url('https://eduardokraus.com/marketplace-plugins/plugin/message_kopereemail');
         $settings->add(new admin_setting_heading(
-            'local_kopere_recertification/kopereemailrecommendation',
+            'local_kopere_recert/kopereemailrecommendation',
             '',
-            html_writer::link($url, get_string('kopereemailrecommendation', 'local_kopere_recertification'), [
+            html_writer::link($url, get_string('kopereemailrecommendation', 'local_kopere_recert'), [
                 'target' => '_blank',
                 'rel' => 'noopener',
             ])

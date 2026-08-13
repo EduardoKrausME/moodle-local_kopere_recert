@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_kopere_recertification/simulation
+    @template local_kopere_recert/simulation
 
     Example context (json):
     {
@@ -84,20 +84,20 @@
 }}
 
 <div class="alert alert-success">
-    <strong>{{#str}}simulationcompleted, local_kopere_recertification{{/str}}</strong><br>
-    {{#str}}simulationrollbackdone, local_kopere_recertification{{/str}}
+    <strong>{{#str}}simulationcompleted, local_kopere_recert{{/str}}</strong><br>
+    {{#str}}simulationrollbackdone, local_kopere_recert{{/str}}
 </div>
 
 <div class="mb-4">
     <div><strong>{{#str}}course{{/str}}:</strong> {{course}}</div>
     <div><strong>{{#str}}user{{/str}}:</strong> {{user}}</div>
-    <div><strong>{{#str}}cycle, local_kopere_recertification{{/str}}:</strong> {{cyclename}}</div>
+    <div><strong>{{#str}}cycle, local_kopere_recert{{/str}}:</strong> {{cyclename}}</div>
 </div>
 
-<h3>{{#str}}executionplan, local_kopere_recertification{{/str}}</h3>
+<h3>{{#str}}executionplan, local_kopere_recert{{/str}}</h3>
 <div class="table-responsive">
 <table class="table generaltable">
-    <thead><tr><th>{{#str}}component, local_kopere_recertification{{/str}}</th><th>{{#str}}name{{/str}}</th><th>{{#str}}cmid, local_kopere_recertification{{/str}}</th><th>{{#str}}createhistory, local_kopere_recertification{{/str}}</th><th>{{#str}}copyfiles, local_kopere_recertification{{/str}}</th><th>{{#str}}cleanupdata, local_kopere_recertification{{/str}}</th><th>{{#str}}simulationdetails, local_kopere_recertification{{/str}}</th></tr></thead>
+    <thead><tr><th>{{#str}}component, local_kopere_recert{{/str}}</th><th>{{#str}}name{{/str}}</th><th>{{#str}}cmid, local_kopere_recert{{/str}}</th><th>{{#str}}createhistory, local_kopere_recert{{/str}}</th><th>{{#str}}copyfiles, local_kopere_recert{{/str}}</th><th>{{#str}}cleanupdata, local_kopere_recert{{/str}}</th><th>{{#str}}simulationdetails, local_kopere_recert{{/str}}</th></tr></thead>
     <tbody>
     {{#plan}}
         <tr>
@@ -110,23 +110,23 @@
 </table>
 </div>
 
-<h3>{{#str}}createhistory, local_kopere_recertification{{/str}}</h3>
-<p>{{historycount}} {{#str}}historyrecordswouldbecreated, local_kopere_recertification{{/str}}</p>
+<h3>{{#str}}createhistory, local_kopere_recert{{/str}}</h3>
+<p>{{historycount}} {{#str}}historyrecordswouldbecreated, local_kopere_recert{{/str}}</p>
 {{#historypreview}}
 <div class="card mb-2"><div class="card-body py-2">
     <strong>{{name}}</strong> <code>{{component}}</code>
-    {{#completedat}}<div>{{#str}}completedat, local_kopere_recertification{{/str}}: {{completedat}}</div>{{/completedat}}
+    {{#completedat}}<div>{{#str}}completedat, local_kopere_recert{{/str}}: {{completedat}}</div>{{/completedat}}
     {{#hasgrade}}<div>{{#str}}grade{{/str}}: {{grade}}</div>{{/hasgrade}}
-    {{#datajson}}<details><summary>{{#str}}structureddata, local_kopere_recertification{{/str}}</summary><pre class="mb-0">{{datajson}}</pre></details>{{/datajson}}
+    {{#datajson}}<details><summary>{{#str}}structureddata, local_kopere_recert{{/str}}</summary><pre class="mb-0">{{datajson}}</pre></details>{{/datajson}}
 </div></div>
 {{/historypreview}}
 
-<h3>{{#str}}copyfiles, local_kopere_recertification{{/str}}</h3>
+<h3>{{#str}}copyfiles, local_kopere_recert{{/str}}</h3>
 {{#files}}<div><code>{{component}}</code>{{#cmid}} / cmid={{cmid}}{{/cmid}}: {{count}}</div>{{/files}}
 {{^files}}<p>{{#str}}none{{/str}}</p>{{/files}}
 
-<h3>{{#str}}cleanupdata, local_kopere_recertification{{/str}}</h3>
+<h3>{{#str}}cleanupdata, local_kopere_recert{{/str}}</h3>
 {{#activitycleanup}}<div class="mb-2"><code>{{component}}</code>{{#cmid}} / cmid={{cmid}}{{/cmid}}: {{affected}}{{#messagerows}}<div class="small text-muted">{{message}}</div>{{/messagerows}}</div>{{/activitycleanup}}
 {{#systemcleanup}}<div class="mb-2"><code>{{component}}</code>: {{affected}}{{#messagerows}}<div class="small text-muted">{{message}}</div>{{/messagerows}}</div>{{/systemcleanup}}
 
-<div class="alert alert-info mt-4"><strong>{{#str}}simulationrollbackdone, local_kopere_recertification{{/str}}</strong></div>
+<div class="alert alert-info mt-4"><strong>{{#str}}simulationrollbackdone, local_kopere_recert{{/str}}</strong></div>

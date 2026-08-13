@@ -25,14 +25,14 @@
 namespace recerttask_grades;
 
 use grade_item;
-use local_kopere_recertification\task\cleanup_result;
-use local_kopere_recertification\task\history_result;
-use local_kopere_recertification\task\task_context;
-use local_kopere_recertification\task\task_plugin_interface;
+use local_kopere_recert\task\cleanup_result;
+use local_kopere_recert\task\history_result;
+use local_kopere_recert\task\task_context;
+use local_kopere_recert\task\task_plugin_interface;
 use moodle_exception;
 
 /**
- * Specialized kopere_recertification task provider for gradebook.
+ * Specialized kopere_recert task provider for gradebook.
  */
 final class task implements task_plugin_interface {
     /**
@@ -77,7 +77,7 @@ final class task implements task_plugin_interface {
     public static function get_system_order(): int { return 10; }
 
     /**
-     * Builds the historical snapshot for the current kopere_recertification context.
+     * Builds the historical snapshot for the current kopere_recert context.
      *
      * @param task_context $context Execution context.
      * @return history_result Structured history result.
@@ -144,11 +144,11 @@ final class task implements task_plugin_interface {
             if (!$item) {
                 continue;
             }
-            if (!$item->update_raw_grade($context->userid, null, 'local_kopere_recertification')) {
-                throw new moodle_exception('gradecleanupfailed', 'local_kopere_recertification');
+            if (!$item->update_raw_grade($context->userid, null, 'local_kopere_recert')) {
+                throw new moodle_exception('gradecleanupfailed', 'local_kopere_recert');
             }
-            if (!$item->update_final_grade($context->userid, null, 'local_kopere_recertification')) {
-                throw new moodle_exception('gradecleanupfailed', 'local_kopere_recertification');
+            if (!$item->update_final_grade($context->userid, null, 'local_kopere_recert')) {
+                throw new moodle_exception('gradecleanupfailed', 'local_kopere_recert');
             }
             $count++;
         }

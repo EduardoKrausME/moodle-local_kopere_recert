@@ -15,13 +15,13 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_kopere_recertification/history
+    @template local_kopere_recert/history
 
     Example context (json):
     {
         "cycles": [
             {
-                "url": "/local/kopere_recertification/history.php?courseid=10&cycleid=2",
+                "url": "/local/kopere_recert/history.php?courseid=10&cycleid=2",
                 "selected": true,
                 "label": "Cycle 2 - 2026"
             }
@@ -43,7 +43,7 @@
                 "hasfiles": true,
                 "files": [
                     {
-                        "url": "/pluginfile.php/123/local_kopere_recertification/history/answer.pdf",
+                        "url": "/pluginfile.php/123/local_kopere_recert/history/answer.pdf",
                         "name": "answer.pdf"
                     }
                 ]
@@ -53,7 +53,7 @@
 }}
 
 <div class="mb-4">
-    <label for="local-recert-cycle">{{#str}}cycle, local_kopere_recertification{{/str}}</label>
+    <label for="local-recert-cycle">{{#str}}cycle, local_kopere_recert{{/str}}</label>
     <select id="local-recert-cycle" class="form-select" onchange="if(this.value){window.location.href=this.value}">
         {{#cycles}}<option value="{{url}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/cycles}}
     </select>
@@ -63,20 +63,20 @@
     <div class="mb-4">
         <h3>{{cyclename}}</h3>
         <div>{{#str}}status{{/str}}: <strong>{{status}}</strong></div>
-        {{#startedat}}<div>{{#str}}startedat, local_kopere_recertification{{/str}}: {{startedat}}</div>{{/startedat}}
-        {{#completedat}}<div>{{#str}}completedat, local_kopere_recertification{{/str}}: {{completedat}}</div>{{/completedat}}
+        {{#startedat}}<div>{{#str}}startedat, local_kopere_recert{{/str}}: {{startedat}}</div>{{/startedat}}
+        {{#completedat}}<div>{{#str}}completedat, local_kopere_recert{{/str}}: {{completedat}}</div>{{/completedat}}
     </div>
 
     {{#items}}
-    <article class="local-kopere_recertification-history-item">
+    <article class="local-kopere_recert-history-item">
         <h4>{{name}}</h4>
         <div class="text-muted">{{component}}</div>
-        {{#completedat}}<div>{{#str}}activitycompletedat, local_kopere_recertification{{/str}}: {{completedat}}</div>{{/completedat}}
+        {{#completedat}}<div>{{#str}}activitycompletedat, local_kopere_recert{{/str}}: {{completedat}}</div>{{/completedat}}
         {{#hasgrade}}<div>{{#str}}grade{{/str}}: {{grade}}</div>{{/hasgrade}}
-        {{#hashtml}}<div class="local-kopere_recertification-history-html mt-2">{{{html}}}</div>{{/hashtml}}
+        {{#hashtml}}<div class="local-kopere_recert-history-html mt-2">{{{html}}}</div>{{/hashtml}}
         {{#hasfiles}}
             <div class="mt-2">
-                <strong>{{#str}}historyfiles, local_kopere_recertification{{/str}}</strong>
+                <strong>{{#str}}historyfiles, local_kopere_recert{{/str}}</strong>
                 <ul class="mb-0">
                     {{#files}}<li><a href="{{url}}">{{name}}</a></li>{{/files}}
                 </ul>
@@ -87,5 +87,5 @@
 {{/hascycle}}
 
 {{^hascycle}}
-    <div class="alert alert-info">{{#str}}nohistory, local_kopere_recertification{{/str}}</div>
+    <div class="alert alert-info">{{#str}}nohistory, local_kopere_recert{{/str}}</div>
 {{/hascycle}}

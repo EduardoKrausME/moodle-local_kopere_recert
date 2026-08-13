@@ -17,12 +17,12 @@
 /**
  * history_filter_form.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\form;
+namespace local_kopere_recert\form;
 
 use moodleform;
 
@@ -51,7 +51,7 @@ class history_filter_form extends moodleform {
         $mform->addElement('autocomplete', 'courseid', get_string('course'), $courseoptions, [
             'ajax' => 'core/form-course-selector',
             'multiple' => false,
-            'noselectionstring' => get_string('allcourses', 'local_kopere_recertification'),
+            'noselectionstring' => get_string('allcourses', 'local_kopere_recert'),
         ]);
         $mform->setType('courseid', PARAM_INT);
         if ($courseid) {
@@ -75,6 +75,6 @@ class history_filter_form extends moodleform {
             $mform->setType('userid', PARAM_INT);
         }
 
-        $mform->addElement('submit', 'filterbutton', get_string('filter', 'local_kopere_recertification'));
+        $mform->addElement('submit', 'filterbutton', get_string('filter', 'local_kopere_recert'));
     }
 }

@@ -17,15 +17,15 @@
 /**
  * course_form.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\form;
+namespace local_kopere_recert\form;
 
-use local_kopere_recertification\course\reference_date_provider_interface;
-use local_kopere_recertification\subplugin\manager;
+use local_kopere_recert\course\reference_date_provider_interface;
+use local_kopere_recert\subplugin\manager;
 use moodleform;
 
 /**
@@ -42,22 +42,22 @@ class course_form extends moodleform {
         $mform->addElement('hidden', 'courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);
 
-        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'local_kopere_recertification'));
+        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'local_kopere_recert'));
 
-        $mform->addElement('select', 'triggertype', get_string('triggertype', 'local_kopere_recertification'), [
-            'enrolment' => get_string('trigger_enrolment', 'local_kopere_recertification'),
-            'fixeddate' => get_string('trigger_fixeddate', 'local_kopere_recertification'),
-            'completion' => get_string('trigger_completion', 'local_kopere_recertification'),
-            'certificate' => get_string('trigger_certificate', 'local_kopere_recertification'),
-            'lastkopere_recertification' => get_string('trigger_lastkopere_recertification', 'local_kopere_recertification'),
+        $mform->addElement('select', 'triggertype', get_string('triggertype', 'local_kopere_recert'), [
+            'enrolment' => get_string('trigger_enrolment', 'local_kopere_recert'),
+            'fixeddate' => get_string('trigger_fixeddate', 'local_kopere_recert'),
+            'completion' => get_string('trigger_completion', 'local_kopere_recert'),
+            'certificate' => get_string('trigger_certificate', 'local_kopere_recert'),
+            'lastkopere_recert' => get_string('trigger_lastkopere_recert', 'local_kopere_recert'),
         ]);
 
-        $mform->addElement('text', 'intervaldays', get_string('intervaldays', 'local_kopere_recertification'));
+        $mform->addElement('text', 'intervaldays', get_string('intervaldays', 'local_kopere_recert'));
         $mform->setType('intervaldays', PARAM_INT);
 
         $months = array_combine(range(1, 12), array_map(fn($m) => userdate(make_timestamp(2024, $m, 1), '%B'), range(1, 12)));
-        $mform->addElement('select', 'fixedmonth', get_string('fixedmonth', 'local_kopere_recertification'), $months);
-        $mform->addElement('select', 'fixedday', get_string('fixedday', 'local_kopere_recertification'), array_combine(range(1, 31), range(1, 31)));
+        $mform->addElement('select', 'fixedmonth', get_string('fixedmonth', 'local_kopere_recert'), $months);
+        $mform->addElement('select', 'fixedday', get_string('fixedday', 'local_kopere_recert'), array_combine(range(1, 31), range(1, 31)));
 
         $modinfo = get_fast_modinfo($courseid);
         $options = [0 => get_string('none')];
@@ -69,19 +69,19 @@ class course_form extends moodleform {
             }
             $options[$cm->id] = format_string($cm->name) . ' (' . $cm->modname . ')';
         }
-        $mform->addElement('select', 'referencecmid', get_string('referencecmid', 'local_kopere_recertification'), $options);
+        $mform->addElement('select', 'referencecmid', get_string('referencecmid', 'local_kopere_recert'), $options);
 
-        $mform->addElement('advcheckbox', 'resetcompetencies', get_string('resetcompetencies', 'local_kopere_recertification'));
-        $mform->addElement('static', 'resetcompetencieshelp', '', get_string('resetcompetencies_desc', 'local_kopere_recertification'));
+        $mform->addElement('advcheckbox', 'resetcompetencies', get_string('resetcompetencies', 'local_kopere_recert'));
+        $mform->addElement('static', 'resetcompetencieshelp', '', get_string('resetcompetencies_desc', 'local_kopere_recert'));
 
-        $mform->addElement('advcheckbox', 'selfenabled', get_string('selfenabled', 'local_kopere_recertification'));
-        $mform->addElement('select', 'selfreferencetype', get_string('selfreferencetype', 'local_kopere_recertification'), [
-            'enrolment' => get_string('selfreference_enrolment', 'local_kopere_recertification'),
-            'completion' => get_string('selfreference_completion', 'local_kopere_recertification'),
-            'lastkopere_recertification' => get_string('selfreference_lastkopere_recertification', 'local_kopere_recertification'),
-            'certificate' => get_string('selfreference_certificate', 'local_kopere_recertification'),
+        $mform->addElement('advcheckbox', 'selfenabled', get_string('selfenabled', 'local_kopere_recert'));
+        $mform->addElement('select', 'selfreferencetype', get_string('selfreferencetype', 'local_kopere_recert'), [
+            'enrolment' => get_string('selfreference_enrolment', 'local_kopere_recert'),
+            'completion' => get_string('selfreference_completion', 'local_kopere_recert'),
+            'lastkopere_recert' => get_string('selfreference_lastkopere_recert', 'local_kopere_recert'),
+            'certificate' => get_string('selfreference_certificate', 'local_kopere_recert'),
         ]);
-        $mform->addElement('text', 'selfafterdays', get_string('selfafterdays', 'local_kopere_recertification'));
+        $mform->addElement('text', 'selfafterdays', get_string('selfafterdays', 'local_kopere_recert'));
         $mform->setType('selfafterdays', PARAM_INT);
 
         $this->add_action_buttons();
@@ -98,15 +98,15 @@ class course_form extends moodleform {
         $errors = parent::validation($data, $files);
         $trigger = (string)($data['triggertype'] ?? '');
         if ($trigger !== 'fixeddate' && (int)($data['intervaldays'] ?? 0) <= 0) {
-            $errors['intervaldays'] = get_string('intervalmustbepositive', 'local_kopere_recertification');
+            $errors['intervaldays'] = get_string('intervalmustbepositive', 'local_kopere_recert');
         }
         if (($trigger === 'certificate'
                 || (!empty($data['selfenabled']) && ($data['selfreferencetype'] ?? '') === 'certificate'))
                 && empty($data['referencecmid'])) {
-            $errors['referencecmid'] = get_string('missingcertificatereference', 'local_kopere_recertification');
+            $errors['referencecmid'] = get_string('missingcertificatereference', 'local_kopere_recert');
         }
         if (!empty($data['selfenabled']) && (int)($data['selfafterdays'] ?? 0) < 0) {
-            $errors['selfafterdays'] = get_string('selfafterdaysinvalid', 'local_kopere_recertification');
+            $errors['selfafterdays'] = get_string('selfafterdaysinvalid', 'local_kopere_recert');
         }
         return $errors;
     }

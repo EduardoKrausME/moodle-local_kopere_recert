@@ -17,18 +17,18 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\status;
+namespace local_kopere_recert\status;
 
-use local_kopere_recertification\cycle\repository;
+use local_kopere_recert\cycle\repository;
 use stdClass;
 
 /**
- * Provides logical kopere_recertification status checks used by the user interface.
+ * Provides logical kopere_recert status checks used by the user interface.
  */
 class manager {
     /**
@@ -43,13 +43,13 @@ class manager {
     }
 
     /**
-     * Reports whether a user currently has a pending or active kopere_recertification state.
+     * Reports whether a user currently has a pending or active kopere_recert state.
      *
      * @param int $courseid Course ID.
      * @param int $userid User ID.
-     * @return bool True when kopere_recertification is logically required.
+     * @return bool True when kopere_recert is logically required.
      */
-    public function is_kopere_recertification_required(int $courseid, int $userid): bool {
+    public function is_kopere_recert_required(int $courseid, int $userid): bool {
         return $this->get_cycle($courseid, $userid) !== null;
     }
 }

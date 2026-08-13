@@ -15,19 +15,19 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_kopere_recertification/course_header
+    @template local_kopere_recert/course_header
 
     Example context (json):
     {
-        "noticesurl": "/local/kopere_recertification/notices.php?courseid=10",
+        "noticesurl": "/local/kopere_recert/notices.php?courseid=10",
         "noticescount": 3,
-        "bulkurl": "/local/kopere_recertification/bulk.php?courseid=10",
-        "historyurl": "/local/kopere_recertification/history.php?courseid=10"
+        "bulkurl": "/local/kopere_recert/bulk.php?courseid=10",
+        "historyurl": "/local/kopere_recert/history.php?courseid=10"
     }
 }}
 
 <div class="d-flex flex-wrap gap-2 mb-4">
-    <a class="btn btn-secondary" href="{{noticesurl}}">{{#str}}notices, local_kopere_recertification{{/str}} ({{noticescount}})</a>
-    <a class="btn btn-secondary" href="{{bulkurl}}">{{#str}}bulkkopere_recertification, local_kopere_recertification{{/str}}</a>
-    <a class="btn btn-secondary" href="{{historyurl}}">{{#str}}history, local_kopere_recertification{{/str}}</a>
+    <a class="btn btn-secondary" href="{{noticesurl}}">{{#str}}notices, local_kopere_recert{{/str}} ({{noticescount}})</a>
+    <a class="btn btn-secondary" href="{{bulkurl}}">{{#str}}bulkkopere_recert, local_kopere_recert{{/str}}</a>
+    <a class="btn btn-secondary" href="{{historyurl}}">{{#str}}history, local_kopere_recert{{/str}}</a>
 </div>

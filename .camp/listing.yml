@@ -1,5 +1,5 @@
 # (RFC §4.1). Authors update their listing with an ordinary commit; camp
-# ingests and hash-pins it at each tagged release. Listing for local_kopere_recertification.
+# ingests and hash-pins it at each tagged release. Listing for local_kopere_recert.
 
 name: "ReCertification"
 summary: "Identify ReCertification and find opportunities to improve performance."
@@ -12,5 +12,5 @@ labels:
   - fully-free
 category: "reports"
 links:
-  docs: https://github.com/EduardoKrausME/moodle-local_kopere_recertification#readme
-  issues: https://github.com/EduardoKrausME/moodle-local_kopere_recertification/issues
+  docs: https://github.com/EduardoKrausME/moodle-local_kopere_recert#readme
+  issues: https://github.com/EduardoKrausME/moodle-local_kopere_recert/issues

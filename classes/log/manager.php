@@ -17,15 +17,15 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\log;
+namespace local_kopere_recert\log;
 
 /**
- * Writes sanitized kopere_recertification execution log entries.
+ * Writes sanitized kopere_recert execution log entries.
  */
 class manager {
     /**
@@ -67,7 +67,7 @@ class manager {
         ?float $duration = null,
     ): void {
         global $DB;
-        $DB->insert_record('local_recert_log', (object)[
+        $DB->insert_record('local_kopere_recert_log', (object)[
             'cycleid' => $cycleid,
             'taskid' => $taskid,
             'action' => $action,

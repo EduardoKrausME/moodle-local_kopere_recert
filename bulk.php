@@ -17,13 +17,14 @@
 /**
  * bulk.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use core\output\notification;
-use local_kopere_recertification\cycle\manager;
+use local_kopere_recert\cycle\manager as cycle_manager;
+use local_kopere_recert\recertification\manager as recertification_manager;
 
 require_once(__DIR__ . '/../../config.php');
 
@@ -33,13 +34,13 @@ $search = optional_param('search', '', PARAM_TEXT);
 $course = get_course($courseid);
 require_login($course);
 $context = context_course::instance($courseid);
-require_capability('local/kopere_recertification:bulkrecertify', $context);
+require_capability('local/kopere_recert:bulkrecertify', $context);
 
 if (data_submitted() && confirm_sesskey()) {
     $userids = optional_param_array('userids', [], PARAM_INT);
     $reason = trim(required_param('reason', PARAM_TEXT));
     if ($reason === '') {
-        throw new invalid_parameter_exception(get_string('reasonrequired', 'local_kopere_recertification'));
+        throw new invalid_parameter_exception(get_string('reasonrequired', 'local_kopere_recert'));
     }
 
     $success = 0;
@@ -50,24 +51,27 @@ if (data_submitted() && confirm_sesskey()) {
             continue;
         }
         try {
-            (new \local_kopere_recertification\kopere_recertification\manager())->create_and_queue(
+            (new recertification_manager())->create_and_queue(
                 $courseid,
-                (int)$userid,
+                (int) $userid,
                 $reason,
                 $reason,
-                manager::SOURCE_BULK,
-                (int)$USER->id
+                cycle_manager::SOURCE_BULK,
+                (int) $USER->id
             );
             $success++;
         } catch (Throwable $e) {
-            // Keep every user isolated; one failure never rolls back another queued kopere_recertification.
+            // Keep every user isolated so one failure does not affect another queued recertification.
             $failed++;
             debugging($e->getMessage(), DEBUG_DEVELOPER);
         }
     }
     redirect(
-        new moodle_url('/local/kopere_recertification/bulk.php', ['courseid' => $courseid]),
-        get_string('bulkqueuedsummary', 'local_kopere_recertification', (object)['success' => $success, 'failed' => $failed]),
+        new moodle_url('/local/kopere_recert/bulk.php', ['courseid' => $courseid]),
+        get_string('bulkqueuedsummary', 'local_kopere_recert', (object) [
+            'success' => $success,
+            'failed' => $failed,
+        ]),
         null,
         $failed ? notification::NOTIFY_WARNING : notification::NOTIFY_SUCCESS
     );
@@ -76,9 +80,9 @@ if (data_submitted() && confirm_sesskey()) {
 [$enrolledsql, $params] = get_enrolled_sql($context, '', 0, true);
 $where = '';
 if ($search !== '') {
-    $where = " AND (" . $DB->sql_like('u.firstname', ':search1', false) .
-        " OR " . $DB->sql_like('u.lastname', ':search2', false) .
-        " OR " . $DB->sql_like('u.email', ':search3', false) . ")";
+    $where = ' AND (' . $DB->sql_like('u.firstname', ':search1', false)
+        . ' OR ' . $DB->sql_like('u.lastname', ':search2', false)
+        . ' OR ' . $DB->sql_like('u.email', ':search3', false) . ')';
     $like = '%' . $DB->sql_like_escape($search) . '%';
     $params['search1'] = $like;
     $params['search2'] = $like;
@@ -95,12 +99,16 @@ $countsql = "SELECT COUNT(1)
                FROM {user} u
                JOIN ({$enrolledsql}) eu ON eu.id = u.id
               WHERE u.deleted = 0 {$where}";
-$totalusers = (int)$DB->get_field_sql($countsql, $params);
+$totalusers = (int) $DB->get_field_sql($countsql, $params);
 
 $PAGE->set_context($context);
 $PAGE->set_course($course);
-$PAGE->set_url(new moodle_url('/local/kopere_recertification/bulk.php', ['courseid' => $courseid, 'page' => $page, 'search' => $search]));
-$PAGE->set_title(get_string('bulkkopere_recertification', 'local_kopere_recertification'));
+$PAGE->set_url(new moodle_url('/local/kopere_recert/bulk.php', [
+    'courseid' => $courseid,
+    'page' => $page,
+    'search' => $search,
+]));
+$PAGE->set_title(get_string('bulkkopere_recert', 'local_kopere_recert'));
 $PAGE->set_heading(format_string($course->fullname));
 
 $rows = [];
@@ -113,7 +121,7 @@ foreach ($users as $user) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template('local_kopere_recertification/bulk', [
+echo $OUTPUT->render_from_template('local_kopere_recert/bulk', [
     'users' => $rows,
     'courseid' => $courseid,
     'sesskey' => sesskey(),
@@ -123,6 +131,9 @@ echo $OUTPUT->paging_bar(
     $totalusers,
     $page,
     $perpage,
-    new moodle_url('/local/kopere_recertification/bulk.php', ['courseid' => $courseid, 'search' => $search])
+    new moodle_url('/local/kopere_recert/bulk.php', [
+        'courseid' => $courseid,
+        'search' => $search,
+    ])
 );
 echo $OUTPUT->footer();

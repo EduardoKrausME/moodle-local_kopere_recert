@@ -17,12 +17,12 @@
 /**
  * plan_item.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 use stdClass;
 
@@ -30,39 +30,95 @@ use stdClass;
  * Immutable description of one activity or system item in an execution plan.
  */
 class plan_item {
+    /** Moodle component name. */
+    public readonly string $component;
+
+    /** Plan item origin. */
+    public readonly string $origin;
+
+    /** Global task configuration ID. */
+    public readonly ?int $taskid;
+
+    /** Course module ID. */
+    public readonly ?int $cmid;
+
+    /** Activity instance ID. */
+    public readonly ?int $instanceid;
+
+    /** Moodle context ID. */
+    public readonly int $contextid;
+
+    /** Activity display name. */
+    public readonly string $activityname;
+
+    /** Activity type. */
+    public readonly string $activitytype;
+
+    /** Execution sort order. */
+    public readonly int $sortorder;
+
+    /** Whether history creation is enabled. */
+    public readonly bool $historyenabled;
+
+    /** Whether file preservation is enabled. */
+    public readonly bool $filesenabled;
+
+    /** Whether cleanup is enabled. */
+    public readonly bool $cleanupenabled;
+
+    /** Optional subplugin provider. */
+    public readonly ?task_plugin_interface $plugin;
+
+    /** Optional generic task configuration. */
+    public readonly ?stdClass $genericconfig;
+
     /**
      * Creates a new plan item instance.
      *
      * @param string $component Moodle component name.
      * @param string $origin Origin.
-     * @param ?int $taskid Global task configuration ID.
-     * @param ?int $cmid Course module ID.
-     * @param ?int $instanceid Activity instance ID.
+     * @param int|null $taskid Global task configuration ID.
+     * @param int|null $cmid Course module ID.
+     * @param int|null $instanceid Activity instance ID.
      * @param int $contextid Context ID.
-     * @param string $activityname Activityname.
-     * @param string $activitytype Activitytype.
-     * @param int $sortorder Sortorder.
-     * @param bool $historyenabled Historyenabled.
-     * @param bool $filesenabled Filesenabled.
-     * @param bool $cleanupenabled Cleanupenabled.
-     * @param ?task_plugin_interface $plugin Subplugin provider instance.
-     * @param ?stdClass $genericconfig Genericconfig.
+     * @param string $activityname Activity name.
+     * @param string $activitytype Activity type.
+     * @param int $sortorder Sort order.
+     * @param bool $historyenabled Whether history creation is enabled.
+     * @param bool $filesenabled Whether file preservation is enabled.
+     * @param bool $cleanupenabled Whether cleanup is enabled.
+     * @param task_plugin_interface|null $plugin Subplugin provider instance.
+     * @param stdClass|null $genericconfig Generic task configuration.
      */
     public function __construct(
-        public readonly string $component,
-        public readonly string $origin,
-        public readonly ?int $taskid,
-        public readonly ?int                   $cmid,
-        public readonly ?int                   $instanceid,
-        public readonly int                    $contextid,
-        public readonly string                 $activityname,
-        public readonly string                 $activitytype,
-        public readonly int                    $sortorder,
-        public readonly bool                   $historyenabled,
-        public readonly bool                   $filesenabled,
-        public readonly bool                   $cleanupenabled,
-        public readonly ?task_plugin_interface $plugin = null,
-        public readonly ?stdClass              $genericconfig = null,
+        string $component,
+        string $origin,
+        ?int $taskid,
+        ?int $cmid,
+        ?int $instanceid,
+        int $contextid,
+        string $activityname,
+        string $activitytype,
+        int $sortorder,
+        bool $historyenabled,
+        bool $filesenabled,
+        bool $cleanupenabled,
+        ?task_plugin_interface $plugin = null,
+        ?stdClass $genericconfig = null
     ) {
+        $this->component = $component;
+        $this->origin = $origin;
+        $this->taskid = $taskid;
+        $this->cmid = $cmid;
+        $this->instanceid = $instanceid;
+        $this->contextid = $contextid;
+        $this->activityname = $activityname;
+        $this->activitytype = $activitytype;
+        $this->sortorder = $sortorder;
+        $this->historyenabled = $historyenabled;
+        $this->filesenabled = $filesenabled;
+        $this->cleanupenabled = $cleanupenabled;
+        $this->plugin = $plugin;
+        $this->genericconfig = $genericconfig;
     }
 }

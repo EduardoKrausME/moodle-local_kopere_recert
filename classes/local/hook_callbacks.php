@@ -17,23 +17,23 @@
 /**
  * hook_callbacks.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\local;
+namespace local_kopere_recert\local;
 
 use core\hook\output\before_standard_top_of_body_html_generation;
-use local_kopere_recertification\status\manager;
+use local_kopere_recert\status\manager;
 use moodle_url;
 
 /**
- * Hook callbacks used to surface logical kopere_recertification status in course pages.
+ * Hook callbacks used to surface logical kopere_recert status in course pages.
  */
 class hook_callbacks {
     /**
-     * Adds the logical kopere_recertification status notice to course pages.
+     * Adds the logical kopere_recert status notice to course pages.
      *
      * @param before_standard_top_of_body_html_generation $hook Hook.
      */
@@ -45,7 +45,7 @@ class hook_callbacks {
         if (during_initial_install() || !isloggedin() || isguestuser() || empty($PAGE->course->id) || $PAGE->course->id == SITEID) {
             return;
         }
-        if (!get_config('local_kopere_recertification', 'version')) {
+        if (!get_config('local_kopere_recert', 'version')) {
             return;
         }
 
@@ -55,14 +55,14 @@ class hook_callbacks {
             return;
         }
 
-        $output = $hook->renderer->render_from_template('local_kopere_recertification/status_banner', [
-            'message' => get_string('kopere_recertificationstatusmessage', 'local_kopere_recertification'),
-            'historyurl' => (new moodle_url('/local/kopere_recertification/history.php', [
+        $output = $hook->renderer->render_from_template('local_kopere_recert/status_banner', [
+            'message' => get_string('kopere_recertstatusmessage', 'local_kopere_recert'),
+            'historyurl' => (new moodle_url('/local/kopere_recert/history.php', [
                 'courseid' => $courseid,
                 'userid' => $USER->id,
                 'cycleid' => $cycle->id,
             ]))->out(false),
-            'historylabel' => get_string('viewhistory', 'local_kopere_recertification'),
+            'historylabel' => get_string('viewhistory', 'local_kopere_recert'),
         ]);
         $hook->add_html($output);
     }

@@ -17,15 +17,15 @@
 /**
  * renderer_service.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\history;
+namespace local_kopere_recert\history;
 
 use core\output\mustache_engine;
-use local_kopere_recertification\task\task_context;
+use local_kopere_recert\task\task_context;
 use Mustache_LambdaHelper;
 
 /**
@@ -76,7 +76,7 @@ class renderer_service {
             'instanceid' => $context->instanceid,
             'contextid' => $context->contextid,
             'cycleid' => $context->cycleid,
-            'kopere_recertificationid' => $context->kopere_recertificationid,
+            'kopere_recertid' => $context->kopere_recertid,
         ];
 
         return $mustache->render($template, array_merge($base, $mustachecontext));

@@ -17,7 +17,7 @@
 /**
  * access.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,47 +25,47 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'local/kopere_recertification:manage' => [
+    'local/kopere_recert:manage' => [
         'riskbitmask' => RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => ['manager' => CAP_ALLOW],
     ],
-    'local/kopere_recertification:managetasks' => [
+    'local/kopere_recert:managetasks' => [
         'riskbitmask' => RISK_CONFIG,
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => ['manager' => CAP_ALLOW],
     ],
-    'local/kopere_recertification:recertify' => [
+    'local/kopere_recert:recertify' => [
         'riskbitmask' => RISK_DATALOSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => ['manager' => CAP_ALLOW],
     ],
-    'local/kopere_recertification:bulkrecertify' => [
+    'local/kopere_recert:bulkrecertify' => [
         'riskbitmask' => RISK_DATALOSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => ['manager' => CAP_ALLOW],
     ],
-    'local/kopere_recertification:recertifyself' => [
+    'local/kopere_recert:recertifyself' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => ['student' => CAP_ALLOW],
     ],
-    'local/kopere_recertification:viewownhistory' => [
+    'local/kopere_recert:viewownhistory' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => ['student' => CAP_ALLOW],
     ],
-    'local/kopere_recertification:viewallhistory' => [
+    'local/kopere_recert:viewallhistory' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => ['manager' => CAP_ALLOW, 'editingteacher' => CAP_ALLOW],
     ],
-    'local/kopere_recertification:simulate' => [
+    'local/kopere_recert:simulate' => [
         'riskbitmask' => RISK_DATALOSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,

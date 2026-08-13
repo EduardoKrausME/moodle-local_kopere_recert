@@ -17,7 +17,7 @@
 /**
  * events.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 $observers = [
     [
         'eventname' => '\core\event\course_completed',
-        'callback' => '\local_kopere_recertification\observer::course_completed',
+        'callback' => '\local_kopere_recert\observer::course_completed',
         'priority' => 1000,
     ],
 ];

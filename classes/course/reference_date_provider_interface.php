@@ -17,19 +17,19 @@
 /**
  * reference_date_provider_interface.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\course;
+namespace local_kopere_recert\course;
 
 /**
- * Contract for providers that expose a component-specific kopere_recertification reference date.
+ * Contract for providers that expose a component-specific kopere_recert reference date.
  */
 interface reference_date_provider_interface {
     /**
-     * Returns the component-specific timestamp used as a kopere_recertification reference.
+     * Returns the component-specific timestamp used as a kopere_recert reference.
      *
      * @param int $userid User ID.
      * @param int $courseid Course ID.

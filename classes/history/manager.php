@@ -17,19 +17,19 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\history;
+namespace local_kopere_recert\history;
 
-use local_kopere_recertification\task\plan_item;
-use local_kopere_recertification\task\task_context;
-use local_kopere_recertification\task\history_result;
+use local_kopere_recert\task\plan_item;
+use local_kopere_recert\task\task_context;
+use local_kopere_recert\task\history_result;
 
 /**
- * Creates and persists immutable historical snapshots for kopere_recertification cycles.
+ * Creates and persists immutable historical snapshots for kopere_recert cycles.
  */
 class manager {
     /**
@@ -108,6 +108,6 @@ class manager {
             'timecreated' => time(),
         ];
 
-        return (int)$DB->insert_record('local_recert_history', $record);
+        return (int)$DB->insert_record('local_kopere_recert_history', $record);
     }
 }

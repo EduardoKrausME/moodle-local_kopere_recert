@@ -17,15 +17,15 @@
 /**
  * recertify.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use core\output\notification;
-use local_kopere_recertification\form\manual_form;
-use local_kopere_recertification\kopere_recertification\manager;
-use local_kopere_recertification\kopere_recertification\simulator;
+use local_kopere_recert\form\manual_form;
+use local_kopere_recert\recertification\manager;
+use local_kopere_recert\recertification\simulator;
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/formslib.php');
@@ -36,18 +36,21 @@ $course = get_course($courseid);
 require_login($course);
 $context = context_course::instance($courseid);
 
-if ($userid === (int)$USER->id) {
-    require_capability('local/kopere_recertification:recertifyself', $context);
-    $source = \local_kopere_recertification\cycle\manager::SOURCE_MANUAL_USER;
+if ($userid === (int) $USER->id) {
+    require_capability('local/kopere_recert:recertifyself', $context);
+    $source = \local_kopere_recert\cycle\manager::SOURCE_MANUAL_USER;
 } else {
-    require_capability('local/kopere_recertification:recertify', $context);
-    $source = \local_kopere_recertification\cycle\manager::SOURCE_MANUAL_ADMIN;
+    require_capability('local/kopere_recert:recertify', $context);
+    $source = \local_kopere_recert\cycle\manager::SOURCE_MANUAL_ADMIN;
 }
 
 $PAGE->set_context($context);
 $PAGE->set_course($course);
-$PAGE->set_url(new moodle_url('/local/kopere_recertification/recertify.php', ['courseid' => $courseid, 'userid' => $userid]));
-$PAGE->set_title(get_string('startkopere_recertification', 'local_kopere_recertification'));
+$PAGE->set_url(new moodle_url('/local/kopere_recert/recertify.php', [
+    'courseid' => $courseid,
+    'userid' => $userid,
+]));
+$PAGE->set_title(get_string('startkopere_recert', 'local_kopere_recert'));
 $PAGE->set_heading(format_string($course->fullname));
 
 $form = new manual_form(null, ['courseid' => $courseid, 'userid' => $userid]);
@@ -58,17 +61,20 @@ if ($data = $form->get_data()) {
     require_sesskey();
     $reason = trim($data->reason);
     if (!empty($data->simulate)) {
-        require_capability('local/kopere_recertification:simulate', $context);
+        require_capability('local/kopere_recert:simulate', $context);
         $report = (new simulator())->simulate(
             $courseid,
             $userid,
             $reason,
             $reason,
             $source,
-            (int)$USER->id
+            (int) $USER->id
         );
-        $SESSION->local_kopere_recertification_simulation = $report;
-        redirect(new moodle_url('/local/kopere_recertification/simulation.php', ['courseid' => $courseid, 'userid' => $userid]));
+        $SESSION->local_kopere_recert_simulation = $report;
+        redirect(new moodle_url('/local/kopere_recert/simulation.php', [
+            'courseid' => $courseid,
+            'userid' => $userid,
+        ]));
     }
 
     $cycle = (new manager())->create_and_queue(
@@ -77,11 +83,15 @@ if ($data = $form->get_data()) {
         $reason,
         $reason,
         $source,
-        (int)$USER->id
+        (int) $USER->id
     );
     redirect(
-        new moodle_url('/local/kopere_recertification/history.php', ['courseid' => $courseid, 'userid' => $userid, 'cycleid' => $cycle->id]),
-        get_string('kopere_recertificationqueued', 'local_kopere_recertification'),
+        new moodle_url('/local/kopere_recert/history.php', [
+            'courseid' => $courseid,
+            'userid' => $userid,
+            'cycleid' => $cycle->id,
+        ]),
+        get_string('kopere_recertqueued', 'local_kopere_recert'),
         null,
         notification::NOTIFY_SUCCESS
     );

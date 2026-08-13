@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_kopere_recertification/bulk
+    @template local_kopere_recert/bulk
 
     Example context (json):
     {
@@ -44,7 +44,7 @@
     <input type="hidden" name="courseid" value="{{courseid}}">
     <input type="hidden" name="sesskey" value="{{sesskey}}">
     <div class="mb-3">
-        <label for="bulk-reason" class="form-label">{{#str}}reason, local_kopere_recertification{{/str}}</label>
+        <label for="bulk-reason" class="form-label">{{#str}}reason, local_kopere_recert{{/str}}</label>
         <input id="bulk-reason" class="form-control" name="reason" required>
     </div>
     <div class="table-responsive">
@@ -55,5 +55,5 @@
         </tbody>
     </table>
     </div>
-    <button class="btn btn-primary" type="submit">{{#str}}recertifyselected, local_kopere_recertification{{/str}}</button>
+    <button class="btn btn-primary" type="submit">{{#str}}recertifyselected, local_kopere_recert{{/str}}</button>
 </form>

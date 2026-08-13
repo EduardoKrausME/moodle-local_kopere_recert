@@ -17,12 +17,12 @@
 /**
  * manual_form.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\form;
+namespace local_kopere_recert\form;
 
 use moodleform;
 
@@ -39,10 +39,10 @@ class manual_form extends moodleform {
         $mform->setType('courseid', PARAM_INT);
         $mform->addElement('hidden', 'userid', $this->_customdata['userid']);
         $mform->setType('userid', PARAM_INT);
-        $mform->addElement('text', 'reason', get_string('reason', 'local_kopere_recertification'), ['size' => 80]);
+        $mform->addElement('text', 'reason', get_string('reason', 'local_kopere_recert'), ['size' => 80]);
         $mform->setType('reason', PARAM_TEXT);
         $mform->addRule('reason', null, 'required');
-        $mform->addElement('advcheckbox', 'simulate', get_string('simulate', 'local_kopere_recertification'));
-        $this->add_action_buttons(true, get_string('startkopere_recertification', 'local_kopere_recertification'));
+        $mform->addElement('advcheckbox', 'simulate', get_string('simulate', 'local_kopere_recert'));
+        $this->add_action_buttons(true, get_string('startkopere_recert', 'local_kopere_recert'));
     }
 }

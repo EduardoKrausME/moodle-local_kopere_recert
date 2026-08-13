@@ -17,12 +17,12 @@
 /**
  * notice_form.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\form;
+namespace local_kopere_recert\form;
 
 use moodleform;
 
@@ -42,23 +42,23 @@ class notice_form extends moodleform {
         $mform->addElement('hidden', 'id', 0);
         $mform->setType('id', PARAM_INT);
 
-        $mform->addElement('select', 'eventtype', get_string('eventtype', 'local_kopere_recertification'), [
-            'kopere_recertification_available' => get_string('notice_available', 'local_kopere_recertification'),
-            'kopere_recertification_created' => get_string('notice_created', 'local_kopere_recertification'),
-            'kopere_recertification_started' => get_string('notice_started', 'local_kopere_recertification'),
-            'expiration_warning' => get_string('notice_warning', 'local_kopere_recertification'),
-            'kopere_recertification_due' => get_string('notice_due', 'local_kopere_recertification'),
-            'kopere_recertification_expired' => get_string('notice_expired', 'local_kopere_recertification'),
-            'kopere_recertification_completed' => get_string('notice_completed', 'local_kopere_recertification'),
+        $mform->addElement('select', 'eventtype', get_string('eventtype', 'local_kopere_recert'), [
+            'kopere_recert_available' => get_string('notice_available', 'local_kopere_recert'),
+            'kopere_recert_created' => get_string('notice_created', 'local_kopere_recert'),
+            'kopere_recert_started' => get_string('notice_started', 'local_kopere_recert'),
+            'expiration_warning' => get_string('notice_warning', 'local_kopere_recert'),
+            'kopere_recert_due' => get_string('notice_due', 'local_kopere_recert'),
+            'kopere_recert_expired' => get_string('notice_expired', 'local_kopere_recert'),
+            'kopere_recert_completed' => get_string('notice_completed', 'local_kopere_recert'),
         ]);
-        $mform->addElement('text', 'offsetdays', get_string('offsetdays', 'local_kopere_recertification'));
+        $mform->addElement('text', 'offsetdays', get_string('offsetdays', 'local_kopere_recert'));
         $mform->setType('offsetdays', PARAM_INT);
         $mform->setDefault('offsetdays', 0);
-        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'local_kopere_recertification'));
+        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'local_kopere_recert'));
         $mform->setDefault('enabled', 1);
-        $mform->addElement('text', 'subject', get_string('subject', 'local_kopere_recertification'), ['size' => 80]);
+        $mform->addElement('text', 'subject', get_string('subject', 'local_kopere_recert'), ['size' => 80]);
         $mform->setType('subject', PARAM_TEXT);
-        $mform->addElement('editor', 'body_editor', get_string('body', 'local_kopere_recertification'), null, ['maxfiles' => 0]);
+        $mform->addElement('editor', 'body_editor', get_string('body', 'local_kopere_recert'), null, ['maxfiles' => 0]);
         $this->add_action_buttons();
     }
 }

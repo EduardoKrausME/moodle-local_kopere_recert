@@ -17,26 +17,26 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\scheduler;
+namespace local_kopere_recert\scheduler;
 
 use context_course;
 use core\lock\lock_config;
-use local_kopere_recertification\course\date_calculator;
-use local_kopere_recertification\cycle\manager as cycle_manager;
-use local_kopere_recertification\cycle\repository as cycle_repository;
-use local_kopere_recertification\event\kopere_recertification_created;
-use local_kopere_recertification\notification\manager as notification_manager;
-use local_kopere_recertification\task\execute_kopere_recertification;
+use local_kopere_recert\course\date_calculator;
+use local_kopere_recert\cycle\manager as cycle_manager;
+use local_kopere_recert\cycle\repository as cycle_repository;
+use local_kopere_recert\event\kopere_recert_created;
+use local_kopere_recert\notification\manager as notification_manager;
+use local_kopere_recert\task\execute_kopere_recert;
 use stdClass;
 use Throwable;
 
 /**
- * Discovers scheduled kopere_recertification candidates and queues isolated work.
+ * Discovers scheduled kopere_recert candidates and queues isolated work.
  */
 class manager {
     /**
@@ -56,7 +56,7 @@ class manager {
     }
 
     /**
-     * Scans configured courses for users who may require kopere_recertification.
+     * Scans configured courses for users who may require kopere_recert.
      *
      * @param int $now Reference timestamp; zero uses the current time.
      */
@@ -64,7 +64,7 @@ class manager {
         global $DB;
         $now = $now ?: time();
 
-        $configs = $DB->get_recordset('local_recert_course', ['enabled' => 1], 'courseid ASC');
+        $configs = $DB->get_recordset('local_kopere_recert_course', ['enabled' => 1], 'courseid ASC');
         foreach ($configs as $config) {
             $this->scan_course($config, $now);
         }
@@ -72,7 +72,7 @@ class manager {
     }
 
     /**
-     * Scans one course and queues eligible kopere_recertification work.
+     * Scans one course and queues eligible kopere_recert work.
      *
      * @param stdClass $config Configuration record.
      * @param int $now Reference timestamp; zero uses the current time.
@@ -90,22 +90,22 @@ class manager {
             try {
                 $this->scan_user($config, (int)$user->id, $now);
             } catch (Throwable $e) {
-                mtrace("local_kopere_recertification: course {$config->courseid}, user {$user->id}: {$e->getMessage()}");
+                mtrace("local_kopere_recert: course {$config->courseid}, user {$user->id}: {$e->getMessage()}");
             }
         }
         $recordset->close();
     }
 
     /**
-     * Evaluates one user for scheduled kopere_recertification.
+     * Evaluates one user for scheduled kopere_recert.
      *
      * @param stdClass $config Configuration record.
      * @param int $userid User ID.
      * @param int $now Reference timestamp; zero uses the current time.
      */
     private function scan_user(stdClass $config, int $userid, int $now): void {
-        $lockfactory = lock_config::get_lock_factory('local_kopere_recertification');
-        $lock = $lockfactory->get_lock("local_kopere_recertification:{$config->courseid}:{$userid}", 0);
+        $lockfactory = lock_config::get_lock_factory('local_kopere_recert');
+        $lock = $lockfactory->get_lock("local_kopere_recert:{$config->courseid}:{$userid}", 0);
         if (!$lock) {
             return;
         }
@@ -132,7 +132,7 @@ class manager {
         }
 
         $scheduled = $DB->get_record_select(
-            'local_recert_cycle',
+            'local_kopere_recert_cycle',
             "courseid = :courseid AND userid = :userid AND status = 'scheduled'",
             ['courseid' => $config->courseid, 'userid' => $userid],
             '*',
@@ -148,8 +148,8 @@ class manager {
             $scheduled = $this->cycles->create(
                 (int)$config->courseid,
                 $userid,
-                get_string('automaticcyclename', 'local_kopere_recertification', userdate($dates['dueat'], '%Y')),
-                get_string('automaticcyclereason', 'local_kopere_recertification'),
+                get_string('automaticcyclename', 'local_kopere_recert', userdate($dates['dueat'], '%Y')),
+                get_string('automaticcyclereason', 'local_kopere_recert'),
                 cycle_manager::SOURCE_AUTOMATIC,
                 null,
                 null,
@@ -157,11 +157,11 @@ class manager {
                 $dates['dueat'],
                 cycle_manager::STATUS_SCHEDULED
             );
-            kopere_recertification_created::create_from_cycle((int)$scheduled->id)->trigger();
+            kopere_recert_created::create_from_cycle((int)$scheduled->id)->trigger();
             try {
-                $this->notifications->send_configured_event((int)$scheduled->id, 'kopere_recertification_created', false);
+                $this->notifications->send_configured_event((int)$scheduled->id, 'kopere_recert_created', false);
             } catch (Throwable $e) {
-                (new \local_kopere_recertification\log\manager())->add((int)$scheduled->id, null, 'notification', null, null, 'failed', $e->getMessage());
+                (new \local_kopere_recert\log\manager())->add((int)$scheduled->id, null, 'notification', null, null, 'failed', $e->getMessage());
             }
         }
 
@@ -171,7 +171,7 @@ class manager {
 
         if (!empty($scheduled->dueat) && (int)$scheduled->dueat <= $now) {
             $this->cycles->mark_pending((int)$scheduled->id);
-            $task = new execute_kopere_recertification();
+            $task = new execute_kopere_recert();
             $task->set_custom_data([
                 'userid' => $userid,
                 'courseid' => (int)$config->courseid,

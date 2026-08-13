@@ -24,13 +24,13 @@
 
 namespace recerttask_quiz;
 
-use local_kopere_recertification\task\cleanup_result;
-use local_kopere_recertification\task\history_result;
-use local_kopere_recertification\task\task_context;
-use local_kopere_recertification\task\task_plugin_interface;
+use local_kopere_recert\task\cleanup_result;
+use local_kopere_recert\task\history_result;
+use local_kopere_recert\task\task_context;
+use local_kopere_recert\task\task_plugin_interface;
 
 /**
- * Specialized kopere_recertification task provider for quizzes.
+ * Specialized kopere_recert task provider for quizzes.
  */
 final class task implements task_plugin_interface {
     /**
@@ -75,7 +75,7 @@ final class task implements task_plugin_interface {
     public static function get_system_order(): int { return 0; }
 
     /**
-     * Builds the historical snapshot for the current kopere_recertification context.
+     * Builds the historical snapshot for the current kopere_recert context.
      *
      * @param task_context $context Execution context.
      * @return history_result Structured history result.

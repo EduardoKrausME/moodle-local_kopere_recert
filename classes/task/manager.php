@@ -17,18 +17,18 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 use context_course;
 use context_module;
 use core_component;
 use invalid_parameter_exception;
-use local_kopere_recertification\subplugin\manager as subplugin_manager;
+use local_kopere_recert\subplugin\manager as subplugin_manager;
 use moodle_exception;
 use stdClass;
 
@@ -51,7 +51,7 @@ class manager {
      */
     public function get_global_tasks(): array {
         global $DB;
-        return $DB->get_records('local_recert_task', null, 'component ASC');
+        return $DB->get_records('local_kopere_recert_task', null, 'component ASC');
     }
 
     /**
@@ -60,7 +60,7 @@ class manager {
      */
     public function get_available_components(): array {
         $groups = $this->get_available_component_groups();
-        return $groups[get_string('installedactivities', 'local_kopere_recertification')] ?? [];
+        return $groups[get_string('installedactivities', 'local_kopere_recert')] ?? [];
     }
 
     /**
@@ -70,7 +70,7 @@ class manager {
         global $DB;
 
         $configured = array_fill_keys(array_keys($DB->get_records_menu(
-            'local_recert_task',
+            'local_kopere_recert_task',
             null,
             '',
             'component,id'
@@ -109,13 +109,13 @@ class manager {
 
         $groups = [];
         if ($activities) {
-            $groups[get_string('installedactivities', 'local_kopere_recertification')] = $activities;
+            $groups[get_string('installedactivities', 'local_kopere_recert')] = $activities;
         }
         if ($supported) {
-            $groups[get_string('supportedplugins', 'local_kopere_recertification')] = $supported;
+            $groups[get_string('supportedplugins', 'local_kopere_recert')] = $supported;
         }
         if ($system) {
-            $groups[get_string('systemcomponents', 'local_kopere_recertification')] = $system;
+            $groups[get_string('systemcomponents', 'local_kopere_recert')] = $system;
         }
         return $groups;
     }
@@ -136,13 +136,13 @@ class manager {
         $issubplugin = ($record->origin ?? 'generic') === 'subplugin';
         if ($issubplugin) {
             if (!$this->subplugins->represents($record->component)) {
-                throw new moodle_exception('subplugincomponentmissing', 'local_kopere_recertification');
+                throw new moodle_exception('subplugincomponentmissing', 'local_kopere_recert');
             }
         } else if ($this->subplugins->represents($record->component)) {
-            throw new moodle_exception('componentrepresentedbysubplugin', 'local_kopere_recertification');
+            throw new moodle_exception('componentrepresentedbysubplugin', 'local_kopere_recert');
         }
 
-        $existing = $DB->get_record('local_recert_task', ['component' => $record->component]);
+        $existing = $DB->get_record('local_kopere_recert_task', ['component' => $record->component]);
         if ($existing && empty($record->id)) {
             $record->id = $existing->id;
         }
@@ -150,12 +150,12 @@ class manager {
         $now = time();
         $record->timemodified = $now;
         if (!empty($record->id)) {
-            $DB->update_record('local_recert_task', $record);
+            $DB->update_record('local_kopere_recert_task', $record);
             return (int)$record->id;
         }
 
         $record->timecreated = $now;
-        return (int)$DB->insert_record('local_recert_task', $record);
+        return (int)$DB->insert_record('local_kopere_recert_task', $record);
     }
 
     /**
@@ -169,14 +169,14 @@ class manager {
 
         $plan = new execution_plan();
         $modinfo = get_fast_modinfo($courseid);
-        $configs = $DB->get_records('local_recert_task');
+        $configs = $DB->get_records('local_kopere_recert_task');
         $configbycomponent = [];
         foreach ($configs as $record) {
             $configbycomponent[$record->component] = $record;
         }
 
         $plugins = $this->subplugins->get_plugins();
-        $courseconfig = $DB->get_record('local_recert_course', ['courseid' => $courseid]);
+        $courseconfig = $DB->get_record('local_kopere_recert_course', ['courseid' => $courseid]);
         $sortorder = 0;
 
         foreach ($modinfo->get_section_info_all() as $section) {

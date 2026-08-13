@@ -1,28 +1,28 @@
 
-.local-kopere_recertification-status {
+.local-kopere_recert-status {
     display: inline-flex;
     align-items: center;
     gap: .35rem;
 }
-.local-kopere_recertification-plan {
+.local-kopere_recert-plan {
     display: grid;
     gap: 1rem;
 }
-.local-kopere_recertification-plan__phase {
+.local-kopere_recert-plan__phase {
     border: 1px solid var(--bs-border-color);
     border-radius: .5rem;
     padding: 1rem;
 }
-.local-kopere_recertification-history-item {
+.local-kopere_recert-history-item {
     border-left: .25rem solid var(--bs-border-color);
     padding-left: 1rem;
     margin-bottom: 1.25rem;
 }
-.local-kopere_recertification-history-html table {
+.local-kopere_recert-history-html table {
     width: 100%;
 }
-.local-kopere_recertification-history-html th,
-.local-kopere_recertification-history-html td {
+.local-kopere_recert-history-html th,
+.local-kopere_recert-history-html td {
     padding: .35rem .5rem;
     border: 1px solid var(--bs-border-color);
 }

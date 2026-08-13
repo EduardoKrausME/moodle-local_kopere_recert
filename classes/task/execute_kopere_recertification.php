@@ -15,37 +15,38 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * execute_recertification.php
+ * execute_kopere_recert.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 use coding_exception;
 use core\task\adhoc_task;
-use local_kopere_recertification\cycle\repository;
+use local_kopere_recert\cycle\repository;
+use local_kopere_recert\recertification\executor;
 
 /**
- * Ad-hoc task that executes one user/course kopere_recertification cycle.
+ * Ad-hoc task that executes one user/course recertification cycle.
  */
-class execute_kopere_recertification extends adhoc_task {
+class execute_kopere_recert extends adhoc_task {
     /**
-     * Executes this kopere_recertification operation.
+     * Executes the recertification operation represented by the task payload.
      */
     public function execute(): void {
         $data = $this->get_custom_data();
         if (empty($data->userid) || empty($data->courseid) || empty($data->cycleid)) {
-            throw new coding_exception('Invalid kopere_recertification adhoc task payload.');
+            throw new coding_exception('Invalid kopere_recert adhoc task payload.');
         }
 
-        $cycle = (new repository())->get((int)$data->cycleid);
-        if ((int)$cycle->userid !== (int)$data->userid || (int)$cycle->courseid !== (int)$data->courseid) {
+        $cycle = (new repository())->get((int) $data->cycleid);
+        if ((int) $cycle->userid !== (int) $data->userid || (int) $cycle->courseid !== (int) $data->courseid) {
             throw new coding_exception('Adhoc payload does not match cycle.');
         }
 
-        (new \local_kopere_recertification\kopere_recertification\executor())->execute((int)$data->cycleid);
+        (new executor())->execute((int) $data->cycleid);
     }
 }

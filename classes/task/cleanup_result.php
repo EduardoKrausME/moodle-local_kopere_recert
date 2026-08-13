@@ -17,26 +17,31 @@
 /**
  * cleanup_result.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 /**
  * Structured cleanup result returned by task providers.
  */
 class cleanup_result {
+    /** Number of affected records. */
+    public int $affected;
+
+    /** Informational cleanup messages. */
+    public array $messages;
+
     /**
      * Creates a new cleanup result instance.
      *
-     * @param int $affected Affected.
-     * @param array $messages Messages.
+     * @param int $affected Number of affected records.
+     * @param array $messages Informational cleanup messages.
      */
-    public function __construct(
-        public int $affected = 0,
-        public array $messages = [],
-    ) {
+    public function __construct(int $affected = 0, array $messages = []) {
+        $this->affected = $affected;
+        $this->messages = $messages;
     }
 }

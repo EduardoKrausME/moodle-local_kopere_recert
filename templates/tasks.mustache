@@ -15,11 +15,11 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_kopere_recertification/tasks
+    @template local_kopere_recert/tasks
 
     Example context (json):
     {
-        "newurl": "/local/kopere_recertification/task_edit.php",
+        "newurl": "/local/kopere_recert/task_edit.php",
         "rows": [
             {
                 "component": "mod_quiz",
@@ -29,24 +29,24 @@
                 "cleanup": "Yes",
                 "origin": "Default",
                 "status": "Enabled",
-                "editurl": "/local/kopere_recertification/task_edit.php?id=7"
+                "editurl": "/local/kopere_recert/task_edit.php?id=7"
             }
         ]
     }
 }}
 
 <div class="mb-3">
-    <a class="btn btn-primary" href="{{newurl}}">{{#str}}newtask, local_kopere_recertification{{/str}}</a>
+    <a class="btn btn-primary" href="{{newurl}}">{{#str}}newtask, local_kopere_recert{{/str}}</a>
 </div>
 <div class="table-responsive">
 <table class="table generaltable">
     <thead><tr>
-        <th>{{#str}}component, local_kopere_recertification{{/str}}</th>
-        <th>{{#str}}type, local_kopere_recertification{{/str}}</th>
-        <th>{{#str}}createhistory, local_kopere_recertification{{/str}}</th>
-        <th>{{#str}}copyfiles, local_kopere_recertification{{/str}}</th>
-        <th>{{#str}}cleanupdata, local_kopere_recertification{{/str}}</th>
-        <th>{{#str}}origin, local_kopere_recertification{{/str}}</th>
+        <th>{{#str}}component, local_kopere_recert{{/str}}</th>
+        <th>{{#str}}type, local_kopere_recert{{/str}}</th>
+        <th>{{#str}}createhistory, local_kopere_recert{{/str}}</th>
+        <th>{{#str}}copyfiles, local_kopere_recert{{/str}}</th>
+        <th>{{#str}}cleanupdata, local_kopere_recert{{/str}}</th>
+        <th>{{#str}}origin, local_kopere_recert{{/str}}</th>
         <th>{{#str}}status{{/str}}</th>
         <th>{{#str}}actions{{/str}}</th>
     </tr></thead>

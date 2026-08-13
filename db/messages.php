@@ -17,7 +17,7 @@
 /**
  * messages.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,9 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $messageproviders = [
-    'kopere_recertification_available' => [],
-    'kopere_recertification_warning' => [],
-    'kopere_recertification_started' => [],
-    'kopere_recertification_expired' => [],
-    'kopere_recertification_completed' => [],
+    'kopere_recert_available' => [],
+    'kopere_recert_warning' => [],
+    'kopere_recert_started' => [],
+    'kopere_recert_expired' => [],
+    'kopere_recert_completed' => [],
 ];

@@ -25,10 +25,10 @@
 namespace recerttask_activitycompletion;
 
 use advanced_testcase;
-use local_kopere_recertification\task\task_plugin_interface;
+use local_kopere_recert\task\task_plugin_interface;
 
 /**
- * Tests kopere_recertification behavior for activitycompletion.
+ * Tests kopere_recert behavior for activitycompletion.
  */
 final class task_test extends advanced_testcase {
     /**

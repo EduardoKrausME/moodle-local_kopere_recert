@@ -17,34 +17,58 @@
 /**
  * history_result.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 /**
  * Structured historical data returned by task providers to the parent plugin.
  */
 class history_result {
+    /** Completion timestamp. */
+    public ?int $completedat;
+
+    /** Grade value. */
+    public ?float $grade;
+
+    /** Rendered historical HTML. */
+    public string $html;
+
+    /** Structured historical data. */
+    public array $data;
+
+    /** File descriptors or file metadata associated with the history. */
+    public array $files;
+
+    /** Informational messages produced while creating the history. */
+    public array $messages;
+
     /**
      * Creates a new history result instance.
      *
-     * @param ?int $completedat Completion timestamp.
-     * @param ?float $grade Grade.
-     * @param string $html Html.
+     * @param int|null $completedat Completion timestamp.
+     * @param float|null $grade Grade.
+     * @param string $html Rendered historical HTML.
      * @param array $data Structured data.
      * @param array $files Files.
      * @param array $messages Messages.
      */
     public function __construct(
-        public ?int $completedat = null,
-        public ?float $grade = null,
-        public string $html = '',
-        public array $data = [],
-        public array $files = [],
-        public array $messages = [],
+        ?int $completedat = null,
+        ?float $grade = null,
+        string $html = '',
+        array $data = [],
+        array $files = [],
+        array $messages = []
     ) {
+        $this->completedat = $completedat;
+        $this->grade = $grade;
+        $this->html = $html;
+        $this->data = $data;
+        $this->files = $files;
+        $this->messages = $messages;
     }
 }

@@ -17,13 +17,13 @@
 /**
  * hooks.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use core\hook\output\before_standard_top_of_body_html_generation;
-use local_kopere_recertification\local\hook_callbacks;
+use local_kopere_recert\local\hook_callbacks;
 
 $callbacks = [
     [

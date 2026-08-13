@@ -17,57 +17,83 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\cycle;
+namespace local_kopere_recert\cycle;
 
 use invalid_parameter_exception;
 use stdClass;
 use Throwable;
 
 /**
- * Applies kopere_recertification cycle lifecycle transitions and business rules.
+ * Applies recertification cycle lifecycle transitions and business rules.
  */
 class manager {
+    /** Cycle has been scheduled for a future date. */
     public const STATUS_SCHEDULED = 'scheduled';
+
+    /** Cycle is ready to be processed. */
     public const STATUS_PENDING = 'pending';
+
+    /** Cycle is currently being processed. */
     public const STATUS_PROCESSING = 'processing';
+
+    /** Cycle reset succeeded and the new certification period is active. */
     public const STATUS_ACTIVE = 'active';
+
+    /** Cycle was completed by a new course completion. */
     public const STATUS_COMPLETED = 'completed';
+
+    /** Cycle processing failed. */
     public const STATUS_FAILED = 'failed';
+
+    /** Cycle was cancelled before processing. */
     public const STATUS_CANCELLED = 'cancelled';
 
+    /** Cycle was created by the automatic scheduler. */
     public const SOURCE_AUTOMATIC = 'automatic';
+
+    /** Cycle was requested by the learner. */
     public const SOURCE_MANUAL_USER = 'manual_user';
+
+    /** Cycle was requested manually by an administrator. */
     public const SOURCE_MANUAL_ADMIN = 'manual_admin';
+
+    /** Cycle was created by the bulk operation. */
     public const SOURCE_BULK = 'bulk';
+
+    /** Cycle was requested through an API integration. */
     public const SOURCE_API = 'api';
+
+    /** Cycle persistence repository. */
+    private readonly repository $repository;
 
     /**
      * Creates a new manager instance.
      *
-     * @param repository $repository Repository.
+     * @param repository|null $repository Cycle persistence repository.
      */
-    public function __construct(private readonly repository $repository = new repository()) {
+    public function __construct(?repository $repository = null) {
+        $this->repository = $repository ?? new repository();
     }
 
     /**
-     * Creates a new kopere_recertification cycle.
+     * Creates a new recertification cycle.
      *
      * @param int $courseid Course ID.
      * @param int $userid User ID.
      * @param string $name Human-readable name.
-     * @param string $reason Human-readable kopere_recertification reason.
+     * @param string $reason Human-readable recertification reason.
      * @param string $source Recertification source.
-     * @param ?int $createdby User ID that created the cycle.
-     * @param ?int $previouscompletedat Previous completion timestamp.
-     * @param ?int $availableat Recertification availability timestamp.
-     * @param ?int $dueat Recertification due timestamp.
+     * @param int|null $createdby User ID that created the cycle.
+     * @param int|null $previouscompletedat Previous completion timestamp.
+     * @param int|null $availableat Recertification availability timestamp.
+     * @param int|null $dueat Recertification due timestamp.
      * @param string $status Cycle or execution status.
-     * @return stdClass Result of the operation.
+     * @return stdClass Created cycle.
      */
     public function create(
         int $courseid,
@@ -84,18 +110,29 @@ class manager {
         global $DB;
 
         $sources = [
-            self::SOURCE_AUTOMATIC, self::SOURCE_MANUAL_USER, self::SOURCE_MANUAL_ADMIN,
-            self::SOURCE_BULK, self::SOURCE_API,
+            self::SOURCE_AUTOMATIC,
+            self::SOURCE_MANUAL_USER,
+            self::SOURCE_MANUAL_ADMIN,
+            self::SOURCE_BULK,
+            self::SOURCE_API,
         ];
         $statuses = [
-            self::STATUS_SCHEDULED, self::STATUS_PENDING, self::STATUS_PROCESSING,
-            self::STATUS_ACTIVE, self::STATUS_COMPLETED, self::STATUS_FAILED, self::STATUS_CANCELLED,
+            self::STATUS_SCHEDULED,
+            self::STATUS_PENDING,
+            self::STATUS_PROCESSING,
+            self::STATUS_ACTIVE,
+            self::STATUS_COMPLETED,
+            self::STATUS_FAILED,
+            self::STATUS_CANCELLED,
         ];
         if (!in_array($source, $sources, true) || !in_array($status, $statuses, true)) {
-            throw new invalid_parameter_exception('Invalid kopere_recertification cycle source or status.');
+            throw new invalid_parameter_exception('Invalid kopere_recert cycle source or status.');
         }
-        if (!$DB->record_exists('course', ['id' => $courseid]) || !$DB->record_exists('user', ['id' => $userid, 'deleted' => 0])) {
-            throw new invalid_parameter_exception('Invalid kopere_recertification course or user.');
+        if (
+            !$DB->record_exists('course', ['id' => $courseid])
+            || !$DB->record_exists('user', ['id' => $userid, 'deleted' => 0])
+        ) {
+            throw new invalid_parameter_exception('Invalid kopere_recert course or user.');
         }
         if ($createdby !== null && !$DB->record_exists('user', ['id' => $createdby, 'deleted' => 0])) {
             throw new invalid_parameter_exception('Invalid cycle creator.');
@@ -106,11 +143,11 @@ class manager {
                 'course' => $courseid,
                 'userid' => $userid,
             ]);
-            $previouscompletedat = $currentcompletion ? (int)$currentcompletion : null;
+            $previouscompletedat = $currentcompletion ? (int) $currentcompletion : null;
         }
 
         $now = time();
-        $record = (object)[
+        $record = (object) [
             'courseid' => $courseid,
             'userid' => $userid,
             'number' => $this->repository->get_next_number($courseid, $userid),
@@ -130,12 +167,12 @@ class manager {
             'timemodified' => $now,
         ];
         $record->id = $this->repository->insert($record);
+
         return $record;
     }
 
-
     /**
-     * Marks a cycle as pending kopere_recertification.
+     * Marks a cycle as pending recertification.
      *
      * @param int $cycleid Recertification cycle ID.
      */
@@ -174,13 +211,13 @@ class manager {
      * Records a cycle failure after the destructive transaction has rolled back.
      *
      * @param int $cycleid Recertification cycle ID.
-     * @param Throwable $e E.
+     * @param Throwable $e Failure exception.
      */
     public function mark_failed(int $cycleid, Throwable $e): void {
         $cycle = $this->repository->get($cycleid);
         $cycle->status = self::STATUS_FAILED;
         $cycle->errorcode = substr(get_class($e), 0, 100);
-        $cycle->errormessage = \local_kopere_recertification\log\manager::sanitize_message($e->getMessage());
+        $cycle->errormessage = \local_kopere_recert\log\manager::sanitize_message($e->getMessage());
         $this->repository->update($cycle);
     }
 
@@ -198,11 +235,11 @@ class manager {
     }
 
     /**
-     * Returns active.
+     * Returns the active cycle for a user and course.
      *
      * @param int $courseid Course ID.
      * @param int $userid User ID.
-     * @return ?stdClass Result of the operation.
+     * @return stdClass|null Active cycle, or null when no cycle is active.
      */
     public function get_active(int $courseid, int $userid): ?stdClass {
         return $this->repository->get_active($courseid, $userid);

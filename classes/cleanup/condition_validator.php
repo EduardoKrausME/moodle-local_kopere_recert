@@ -17,12 +17,12 @@
 /**
  * condition_validator.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\cleanup;
+namespace local_kopere_recert\cleanup;
 
 use invalid_parameter_exception;
 
@@ -31,7 +31,7 @@ use invalid_parameter_exception;
  */
 class condition_validator {
     public const ALLOWED_PLACEHOLDERS = [
-        'userid', 'courseid', 'cmid', 'instanceid', 'contextid', 'cycleid', 'kopere_recertificationid',
+        'userid', 'courseid', 'cmid', 'instanceid', 'contextid', 'cycleid', 'kopere_recertid',
     ];
 
     /**

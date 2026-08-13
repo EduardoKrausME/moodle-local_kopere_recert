@@ -17,7 +17,7 @@
 /**
  * tasks.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $tasks = [
     [
-        'classname' => '\local_kopere_recertification\task\scan_kopere_recertifications',
+        'classname' => '\local_kopere_recert\task\scan_kopere_recerts',
         'blocking' => 0,
         'minute' => 'R',
         'hour' => '*',

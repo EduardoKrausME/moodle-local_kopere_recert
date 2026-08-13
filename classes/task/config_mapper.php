@@ -17,16 +17,16 @@
 /**
  * config_mapper.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 use invalid_parameter_exception;
-use local_kopere_recertification\cleanup\condition_validator;
-use local_kopere_recertification\cleanup\table_discovery;
+use local_kopere_recert\cleanup\condition_validator;
+use local_kopere_recert\cleanup\table_discovery;
 use stdClass;
 
 /**
@@ -143,7 +143,7 @@ class config_mapper {
         $rows = [];
         $dummy = [
             'userid' => 1, 'courseid' => 1, 'cmid' => 1, 'instanceid' => 1,
-            'contextid' => 1, 'cycleid' => 1, 'kopere_recertificationid' => 1,
+            'contextid' => 1, 'cycleid' => 1, 'kopere_recertid' => 1,
         ];
 
         for ($i = 1; $i <= 3; $i++) {

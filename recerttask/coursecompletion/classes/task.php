@@ -26,14 +26,14 @@ namespace recerttask_coursecompletion;
 
 use completion_completion;
 use completion_criteria_completion;
-use local_kopere_recertification\task\cleanup_result;
-use local_kopere_recertification\task\history_result;
-use local_kopere_recertification\task\task_context;
-use local_kopere_recertification\task\task_plugin_interface;
+use local_kopere_recert\task\cleanup_result;
+use local_kopere_recert\task\history_result;
+use local_kopere_recert\task\task_context;
+use local_kopere_recert\task\task_plugin_interface;
 use moodle_exception;
 
 /**
- * Specialized kopere_recertification task provider for course completion.
+ * Specialized kopere_recert task provider for course completion.
  */
 final class task implements task_plugin_interface {
     /**
@@ -78,7 +78,7 @@ final class task implements task_plugin_interface {
     public static function get_system_order(): int { return 30; }
 
     /**
-     * Builds the historical snapshot for the current kopere_recertification context.
+     * Builds the historical snapshot for the current kopere_recert context.
      *
      * @param task_context $context Execution context.
      * @return history_result Structured history result.
@@ -167,7 +167,7 @@ final class task implements task_plugin_interface {
         if ($criteria) {
             foreach ($criteria as $criterion) {
                 if (!$criterion->delete()) {
-                    throw new moodle_exception('coursecompletioncleanupfailed', 'local_kopere_recertification');
+                    throw new moodle_exception('coursecompletioncleanupfailed', 'local_kopere_recert');
                 }
                 $count++;
             }
@@ -179,7 +179,7 @@ final class task implements task_plugin_interface {
         ]);
         if ($completion) {
             if (!$completion->delete()) {
-                throw new moodle_exception('coursecompletioncleanupfailed', 'local_kopere_recertification');
+                throw new moodle_exception('coursecompletioncleanupfailed', 'local_kopere_recert');
             }
             $count++;
         }

@@ -17,26 +17,26 @@
 /**
  * observer.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification;
+namespace local_kopere_recert;
 
 use coding_exception;
 use core\event\course_completed;
 use dml_exception;
-use local_kopere_recertification\cycle\manager;
-use local_kopere_recertification\event\kopere_recertification_completed;
+use local_kopere_recert\cycle\manager;
+use local_kopere_recert\event\kopere_recert_completed;
 use Throwable;
 
 /**
- * Handles Moodle events that change kopere_recertification cycle state.
+ * Handles Moodle events that change kopere_recert cycle state.
  */
 class observer {
     /**
-     * Handles a new Moodle course completion for an active kopere_recertification cycle.
+     * Handles a new Moodle course completion for an active kopere_recert cycle.
      *
      * @param course_completed $event Moodle event instance.
      * @throws coding_exception
@@ -52,7 +52,7 @@ class observer {
         }
 
         $cycle = $DB->get_record_select(
-            'local_recert_cycle',
+            'local_kopere_recert_cycle',
             "courseid = :courseid AND userid = :userid AND status = 'active'",
             ['courseid' => $courseid, 'userid' => $userid],
             '*',
@@ -69,10 +69,10 @@ class observer {
         }
 
         (new manager())->mark_completed((int)$cycle->id, $completiontime);
-        kopere_recertification_completed::create_from_cycle((int)$cycle->id)->trigger();
+        kopere_recert_completed::create_from_cycle((int)$cycle->id)->trigger();
 
         try {
-            (new notification\manager())->send_configured_event((int)$cycle->id, 'kopere_recertification_completed');
+            (new notification\manager())->send_configured_event((int)$cycle->id, 'kopere_recert_completed');
         } catch (Throwable $e) {
             (new log\manager())->add(
                 (int)$cycle->id,

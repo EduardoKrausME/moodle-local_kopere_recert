@@ -17,16 +17,17 @@
 /**
  * manager.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\cleanup;
+namespace local_kopere_recert\cleanup;
 
+use ddl_exception;
 use dml_exception;
 use invalid_parameter_exception;
-use local_kopere_recertification\task\task_context;
+use local_kopere_recert\task\task_context;
 
 /**
  * Executes generic cleanup through Moodle DML without administrator-authored DELETE SQL.
@@ -53,6 +54,7 @@ class manager {
      * @return int Structured cleanup result.
      * @throws dml_exception
      * @throws invalid_parameter_exception
+     * @throws ddl_exception
      */
     public function cleanup(string $component, array $config, task_context $context): int {
         global $DB;

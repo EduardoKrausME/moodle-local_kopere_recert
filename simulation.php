@@ -17,7 +17,7 @@
 /**
  * simulation.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,18 +29,18 @@ $userid = required_param('userid', PARAM_INT);
 $course = get_course($courseid);
 require_login($course);
 $context = context_course::instance($courseid);
-require_capability('local/kopere_recertification:simulate', $context);
+require_capability('local/kopere_recert:simulate', $context);
 
 $PAGE->set_context($context);
 $PAGE->set_course($course);
-$PAGE->set_url(new moodle_url('/local/kopere_recertification/simulation.php', ['courseid' => $courseid, 'userid' => $userid]));
-$PAGE->set_title(get_string('simulation', 'local_kopere_recertification'));
+$PAGE->set_url(new moodle_url('/local/kopere_recert/simulation.php', ['courseid' => $courseid, 'userid' => $userid]));
+$PAGE->set_title(get_string('simulation', 'local_kopere_recert'));
 $PAGE->set_heading(format_string($course->fullname));
 
-$report = $SESSION->local_kopere_recertification_simulation ?? null;
-unset($SESSION->local_kopere_recertification_simulation);
+$report = $SESSION->local_kopere_recert_simulation ?? null;
+unset($SESSION->local_kopere_recert_simulation);
 if (!$report) {
-    throw new moodle_exception('nosimulationreport', 'local_kopere_recertification');
+    throw new moodle_exception('nosimulationreport', 'local_kopere_recert');
 }
 
 $planrows = [];
@@ -87,7 +87,7 @@ $formatcleanup = static function(array $rows): array {
 $user = core_user::get_user($userid, '*', MUST_EXIST);
 
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template('local_kopere_recertification/simulation', [
+echo $OUTPUT->render_from_template('local_kopere_recert/simulation', [
     'course' => format_string($course->fullname),
     'user' => fullname($user),
     'cyclename' => $report['cycle']->name ?? '',

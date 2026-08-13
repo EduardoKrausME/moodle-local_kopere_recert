@@ -17,25 +17,25 @@
 /**
  * tasks.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_kopere_recertification\task\manager;
+use local_kopere_recert\task\manager;
 
 require_once(__DIR__ . '/../../config.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/kopere_recertification:managetasks', $context);
+require_capability('local/kopere_recert:managetasks', $context);
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/kopere_recertification/tasks.php'));
-$PAGE->set_title(get_string('tasks', 'local_kopere_recertification'));
-$PAGE->set_heading(get_string('tasks', 'local_kopere_recertification'));
+$PAGE->set_url(new moodle_url('/local/kopere_recert/tasks.php'));
+$PAGE->set_title(get_string('tasks', 'local_kopere_recert'));
+$PAGE->set_heading(get_string('tasks', 'local_kopere_recert'));
 
-$subplugins = (new \local_kopere_recertification\subplugin\manager())->get_plugins();
+$subplugins = (new \local_kopere_recert\subplugin\manager())->get_plugins();
 $configs = (new manager())->get_global_tasks();
 $configbycomponent = [];
 foreach ($configs as $config) {
@@ -52,16 +52,16 @@ foreach ($subplugins as $component => $plugin) {
 
     $rows[] = [
         'component' => $component,
-        'type' => get_string('subplugin', 'local_kopere_recertification'),
+        'type' => get_string('subplugin', 'local_kopere_recert'),
         'history' => $config && $plugin::supports_history() && $config->historyenabled ? get_string('yes') : get_string('no'),
         'files' => $config && $plugin::supports_files() && $config->filesenabled ? get_string('yes') : get_string('no'),
         'cleanup' => $config && $plugin::supports_cleanup() && $config->cleanupenabled ? get_string('yes') : get_string('no'),
         'origin' => preg_replace('/^\\\\/', '', get_class($plugin)),
         'status' => !$installed
-            ? get_string('componentnotinstalled', 'local_kopere_recertification')
-            : (!$config ? get_string('notconfigured', 'local_kopere_recertification')
-                : ($config->enabled ? get_string('enabled', 'local_kopere_recertification') : get_string('disabled', 'local_kopere_recertification'))),
-        'editurl' => (new moodle_url('/local/kopere_recertification/taskedit.php', $config
+            ? get_string('componentnotinstalled', 'local_kopere_recert')
+            : (!$config ? get_string('notconfigured', 'local_kopere_recert')
+                : ($config->enabled ? get_string('enabled', 'local_kopere_recert') : get_string('disabled', 'local_kopere_recert'))),
+        'editurl' => (new moodle_url('/local/kopere_recert/taskedit.php', $config
             ? ['id' => $config->id]
             : ['component' => $component]))->out(false),
     ];
@@ -71,12 +71,12 @@ foreach ($configs as $task) {
     if (($task->origin ?? 'generic') === 'subplugin' && !isset($subplugins[$task->component])) {
         $rows[] = [
             'component' => $task->component,
-            'type' => get_string('subplugin', 'local_kopere_recertification'),
+            'type' => get_string('subplugin', 'local_kopere_recert'),
             'history' => $task->historyenabled ? get_string('yes') : get_string('no'),
             'files' => $task->filesenabled ? get_string('yes') : get_string('no'),
             'cleanup' => $task->cleanupenabled ? get_string('yes') : get_string('no'),
-            'origin' => get_string('subpluginmissing', 'local_kopere_recertification'),
-            'status' => get_string('componentnotinstalled', 'local_kopere_recertification'),
+            'origin' => get_string('subpluginmissing', 'local_kopere_recert'),
+            'status' => get_string('componentnotinstalled', 'local_kopere_recert'),
             'editurl' => '',
         ];
         continue;
@@ -90,22 +90,22 @@ foreach ($configs as $task) {
     }
     $rows[] = [
         'component' => $task->component,
-        'type' => get_string('generic', 'local_kopere_recertification'),
+        'type' => get_string('generic', 'local_kopere_recert'),
         'history' => $task->historyenabled ? get_string('yes') : get_string('no'),
         'files' => $task->filesenabled ? get_string('yes') : get_string('no'),
         'cleanup' => $task->cleanupenabled ? get_string('yes') : get_string('no'),
-        'origin' => get_string('configuration', 'local_kopere_recertification'),
+        'origin' => get_string('configuration', 'local_kopere_recert'),
         'status' => $installed && $task->enabled
-            ? get_string('enabled', 'local_kopere_recertification')
-            : ($installed ? get_string('disabled', 'local_kopere_recertification') : get_string('componentnotinstalled', 'local_kopere_recertification')),
-        'editurl' => (new moodle_url('/local/kopere_recertification/taskedit.php', ['id' => $task->id]))->out(false),
+            ? get_string('enabled', 'local_kopere_recert')
+            : ($installed ? get_string('disabled', 'local_kopere_recert') : get_string('componentnotinstalled', 'local_kopere_recert')),
+        'editurl' => (new moodle_url('/local/kopere_recert/taskedit.php', ['id' => $task->id]))->out(false),
     ];
 }
 usort($rows, fn($a, $b) => strcmp($a['component'], $b['component']));
 
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template('local_kopere_recertification/tasks', [
+echo $OUTPUT->render_from_template('local_kopere_recert/tasks', [
     'rows' => $rows,
-    'newurl' => (new moodle_url('/local/kopere_recertification/taskedit.php'))->out(false),
+    'newurl' => (new moodle_url('/local/kopere_recert/taskedit.php'))->out(false),
 ]);
 echo $OUTPUT->footer();

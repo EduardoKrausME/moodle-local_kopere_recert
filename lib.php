@@ -17,15 +17,15 @@
 /**
  * lib.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_kopere_recertification\status\manager;
+use local_kopere_recert\status\manager;
 
 /**
- * Handles the local kopere_recertification pluginfile operation.
+ * Handles the local kopere_recert pluginfile operation.
  *
  * @param stdClass $course Course record.
  * @param ?stdClass $cm Cm.
@@ -36,7 +36,7 @@ use local_kopere_recertification\status\manager;
  * @param array $options Options.
  * @return bool Boolean result.
  */
-function local_kopere_recertification_pluginfile(
+function local_kopere_recert_pluginfile(
     stdClass $course,
     ?stdClass $cm,
     context $context,
@@ -61,7 +61,7 @@ function local_kopere_recertification_pluginfile(
     $filename = array_pop($args);
     $filepath = '/' . ($args ? implode('/', $args) . '/' : '');
 
-    $history = $DB->get_record('local_recert_history', ['id' => $historyid], '*', IGNORE_MISSING);
+    $history = $DB->get_record('local_kopere_recert_history', ['id' => $historyid], '*', IGNORE_MISSING);
     if (!$history) {
         return false;
     }
@@ -71,8 +71,8 @@ function local_kopere_recertification_pluginfile(
         return false;
     }
     $allowed = (int)$history->userid === (int)$USER->id
-        ? has_capability('local/kopere_recertification:viewownhistory', $coursecontext)
-        : has_capability('local/kopere_recertification:viewallhistory', $coursecontext);
+        ? has_capability('local/kopere_recert:viewownhistory', $coursecontext)
+        : has_capability('local/kopere_recert:viewallhistory', $coursecontext);
 
     if (!$allowed) {
         return false;
@@ -81,7 +81,7 @@ function local_kopere_recertification_pluginfile(
     $fs = get_file_storage();
     $file = $fs->get_file(
         $context->id,
-        'local_kopere_recertification',
+        'local_kopere_recert',
         'historyfiles',
         $historyid,
         $filepath,
@@ -96,39 +96,39 @@ function local_kopere_recertification_pluginfile(
 }
 
 /**
- * Handles the local kopere_recertification extend navigation course operation.
+ * Handles the local kopere_recert extend navigation course operation.
  *
  * @param navigation_node $navigation Navigation.
  * @param stdClass $course Course record.
  * @param context_course $context Execution context.
  */
-function local_kopere_recertification_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context): void {
+function local_kopere_recert_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context): void {
     global $USER;
 
-    if (has_capability('local/kopere_recertification:viewownhistory', $context)) {
+    if (has_capability('local/kopere_recert:viewownhistory', $context)) {
         $navigation->add(
-            get_string('history', 'local_kopere_recertification'),
-            new moodle_url('/local/kopere_recertification/history.php', ['courseid' => $course->id, 'userid' => $USER->id]),
+            get_string('history', 'local_kopere_recert'),
+            new moodle_url('/local/kopere_recert/history.php', ['courseid' => $course->id, 'userid' => $USER->id]),
             navigation_node::TYPE_CUSTOM
         );
     }
 
 
-    if (has_capability('local/kopere_recertification:recertifyself', $context)) {
-        $availability = (new \local_kopere_recertification\kopere_recertification\manager())->get_self_availability((int)$course->id, (int)$USER->id);
-        if (!empty($availability['allowed']) && !(new manager())->is_kopere_recertification_required((int)$course->id, (int)$USER->id)) {
+    if (has_capability('local/kopere_recert:recertifyself', $context)) {
+        $availability = (new \local_kopere_recert\kopere_recert\manager())->get_self_availability((int)$course->id, (int)$USER->id);
+        if (!empty($availability['allowed']) && !(new manager())->is_kopere_recert_required((int)$course->id, (int)$USER->id)) {
             $navigation->add(
-                get_string('startkopere_recertification', 'local_kopere_recertification'),
-                new moodle_url('/local/kopere_recertification/recertify.php', ['courseid' => $course->id, 'userid' => $USER->id]),
+                get_string('startkopere_recert', 'local_kopere_recert'),
+                new moodle_url('/local/kopere_recert/recertify.php', ['courseid' => $course->id, 'userid' => $USER->id]),
                 navigation_node::TYPE_CUSTOM
             );
         }
     }
 
-    if (has_capability('local/kopere_recertification:manage', $context)) {
+    if (has_capability('local/kopere_recert:manage', $context)) {
         $navigation->add(
-            get_string('courseconfiguration', 'local_kopere_recertification'),
-            new moodle_url('/local/kopere_recertification/course.php', ['courseid' => $course->id]),
+            get_string('courseconfiguration', 'local_kopere_recert'),
+            new moodle_url('/local/kopere_recert/course.php', ['courseid' => $course->id]),
             navigation_node::TYPE_CUSTOM
         );
     }

@@ -27,6 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'recerttask_forum';
 $plugin->version = 2026081204;
 $plugin->requires = 2024100700;
-$plugin->dependencies = ['local_kopere_recertification' => 2026081204];
-$plugin->maturity = MATURITY_BETA;
+$plugin->dependencies = ['local_kopere_recert' => 2026081204];
+$plugin->maturity = MATURITY_STABLE;
 $plugin->release = '0.9.4';

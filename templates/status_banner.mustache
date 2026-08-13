@@ -15,18 +15,18 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_kopere_recertification/status_banner
+    @template local_kopere_recert/status_banner
 
     Example context (json):
     {
         "message": "Your current certification has expired and recertification is required.",
-        "historyurl": "/local/kopere_recertification/history.php?courseid=10",
+        "historyurl": "/local/kopere_recert/history.php?courseid=10",
         "historylabel": "View certification history"
     }
 }}
 
-<div class="alert alert-warning local-kopere_recertification-status" role="status">
-    <strong>{{#str}} kopere_recertificationrequired, local_kopere_recertification {{/str}}</strong>
+<div class="alert alert-warning local-kopere_recert-status" role="status">
+    <strong>{{#str}} kopere_recertrequired, local_kopere_recert {{/str}}</strong>
     <div>{{message}}</div>
     <a href="{{historyurl}}">{{historylabel}}</a>
 </div>

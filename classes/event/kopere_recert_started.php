@@ -17,12 +17,12 @@
 /**
  * recertification_started.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\event;
+namespace local_kopere_recert\event;
 
 use coding_exception;
 use context_course;
@@ -30,14 +30,14 @@ use core\event\base;
 use dml_exception;
 
 /**
- * Moodle event emitted when a kopere_recertification cycle is started.
+ * Moodle event emitted when a kopere_recert cycle is started.
  */
-class kopere_recertification_started extends base {
+class kopere_recert_started extends base {
     /**
      * Initializes the event properties.
      */
     protected function init(): void {
-        $this->data['objecttable'] = 'local_recert_cycle';
+        $this->data['objecttable'] = 'local_kopere_recert_cycle';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_OTHER;
     }
@@ -49,7 +49,7 @@ class kopere_recertification_started extends base {
      * @throws coding_exception
      */
     public static function get_name(): string {
-        return get_string('event_kopere_recertification_started', 'local_kopere_recertification');
+        return get_string('event_kopere_recert_started', 'local_kopere_recert');
     }
 
     /**
@@ -59,7 +59,7 @@ class kopere_recertification_started extends base {
      * @throws coding_exception
      */
     public function get_description(): string {
-        return get_string('event_kopere_recertification_started_description', 'local_kopere_recertification', (object)[
+        return get_string('event_kopere_recert_started_description', 'local_kopere_recert', (object)[
             'userid' => $this->relateduserid,
             'courseid' => $this->courseid,
             'cycleid' => $this->objectid,
@@ -67,7 +67,7 @@ class kopere_recertification_started extends base {
     }
 
     /**
-     * Creates an event instance populated from a kopere_recertification cycle.
+     * Creates an event instance populated from a kopere_recert cycle.
      *
      * @param int $cycleid Recertification cycle ID.
      * @return base Result of the operation.
@@ -76,7 +76,7 @@ class kopere_recertification_started extends base {
      */
     public static function create_from_cycle(int $cycleid): base {
         global $DB;
-        $cycle = $DB->get_record('local_recert_cycle', ['id' => $cycleid], '*', MUST_EXIST);
+        $cycle = $DB->get_record('local_kopere_recert_cycle', ['id' => $cycleid], '*', MUST_EXIST);
         return self::create([
             'context' => context_course::instance($cycle->courseid),
             'objectid' => $cycleid,

@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_kopere_recertification/notices
+    @template local_kopere_recert/notices
 
     Example context (json):
     {
@@ -24,17 +24,17 @@
                 "eventtype": "Before recertification",
                 "offsetdays": 30,
                 "enabled": "Yes",
-                "editurl": "/local/kopere_recertification/notice_edit.php?id=5&courseid=10",
-                "deleteurl": "/local/kopere_recertification/notice_delete.php?id=5&courseid=10"
+                "editurl": "/local/kopere_recert/notice_edit.php?id=5&courseid=10",
+                "deleteurl": "/local/kopere_recert/notice_delete.php?id=5&courseid=10"
             }
         ]
     }
 }}
 
-<h3>{{#str}}configurednotices, local_kopere_recertification{{/str}}</h3>
+<h3>{{#str}}configurednotices, local_kopere_recert{{/str}}</h3>
 <div class="table-responsive">
 <table class="table generaltable">
-    <thead><tr><th>{{#str}}eventtype, local_kopere_recertification{{/str}}</th><th>{{#str}}offsetdays, local_kopere_recertification{{/str}}</th><th>{{#str}}enabled, local_kopere_recertification{{/str}}</th><th>{{#str}}actions{{/str}}</th></tr></thead>
+    <thead><tr><th>{{#str}}eventtype, local_kopere_recert{{/str}}</th><th>{{#str}}offsetdays, local_kopere_recert{{/str}}</th><th>{{#str}}enabled, local_kopere_recert{{/str}}</th><th>{{#str}}actions{{/str}}</th></tr></thead>
     <tbody>
     {{#rows}}<tr><td>{{eventtype}}</td><td>{{offsetdays}}</td><td>{{enabled}}</td><td><a href="{{editurl}}">{{#str}}edit{{/str}}</a> · <a href="{{deleteurl}}">{{#str}}delete{{/str}}</a></td></tr>{{/rows}}
     </tbody>

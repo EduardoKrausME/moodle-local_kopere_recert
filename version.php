@@ -17,7 +17,7 @@
 /**
  * version.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 2026081205;
 $plugin->release = '1.9.4';
-$plugin->component = 'local_kopere_recertification';
+$plugin->component = 'local_kopere_recert';
 $plugin->requires = 2024100700;
 $plugin->maturity = MATURITY_STABLE;

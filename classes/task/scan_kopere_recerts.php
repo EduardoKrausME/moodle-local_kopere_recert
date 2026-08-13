@@ -17,32 +17,32 @@
 /**
  * scan_recertifications.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 use core\task\scheduled_task;
 
 /**
- * Scheduled task that discovers due kopere_recertifications and queues ad-hoc tasks.
+ * Scheduled task that discovers due kopere_recerts and queues ad-hoc tasks.
  */
-class scan_kopere_recertifications extends scheduled_task {
+class scan_kopere_recerts extends scheduled_task {
     /**
      * Returns the localized name of this provider.
      *
      * @return string Localized provider name.
      */
     public function get_name(): string {
-        return get_string('task_scan', 'local_kopere_recertification');
+        return get_string('task_scan', 'local_kopere_recert');
     }
 
     /**
-     * Executes this kopere_recertification operation.
+     * Executes this kopere_recert operation.
      */
     public function execute(): void {
-        (new \local_kopere_recertification\scheduler\manager())->scan();
+        (new \local_kopere_recert\scheduler\manager())->scan();
     }
 }

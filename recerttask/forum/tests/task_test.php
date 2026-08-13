@@ -25,10 +25,10 @@
 namespace recerttask_forum;
 
 use advanced_testcase;
-use local_kopere_recertification\task\task_plugin_interface;
+use local_kopere_recert\task\task_plugin_interface;
 
 /**
- * Tests kopere_recertification behavior for forum.
+ * Tests kopere_recert behavior for forum.
  */
 final class task_test extends advanced_testcase {
     /**

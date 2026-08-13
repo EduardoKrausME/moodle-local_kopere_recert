@@ -17,12 +17,12 @@
 /**
  * task_component_form.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\form;
+namespace local_kopere_recert\form;
 
 use moodleform;
 
@@ -36,7 +36,7 @@ class task_component_form extends moodleform {
     protected function definition(): void {
         $mform = $this->_form;
         $components = $this->_customdata['components'] ?? [];
-        $mform->addElement('selectgroups', 'component', get_string('component', 'local_kopere_recertification'), $components, null, true);
+        $mform->addElement('selectgroups', 'component', get_string('component', 'local_kopere_recert'), $components, null, true);
         $mform->setType('component', PARAM_COMPONENT);
         $mform->addRule('component', null, 'required');
         $this->add_action_buttons(true, get_string('continue'));

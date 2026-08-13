@@ -17,15 +17,15 @@
 /**
  * task_plugin_interface.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\task;
+namespace local_kopere_recert\task;
 
 /**
- * Contract implemented by specialized kopere_recertification task subplugins.
+ * Contract implemented by specialized kopere_recert task subplugins.
  */
 interface task_plugin_interface {
     /**
@@ -78,7 +78,7 @@ interface task_plugin_interface {
     public static function get_system_order(): int;
 
     /**
-     * Builds the historical snapshot for the current kopere_recertification context.
+     * Builds the historical snapshot for the current kopere_recert context.
      *
      * @param task_context $context Execution context.
      * @return history_result Structured history result.
@@ -88,7 +88,7 @@ interface task_plugin_interface {
     /**
      * Returns file descriptors to be copied by the parent.
      *
-     * Subplugins must not insert local_recert_file rows directly.
+     * Subplugins must not insert local_kopere_recert_file rows directly.
      *
      * @return file_descriptor[]
      */

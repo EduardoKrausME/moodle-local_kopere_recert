@@ -17,49 +17,49 @@
 /**
  * taskedit.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use core\output\notification;
-use local_kopere_recertification\form\task_component_form;
-use local_kopere_recertification\form\task_form;
-use local_kopere_recertification\task\config_mapper;
-use local_kopere_recertification\task\manager;
+use local_kopere_recert\form\task_component_form;
+use local_kopere_recert\form\task_form;
+use local_kopere_recert\task\config_mapper;
+use local_kopere_recert\task\manager;
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/formslib.php');
 
 require_login();
 $context = context_system::instance();
-require_capability('local/kopere_recertification:managetasks', $context);
+require_capability('local/kopere_recert:managetasks', $context);
 
 $id = optional_param('id', 0, PARAM_INT);
 $component = optional_param('component', '', PARAM_COMPONENT);
-$record = $id ? $DB->get_record('local_recert_task', ['id' => $id], '*', MUST_EXIST) : null;
-$subplugins = new \local_kopere_recertification\subplugin\manager();
+$record = $id ? $DB->get_record('local_kopere_recert_task', ['id' => $id], '*', MUST_EXIST) : null;
+$subplugins = new \local_kopere_recert\subplugin\manager();
 $taskmanager = new manager();
 $mapper = new config_mapper();
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/kopere_recertification/taskedit.php', array_filter([
+$PAGE->set_url(new moodle_url('/local/kopere_recert/taskedit.php', array_filter([
     'id' => $id ?: null,
     'component' => $component ?: null,
 ])));
-$PAGE->set_title(get_string('edittask', 'local_kopere_recertification'));
-$PAGE->set_heading(get_string('edittask', 'local_kopere_recertification'));
+$PAGE->set_title(get_string('edittask', 'local_kopere_recert'));
+$PAGE->set_heading(get_string('edittask', 'local_kopere_recert'));
 
 if (!$record && $component === '') {
     $selectform = new task_component_form(null, [
         'components' => $taskmanager->get_available_component_groups(),
     ]);
     if ($selectform->is_cancelled()) {
-        redirect(new moodle_url('/local/kopere_recertification/tasks.php'));
+        redirect(new moodle_url('/local/kopere_recert/tasks.php'));
     }
     if ($data = $selectform->get_data()) {
         require_sesskey();
-        redirect(new moodle_url('/local/kopere_recertification/taskedit.php', ['component' => $data->component]));
+        redirect(new moodle_url('/local/kopere_recert/taskedit.php', ['component' => $data->component]));
     }
     echo $OUTPUT->header();
     $selectform->display();
@@ -72,11 +72,11 @@ $subplugin = $subplugins->get_for_component($effectivecomponent);
 if (!$record && !$subplugin) {
     $available = $taskmanager->get_available_components();
     if (!isset($available[$effectivecomponent])) {
-        throw new invalid_parameter_exception('Component is not available for a generic kopere_recertification task.');
+        throw new invalid_parameter_exception('Component is not available for a generic kopere_recert task.');
     }
 }
 if ($record && ($record->origin ?? 'generic') === 'subplugin' && !$subplugin) {
-    throw new moodle_exception('subplugincomponentmissing', 'local_kopere_recertification');
+    throw new moodle_exception('subplugincomponentmissing', 'local_kopere_recert');
 }
 
 $form = new task_form(null, [
@@ -98,7 +98,7 @@ if ($record) {
 }
 
 if ($form->is_cancelled()) {
-    redirect(new moodle_url('/local/kopere_recertification/tasks.php'));
+    redirect(new moodle_url('/local/kopere_recert/tasks.php'));
 }
 
 if ($data = $form->get_data()) {
@@ -125,7 +125,7 @@ if ($data = $form->get_data()) {
     }
 
     $taskmanager->save($save);
-    redirect(new moodle_url('/local/kopere_recertification/tasks.php'), get_string('changessaved'), null, notification::NOTIFY_SUCCESS);
+    redirect(new moodle_url('/local/kopere_recert/tasks.php'), get_string('changessaved'), null, notification::NOTIFY_SUCCESS);
 }
 
 echo $OUTPUT->header();

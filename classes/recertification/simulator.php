@@ -17,44 +17,49 @@
 /**
  * simulator.php
  *
- * @package   local_kopere_recertification
+ * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_kopere_recertification\kopere_recertification;
+namespace local_kopere_recert\recertification;
 
 use core\lock\lock_config;
-use local_kopere_recertification\cycle\manager as cycle_manager;
-use local_kopere_recertification\task\executor as task_executor;
-use local_kopere_recertification\task\manager as task_manager;
+use local_kopere_recert\cycle\manager as cycle_manager;
+use local_kopere_recert\task\executor as task_executor;
+use local_kopere_recert\task\manager as task_manager;
 use moodle_exception;
 
 /**
- * Runs the real kopere_recertification pipeline in rollback-only simulation mode.
+ * Runs the real recertification pipeline in rollback-only simulation mode.
  */
 class simulator {
+    /** Task plan manager. */
+    private readonly task_manager $tasks;
+
+    /** Task execution service. */
+    private readonly task_executor $executor;
+
     /**
      * Creates a new simulator instance.
      *
-     * @param task_manager $tasks Tasks.
-     * @param task_executor $executor Executor.
+     * @param task_manager|null $tasks Task plan manager.
+     * @param task_executor|null $executor Task execution service.
      */
-    public function __construct(
-        private readonly task_manager $tasks = new task_manager(),
-        private readonly task_executor $executor = new task_executor(),
-    ) {
+    public function __construct(?task_manager $tasks = null, ?task_executor $executor = null) {
+        $this->tasks = $tasks ?? new task_manager();
+        $this->executor = $executor ?? new task_executor();
     }
 
     /**
-     * Executes the real kopere_recertification flow inside a transaction that is always rolled back.
+     * Executes the real recertification flow inside a transaction that is always rolled back.
      *
      * @param int $courseid Course ID.
      * @param int $userid User ID.
      * @param string $name Human-readable name.
-     * @param string $reason Human-readable kopere_recertification reason.
+     * @param string $reason Human-readable recertification reason.
      * @param string $source Recertification source.
-     * @param ?int $createdby User ID that created the cycle.
+     * @param int|null $createdby User ID that created the cycle.
      * @return array Simulation report.
      */
     public function simulate(
@@ -67,10 +72,10 @@ class simulator {
     ): array {
         global $DB;
 
-        $lockfactory = lock_config::get_lock_factory('local_kopere_recertification');
-        $lock = $lockfactory->get_lock("local_kopere_recertification:{$courseid}:{$userid}", 0);
+        $lockfactory = lock_config::get_lock_factory('local_kopere_recert');
+        $lock = $lockfactory->get_lock("local_kopere_recert:{$courseid}:{$userid}", 0);
         if (!$lock) {
-            throw new moodle_exception('kopere_recertificationlocked', 'local_kopere_recertification');
+            throw new moodle_exception('kopere_recertlocked', 'local_kopere_recert');
         }
 
         try {
@@ -78,18 +83,49 @@ class simulator {
             try {
                 $cycles = new cycle_manager();
                 $cycle = $cycles->create($courseid, $userid, $name, $reason, $source, $createdby);
-                $cycles->mark_processing((int)$cycle->id);
+                $cycles->mark_processing((int) $cycle->id);
 
                 $plan = $this->tasks->build_plan($courseid);
-                $inspection = $this->executor->describe_plan($plan, $userid, $courseid, (int)$cycle->id, true);
-                $historyids = $this->executor->create_all_histories($plan, $userid, $courseid, (int)$cycle->id, true);
-                $files = $this->executor->copy_all_files($plan, $userid, $courseid, (int)$cycle->id, $historyids, true);
-                $activitycleanup = $this->executor->cleanup_all_activities($plan, $userid, $courseid, (int)$cycle->id, true);
-                $systemcleanup = $this->executor->cleanup_all_system($plan, $userid, $courseid, (int)$cycle->id, true);
+                $inspection = $this->executor->describe_plan(
+                    $plan,
+                    $userid,
+                    $courseid,
+                    (int) $cycle->id,
+                    true
+                );
+                $historyids = $this->executor->create_all_histories(
+                    $plan,
+                    $userid,
+                    $courseid,
+                    (int) $cycle->id,
+                    true
+                );
+                $files = $this->executor->copy_all_files(
+                    $plan,
+                    $userid,
+                    $courseid,
+                    (int) $cycle->id,
+                    $historyids,
+                    true
+                );
+                $activitycleanup = $this->executor->cleanup_all_activities(
+                    $plan,
+                    $userid,
+                    $courseid,
+                    (int) $cycle->id,
+                    true
+                );
+                $systemcleanup = $this->executor->cleanup_all_system(
+                    $plan,
+                    $userid,
+                    $courseid,
+                    (int) $cycle->id,
+                    true
+                );
 
                 $historypreview = [];
                 foreach ($historyids as $sortorder => $historyid) {
-                    $row = $DB->get_record('local_recert_history', ['id' => $historyid], '*', MUST_EXIST);
+                    $row = $DB->get_record('local_kopere_recert_history', ['id' => $historyid], '*', MUST_EXIST);
                     $historypreview[$sortorder] = [
                         'component' => $row->component,
                         'name' => $row->activityname,
