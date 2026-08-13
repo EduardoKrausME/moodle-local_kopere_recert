@@ -2,12 +2,6 @@
 
 Recertification engine for Moodle focused on preserving auditable history before any user data is reset.
 
-## Compatibility
-
-- Moodle 4.5 through 5.1 (`$plugin->supported = [405, 501]`)
-- PHP versions supported by the corresponding Moodle release
-- Plugin directory: `local/kopere_recert`
-
 ## Safety model
 
 The central entity is `local_recert_cycle`. Every archived activity, copied file, execution log and notification is tied to a cycle.
