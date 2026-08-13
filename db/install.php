@@ -17,13 +17,17 @@
 /**
  * Post-install actions for local_kopere_recert.
  *
- * @package local_kopere_recert
+ * @package   local_kopere_recert
+ * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use local_kopere_recert\install\default_tasks;
 
 /**
  * Creates the bundled default task configuration after the database schema is installed.
  */
 function xmldb_local_kopere_recert_install(): void {
     require_once(__DIR__ . '/../classes/install/default_tasks.php');
-    \local_kopere_recert\install\default_tasks::create();
+    default_tasks::create();
 }

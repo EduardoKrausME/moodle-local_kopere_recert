@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_kopere_recert\install\default_tasks;
+
 /**
  * Handles the xmldb local kopere_recert upgrade operation.
  *
@@ -155,7 +157,7 @@ function xmldb_local_kopere_recert_upgrade(int $oldversion): bool {
 
     if ($oldversion < 2026081301) {
         require_once(__DIR__ . '/../classes/install/default_tasks.php');
-        \local_kopere_recert\install\default_tasks::create();
+        default_tasks::create();
         upgrade_plugin_savepoint(true, 2026081301, 'local', 'kopere_recert');
     }
 
