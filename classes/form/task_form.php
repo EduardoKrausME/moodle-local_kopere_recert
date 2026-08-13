@@ -98,7 +98,7 @@ class task_form extends moodleform {
             $mform->addElement('text', "filepath_{$i}", get_string('filepath', 'local_kopere_recert'));
             $mform->setType("filepath_{$i}", PARAM_PATH);
             $mform->setDefault("filepath_{$i}", '/');
-            $mform->addElement('text', "filename_{$i}", get_string('filename'));
+            $mform->addElement('text', "filename_{$i}", get_string('filename', 'local_kopere_recert'));
             $mform->setType("filename_{$i}", PARAM_FILE);
             $mform->addElement('static', "fileuserid_{$i}", get_string('user'), ':userid');
         }

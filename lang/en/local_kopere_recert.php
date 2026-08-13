@@ -196,3 +196,4 @@ $string['type'] = 'Type';
 $string['usercolumn'] = 'User column';
 $string['usernotenrolled'] = 'The selected user does not have an active enrolment in this course.';
 $string['viewhistory'] = 'View recertification history';
+$string['filename'] = 'Filename';
