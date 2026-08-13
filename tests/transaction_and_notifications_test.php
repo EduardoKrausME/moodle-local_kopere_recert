@@ -105,6 +105,7 @@ final class transaction_and_notifications_test extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
+        $this->preventResetByRollback();
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
         $this->make_page_task($course->id, '{{#sqlecho}}DELETE FROM {user}{{/sqlecho}}');
@@ -131,6 +132,7 @@ final class transaction_and_notifications_test extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
+        $this->preventResetByRollback();
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
         $this->make_page_task($course->id, '', true, false);
@@ -153,6 +155,7 @@ final class transaction_and_notifications_test extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
+        $this->preventResetByRollback();
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
         $this->make_page_task($course->id, '', false, true);
@@ -175,6 +178,7 @@ final class transaction_and_notifications_test extends advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
+        $this->preventResetByRollback();
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
         $this->make_page_task($course->id);
@@ -205,7 +209,7 @@ final class transaction_and_notifications_test extends advanced_testcase {
 
         try {
             $this->expectException(moodle_exception::class);
-            (new simulator())->simulate($course->id, $user->id, 'Test', 'Test', 'api', null);
+            (new simulator(null, null, $factory))->simulate($course->id, $user->id, 'Test', 'Test', 'api', null);
         } finally {
             $lock->release();
         }

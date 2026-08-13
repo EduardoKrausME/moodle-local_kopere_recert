@@ -25,10 +25,12 @@
 namespace local_kopere_recert\recertification;
 
 use core\lock\lock_config;
+use core\lock\lock_factory;
 use local_kopere_recert\cycle\manager as cycle_manager;
 use local_kopere_recert\task\executor as task_executor;
 use local_kopere_recert\task\manager as task_manager;
 use moodle_exception;
+use Throwable;
 
 /**
  * Runs the real recertification pipeline in rollback-only simulation mode.
@@ -40,15 +42,24 @@ class simulator {
     /** Task execution service. */
     private readonly task_executor $executor;
 
+    /** Lock factory used to prevent duplicate execution. */
+    private readonly lock_factory $lockfactory;
+
     /**
      * Creates a new simulator instance.
      *
      * @param task_manager|null $tasks Task plan manager.
      * @param task_executor|null $executor Task execution service.
+     * @param lock_factory|null $lockfactory Lock factory.
      */
-    public function __construct(?task_manager $tasks = null, ?task_executor $executor = null) {
+    public function __construct(
+        ?task_manager $tasks = null,
+        ?task_executor $executor = null,
+        ?lock_factory $lockfactory = null
+    ) {
         $this->tasks = $tasks ?? new task_manager();
         $this->executor = $executor ?? new task_executor();
+        $this->lockfactory = $lockfactory ?? lock_config::get_lock_factory('local_kopere_recert');
     }
 
     /**
@@ -72,8 +83,7 @@ class simulator {
     ): array {
         global $DB;
 
-        $lockfactory = lock_config::get_lock_factory('local_kopere_recert');
-        $lock = $lockfactory->get_lock("local_kopere_recert:{$courseid}:{$userid}", 0);
+        $lock = $this->lockfactory->get_lock("local_kopere_recert:{$courseid}:{$userid}", 0);
         if (!$lock) {
             throw new moodle_exception('kopere_recertlocked', 'local_kopere_recert');
         }
@@ -150,6 +160,11 @@ class simulator {
                 $transaction->rollback(new simulation_rollback($report));
             } catch (simulation_rollback $e) {
                 return $e->get_report();
+            } catch (Throwable $e) {
+                if (!$transaction->is_disposed()) {
+                    $transaction->rollback($e);
+                }
+                throw $e;
             }
         } finally {
             $lock->release();
