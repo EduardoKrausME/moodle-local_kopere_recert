@@ -54,7 +54,7 @@ class notice_form extends moodleform {
         $mform->addElement('text', 'offsetdays', get_string('offsetdays', 'local_kopere_recert'));
         $mform->setType('offsetdays', PARAM_INT);
         $mform->setDefault('offsetdays', 0);
-        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'enabled', get_string('enabled', 'local_kopere_recert'));
         $mform->setDefault('enabled', 1);
         $mform->addElement('text', 'subject', get_string('subject', 'local_kopere_recert'), ['size' => 80]);
         $mform->setType('subject', PARAM_TEXT);

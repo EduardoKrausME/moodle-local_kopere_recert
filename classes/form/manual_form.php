@@ -42,7 +42,7 @@ class manual_form extends moodleform {
         $mform->addElement('text', 'reason', get_string('reason', 'local_kopere_recert'), ['size' => 80]);
         $mform->setType('reason', PARAM_TEXT);
         $mform->addRule('reason', null, 'required');
-        $mform->addElement('advcheckbox', 'simulate', get_string('simulate', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'simulate', get_string('simulate', 'local_kopere_recert'));
         $this->add_action_buttons(true, get_string('startkopere_recert', 'local_kopere_recert'));
     }
 }

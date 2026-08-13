@@ -47,11 +47,11 @@ class task_form extends moodleform {
         $mform->addElement('hidden', 'component', $component);
         $mform->setType('component', PARAM_COMPONENT);
 
-        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'enabled', get_string('enabled', 'local_kopere_recert'));
         $mform->setDefault('enabled', 1);
 
         $mform->addElement('header', 'historyhdr', get_string('createhistory', 'local_kopere_recert'));
-        $mform->addElement('advcheckbox', 'historyenabled', get_string('enabled', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'historyenabled', get_string('enabled', 'local_kopere_recert'));
         $mform->setDefault('historyenabled', 1);
         if (!$subplugin) {
             $mform->addElement('textarea', 'historytemplate', get_string('historytemplate', 'local_kopere_recert'), ['rows' => 12, 'cols' => 100]);
@@ -60,13 +60,13 @@ class task_form extends moodleform {
         }
 
         $mform->addElement('header', 'fileshdr', get_string('copyfiles', 'local_kopere_recert'));
-        $mform->addElement('advcheckbox', 'filesenabled', get_string('enabled', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'filesenabled', get_string('enabled', 'local_kopere_recert'));
         if (!$subplugin) {
             $this->add_file_builder($mform, $component);
         }
 
         $mform->addElement('header', 'cleanuphdr', get_string('cleanupdata', 'local_kopere_recert'));
-        $mform->addElement('advcheckbox', 'cleanupenabled', get_string('enabled', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'cleanupenabled', get_string('enabled', 'local_kopere_recert'));
         if (!$subplugin) {
             $this->add_cleanup_builder($mform, $component);
         }

@@ -42,7 +42,7 @@ class course_form extends moodleform {
         $mform->addElement('hidden', 'courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);
 
-        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'enabled', get_string('enabled', 'local_kopere_recert'));
 
         $mform->addElement('select', 'triggertype', get_string('triggertype', 'local_kopere_recert'), [
             'enrolment' => get_string('trigger_enrolment', 'local_kopere_recert'),
@@ -71,10 +71,10 @@ class course_form extends moodleform {
         }
         $mform->addElement('select', 'referencecmid', get_string('referencecmid', 'local_kopere_recert'), $options);
 
-        $mform->addElement('advcheckbox', 'resetcompetencies', get_string('resetcompetencies', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'resetcompetencies', get_string('resetcompetencies', 'local_kopere_recert'));
         $mform->addElement('static', 'resetcompetencieshelp', '', get_string('resetcompetencies_desc', 'local_kopere_recert'));
 
-        $mform->addElement('advcheckbox', 'selfenabled', get_string('selfenabled', 'local_kopere_recert'));
+        $mform->addElement('selectyesno', 'selfenabled', get_string('selfenabled', 'local_kopere_recert'));
         $mform->addElement('select', 'selfreferencetype', get_string('selfreferencetype', 'local_kopere_recert'), [
             'enrolment' => get_string('selfreference_enrolment', 'local_kopere_recert'),
             'completion' => get_string('selfreference_completion', 'local_kopere_recert'),
