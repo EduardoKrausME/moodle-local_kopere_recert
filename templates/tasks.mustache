@@ -1,0 +1,68 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_kopere_recertification/tasks
+
+    Example context (json):
+    {
+        "newurl": "/local/kopere_recertification/task_edit.php",
+        "rows": [
+            {
+                "component": "mod_quiz",
+                "type": "Activity",
+                "history": "Yes",
+                "files": "No",
+                "cleanup": "Yes",
+                "origin": "Default",
+                "status": "Enabled",
+                "editurl": "/local/kopere_recertification/task_edit.php?id=7"
+            }
+        ]
+    }
+}}
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="{{newurl}}">{{#str}}newtask, local_kopere_recertification{{/str}}</a>
+</div>
+<div class="table-responsive">
+<table class="table generaltable">
+    <thead><tr>
+        <th>{{#str}}component, local_kopere_recertification{{/str}}</th>
+        <th>{{#str}}type, local_kopere_recertification{{/str}}</th>
+        <th>{{#str}}createhistory, local_kopere_recertification{{/str}}</th>
+        <th>{{#str}}copyfiles, local_kopere_recertification{{/str}}</th>
+        <th>{{#str}}cleanupdata, local_kopere_recertification{{/str}}</th>
+        <th>{{#str}}origin, local_kopere_recertification{{/str}}</th>
+        <th>{{#str}}status{{/str}}</th>
+        <th>{{#str}}actions{{/str}}</th>
+    </tr></thead>
+    <tbody>
+    {{#rows}}
+        <tr>
+            <td><code>{{component}}</code></td>
+            <td>{{type}}</td>
+            <td>{{history}}</td>
+            <td>{{files}}</td>
+            <td>{{cleanup}}</td>
+            <td>{{origin}}</td>
+            <td>{{status}}</td>
+            <td>{{#editurl}}<a href="{{editurl}}">{{#str}}edit{{/str}}</a>{{/editurl}}</td>
+        </tr>
+    {{/rows}}
+    </tbody>
+</table>
+</div>

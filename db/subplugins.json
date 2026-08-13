@@ -1,0 +1,8 @@
+{
+  "plugintypes": {
+    "recerttask": "local/kopere_recertification/recerttask"
+  },
+  "subplugintypes": {
+    "recerttask": "recerttask"
+  }
+}

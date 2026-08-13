@@ -1,0 +1,132 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_kopere_recertification/simulation
+
+    Example context (json):
+    {
+        "course": "Workplace Safety",
+        "user": "Eduardo Kraus",
+        "cyclename": "Cycle 2 - 2026",
+        "plan": [
+            {
+                "component": "mod_quiz",
+                "name": "Final assessment",
+                "cmid": 25,
+                "history": true,
+                "files": true,
+                "cleanup": true,
+                "hasdetails": true,
+                "details": [
+                    {
+                        "key": "Attempts",
+                        "value": "2 attempts would be archived"
+                    }
+                ]
+            }
+        ],
+        "historycount": 1,
+        "historypreview": [
+            {
+                "name": "Final assessment",
+                "component": "mod_quiz",
+                "completedat": "10 August 2026, 14:30",
+                "hasgrade": true,
+                "grade": "92.00",
+                "datajson": "{\"attempts\":2}"
+            }
+        ],
+        "files": [
+            {
+                "component": "mod_assign",
+                "cmid": 18,
+                "count": 3
+            }
+        ],
+        "activitycleanup": [
+            {
+                "component": "mod_quiz",
+                "cmid": 25,
+                "affected": 2,
+                "messagerows": [
+                    {
+                        "message": "Quiz attempts would be removed after the history is preserved."
+                    }
+                ]
+            }
+        ],
+        "systemcleanup": [
+            {
+                "component": "core_completion",
+                "affected": 4,
+                "messagerows": [
+                    {
+                        "message": "Course completion records would be reset."
+                    }
+                ]
+            }
+        ]
+    }
+}}
+
+<div class="alert alert-success">
+    <strong>{{#str}}simulationcompleted, local_kopere_recertification{{/str}}</strong><br>
+    {{#str}}simulationrollbackdone, local_kopere_recertification{{/str}}
+</div>
+
+<div class="mb-4">
+    <div><strong>{{#str}}course{{/str}}:</strong> {{course}}</div>
+    <div><strong>{{#str}}user{{/str}}:</strong> {{user}}</div>
+    <div><strong>{{#str}}cycle, local_kopere_recertification{{/str}}:</strong> {{cyclename}}</div>
+</div>
+
+<h3>{{#str}}executionplan, local_kopere_recertification{{/str}}</h3>
+<div class="table-responsive">
+<table class="table generaltable">
+    <thead><tr><th>{{#str}}component, local_kopere_recertification{{/str}}</th><th>{{#str}}name{{/str}}</th><th>{{#str}}cmid, local_kopere_recertification{{/str}}</th><th>{{#str}}createhistory, local_kopere_recertification{{/str}}</th><th>{{#str}}copyfiles, local_kopere_recertification{{/str}}</th><th>{{#str}}cleanupdata, local_kopere_recertification{{/str}}</th><th>{{#str}}simulationdetails, local_kopere_recertification{{/str}}</th></tr></thead>
+    <tbody>
+    {{#plan}}
+        <tr>
+            <td><code>{{component}}</code></td><td>{{name}}</td><td>{{cmid}}</td>
+            <td>{{#history}}✓{{/history}}</td><td>{{#files}}✓{{/files}}</td><td>{{#cleanup}}✓{{/cleanup}}</td>
+            <td>{{#details}}<div><strong>{{key}}:</strong> {{value}}</div>{{/details}}{{^hasdetails}}—{{/hasdetails}}</td>
+        </tr>
+    {{/plan}}
+    </tbody>
+</table>
+</div>
+
+<h3>{{#str}}createhistory, local_kopere_recertification{{/str}}</h3>
+<p>{{historycount}} {{#str}}historyrecordswouldbecreated, local_kopere_recertification{{/str}}</p>
+{{#historypreview}}
+<div class="card mb-2"><div class="card-body py-2">
+    <strong>{{name}}</strong> <code>{{component}}</code>
+    {{#completedat}}<div>{{#str}}completedat, local_kopere_recertification{{/str}}: {{completedat}}</div>{{/completedat}}
+    {{#hasgrade}}<div>{{#str}}grade{{/str}}: {{grade}}</div>{{/hasgrade}}
+    {{#datajson}}<details><summary>{{#str}}structureddata, local_kopere_recertification{{/str}}</summary><pre class="mb-0">{{datajson}}</pre></details>{{/datajson}}
+</div></div>
+{{/historypreview}}
+
+<h3>{{#str}}copyfiles, local_kopere_recertification{{/str}}</h3>
+{{#files}}<div><code>{{component}}</code>{{#cmid}} / cmid={{cmid}}{{/cmid}}: {{count}}</div>{{/files}}
+{{^files}}<p>{{#str}}none{{/str}}</p>{{/files}}
+
+<h3>{{#str}}cleanupdata, local_kopere_recertification{{/str}}</h3>
+{{#activitycleanup}}<div class="mb-2"><code>{{component}}</code>{{#cmid}} / cmid={{cmid}}{{/cmid}}: {{affected}}{{#messagerows}}<div class="small text-muted">{{message}}</div>{{/messagerows}}</div>{{/activitycleanup}}
+{{#systemcleanup}}<div class="mb-2"><code>{{component}}</code>: {{affected}}{{#messagerows}}<div class="small text-muted">{{message}}</div>{{/messagerows}}</div>{{/systemcleanup}}
+
+<div class="alert alert-info mt-4"><strong>{{#str}}simulationrollbackdone, local_kopere_recertification{{/str}}</strong></div>

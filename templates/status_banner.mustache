@@ -1,0 +1,32 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_kopere_recertification/status_banner
+
+    Example context (json):
+    {
+        "message": "Your current certification has expired and recertification is required.",
+        "historyurl": "/local/kopere_recertification/history.php?courseid=10",
+        "historylabel": "View certification history"
+    }
+}}
+
+<div class="alert alert-warning local-kopere_recertification-status" role="status">
+    <strong>{{#str}} kopere_recertificationrequired, local_kopere_recertification {{/str}}</strong>
+    <div>{{message}}</div>
+    <a href="{{historyurl}}">{{historylabel}}</a>
+</div>

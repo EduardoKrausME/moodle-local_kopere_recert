@@ -1,0 +1,16 @@
+# (RFC §4.1). Authors update their listing with an ordinary commit; camp
+# ingests and hash-pins it at each tagged release. Listing for local_kopere_recertification.
+
+name: "ReCertification"
+summary: "Identify ReCertification and find opportunities to improve performance."
+description: |
+  Identify ReCertification and find opportunities to improve performance.
+
+  Supported Moodle versions in the supplied plugin list: 3.9 - 5.0.
+
+labels:
+  - fully-free
+category: "reports"
+links:
+  docs: https://github.com/EduardoKrausME/moodle-local_kopere_recertification#readme
+  issues: https://github.com/EduardoKrausME/moodle-local_kopere_recertification/issues

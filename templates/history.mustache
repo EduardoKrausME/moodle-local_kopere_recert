@@ -1,0 +1,91 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_kopere_recertification/history
+
+    Example context (json):
+    {
+        "cycles": [
+            {
+                "url": "/local/kopere_recertification/history.php?courseid=10&cycleid=2",
+                "selected": true,
+                "label": "Cycle 2 - 2026"
+            }
+        ],
+        "hascycle": true,
+        "cyclename": "Cycle 2 - 2026",
+        "status": "Completed",
+        "startedat": "12 August 2026, 09:00",
+        "completedat": "12 August 2026, 09:05",
+        "items": [
+            {
+                "name": "Final assessment",
+                "component": "mod_quiz",
+                "completedat": "10 August 2026, 14:30",
+                "hasgrade": true,
+                "grade": "92.00",
+                "hashtml": false,
+                "html": "",
+                "hasfiles": true,
+                "files": [
+                    {
+                        "url": "/pluginfile.php/123/local_kopere_recertification/history/answer.pdf",
+                        "name": "answer.pdf"
+                    }
+                ]
+            }
+        ]
+    }
+}}
+
+<div class="mb-4">
+    <label for="local-recert-cycle">{{#str}}cycle, local_kopere_recertification{{/str}}</label>
+    <select id="local-recert-cycle" class="form-select" onchange="if(this.value){window.location.href=this.value}">
+        {{#cycles}}<option value="{{url}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/cycles}}
+    </select>
+</div>
+
+{{#hascycle}}
+    <div class="mb-4">
+        <h3>{{cyclename}}</h3>
+        <div>{{#str}}status{{/str}}: <strong>{{status}}</strong></div>
+        {{#startedat}}<div>{{#str}}startedat, local_kopere_recertification{{/str}}: {{startedat}}</div>{{/startedat}}
+        {{#completedat}}<div>{{#str}}completedat, local_kopere_recertification{{/str}}: {{completedat}}</div>{{/completedat}}
+    </div>
+
+    {{#items}}
+    <article class="local-kopere_recertification-history-item">
+        <h4>{{name}}</h4>
+        <div class="text-muted">{{component}}</div>
+        {{#completedat}}<div>{{#str}}activitycompletedat, local_kopere_recertification{{/str}}: {{completedat}}</div>{{/completedat}}
+        {{#hasgrade}}<div>{{#str}}grade{{/str}}: {{grade}}</div>{{/hasgrade}}
+        {{#hashtml}}<div class="local-kopere_recertification-history-html mt-2">{{{html}}}</div>{{/hashtml}}
+        {{#hasfiles}}
+            <div class="mt-2">
+                <strong>{{#str}}historyfiles, local_kopere_recertification{{/str}}</strong>
+                <ul class="mb-0">
+                    {{#files}}<li><a href="{{url}}">{{name}}</a></li>{{/files}}
+                </ul>
+            </div>
+        {{/hasfiles}}
+    </article>
+    {{/items}}
+{{/hascycle}}
+
+{{^hascycle}}
+    <div class="alert alert-info">{{#str}}nohistory, local_kopere_recertification{{/str}}</div>
+{{/hascycle}}

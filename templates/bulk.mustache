@@ -1,0 +1,59 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_kopere_recertification/bulk
+
+    Example context (json):
+    {
+        "courseid": 10,
+        "search": "Eduardo",
+        "sesskey": "example-session-key",
+        "users": [
+            {
+                "id": 42,
+                "fullname": "Eduardo Kraus",
+                "email": "eduardo@example.com"
+            }
+        ]
+    }
+}}
+
+<form method="get" class="mb-3">
+    <input type="hidden" name="courseid" value="{{courseid}}">
+    <div class="input-group">
+        <input class="form-control" type="search" name="search" value="{{search}}" placeholder="{{#str}}search{{/str}}">
+        <button class="btn btn-secondary" type="submit">{{#str}}search{{/str}}</button>
+    </div>
+</form>
+
+<form method="post">
+    <input type="hidden" name="courseid" value="{{courseid}}">
+    <input type="hidden" name="sesskey" value="{{sesskey}}">
+    <div class="mb-3">
+        <label for="bulk-reason" class="form-label">{{#str}}reason, local_kopere_recertification{{/str}}</label>
+        <input id="bulk-reason" class="form-control" name="reason" required>
+    </div>
+    <div class="table-responsive">
+    <table class="table generaltable">
+        <thead><tr><th></th><th>{{#str}}fullname{{/str}}</th><th>{{#str}}email{{/str}}</th></tr></thead>
+        <tbody>
+        {{#users}}<tr><td><input type="checkbox" name="userids[]" value="{{id}}"></td><td>{{fullname}}</td><td>{{email}}</td></tr>{{/users}}
+        </tbody>
+    </table>
+    </div>
+    <button class="btn btn-primary" type="submit">{{#str}}recertifyselected, local_kopere_recertification{{/str}}</button>
+</form>
