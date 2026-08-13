@@ -1,0 +1,12 @@
+<h5>{{activityname}}</h5>
+{{#hasview}}
+<dl>
+    <dt>{{#str}}progress, recerttask_supervideo{{/str}}</dt><dd>{{percent}}%</dd>
+    <dt>{{#str}}currenttime, recerttask_supervideo{{/str}}</dt><dd>{{currenttime}} s</dd>
+    <dt>{{#str}}duration, recerttask_supervideo{{/str}}</dt><dd>{{duration}} s</dd>
+    <dt>{{#str}}lastview, recerttask_supervideo{{/str}}</dt><dd>{{lastview}}</dd>
+</dl>
+{{/hasview}}
+{{^hasview}}
+<p>{{#str}}noprogress, recerttask_supervideo{{/str}}</p>
+{{/hasview}}

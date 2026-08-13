@@ -1,0 +1,16 @@
+<h5>{{activityname}}</h5>
+{{#hasprogress}}
+<dl>
+    <dt>{{#str}}progress, recerttask_videoprogress{{/str}}</dt><dd>{{percent}}%</dd>
+    <dt>{{#str}}lastposition, recerttask_videoprogress{{/str}}</dt><dd>{{lastposition}} s</dd>
+    <dt>{{#str}}duration, recerttask_videoprogress{{/str}}</dt><dd>{{duration}} s</dd>
+    <dt>{{#str}}totalwatchtime, recerttask_videoprogress{{/str}}</dt><dd>{{totalwatchtime}} s</dd>
+    <dt>{{#str}}completed, recerttask_videoprogress{{/str}}</dt>
+    <dd>{{#completed}}{{#str}}yes, recerttask_videoprogress{{/str}}{{/completed}}{{^completed}}{{#str}}no, recerttask_videoprogress{{/str}}{{/completed}}</dd>
+</dl>
+{{/hasprogress}}
+{{^hasprogress}}<p>{{#str}}noprogress, recerttask_videoprogress{{/str}}</p>{{/hasprogress}}
+<dl>
+    <dt>{{#str}}sessions, recerttask_videoprogress{{/str}}</dt><dd>{{sessioncount}}</dd>
+    <dt>{{#str}}interactions, recerttask_videoprogress{{/str}}</dt><dd>{{interactioncount}}</dd>
+</dl>

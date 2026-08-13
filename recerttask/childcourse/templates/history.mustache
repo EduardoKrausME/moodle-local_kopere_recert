@@ -1,0 +1,11 @@
+<h5>{{activityname}}</h5>
+<dl>
+    <dt>{{#str}}childcourse, recerttask_childcourse{{/str}}</dt><dd>{{childcoursename}}</dd>
+    {{#mapped}}<dt>{{#str}}enrolledat, recerttask_childcourse{{/str}}</dt><dd>{{timeenrolled}}</dd>{{/mapped}}
+    {{#hasstate}}
+        <dt>{{#str}}coursecompleted, recerttask_childcourse{{/str}}</dt>
+        <dd>{{#coursecompleted}}{{#str}}yes, recerttask_childcourse{{/str}}{{/coursecompleted}}{{^coursecompleted}}{{#str}}no, recerttask_childcourse{{/str}}{{/coursecompleted}}</dd>
+        {{#hasgrade}}<dt>{{#str}}finalgrade, recerttask_childcourse{{/str}}</dt><dd>{{finalgrade}}</dd>{{/hasgrade}}
+    {{/hasstate}}
+</dl>
+{{^hasstate}}<p>{{#str}}nostate, recerttask_childcourse{{/str}}</p>{{/hasstate}}

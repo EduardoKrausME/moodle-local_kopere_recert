@@ -153,5 +153,11 @@ function xmldb_local_kopere_recert_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026081300, 'local', 'kopere_recert');
     }
 
+    if ($oldversion < 2026081301) {
+        require_once(__DIR__ . '/../classes/install/default_tasks.php');
+        \local_kopere_recert\install\default_tasks::create();
+        upgrade_plugin_savepoint(true, 2026081301, 'local', 'kopere_recert');
+    }
+
     return true;
 }

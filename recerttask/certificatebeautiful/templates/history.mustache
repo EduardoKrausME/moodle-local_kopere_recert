@@ -1,0 +1,11 @@
+<h5>{{activityname}}</h5>
+{{#hasissue}}
+<dl>
+    <dt>{{#str}}code, recerttask_certificatebeautiful{{/str}}</dt><dd>{{code}}</dd>
+    <dt>{{#str}}version, recerttask_certificatebeautiful{{/str}}</dt><dd>{{version}}</dd>
+    <dt>{{#str}}issuedat, recerttask_certificatebeautiful{{/str}}</dt><dd>{{issuedat}}</dd>
+</dl>
+{{/hasissue}}
+{{^hasissue}}
+<p>{{#str}}noissue, recerttask_certificatebeautiful{{/str}}</p>
+{{/hasissue}}
