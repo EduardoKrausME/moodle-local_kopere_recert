@@ -81,7 +81,7 @@ $PAGE->set_heading(format_string($course->fullname));
 $rows = [];
 foreach ($DB->get_records('local_kopere_recert_notice', ['courseid' => $courseid], 'eventtype ASC, offsetdays DESC') as $notice) {
     $rows[] = [
-        'eventtype' => get_string('notice_' . match($notice->eventtype) {
+        'eventtype' => get_string('notice_' . match ($notice->eventtype) {
             'kopere_recert_available' => 'available',
             'kopere_recert_created' => 'created',
             'kopere_recert_started' => 'started',

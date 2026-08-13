@@ -113,7 +113,6 @@ function local_kopere_recert_extend_navigation_course(navigation_node $navigatio
         );
     }
 
-
     if (has_capability('local/kopere_recert:recertifyself', $context)) {
         $availability = (new \local_kopere_recert\kopere_recert\manager())->get_self_availability((int)$course->id, (int)$USER->id);
         if (!empty($availability['allowed']) && !(new manager())->is_kopere_recert_required((int)$course->id, (int)$USER->id)) {

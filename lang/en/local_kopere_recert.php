@@ -180,6 +180,7 @@ $string['subject'] = 'Assunto';
 $string['subplugin'] = 'Subplugin';
 $string['subpluginmissing'] = 'O subplugin configurado não está mais instalado';
 $string['subplugintype_recerttask'] = 'Tarefa de recertificação';
+$string['subplugintype_recerttask_plural'] = '';
 $string['supportedplugins'] = 'Plugins suportados';
 $string['systemcomponents'] = 'Componentes de sistema';
 $string['table'] = 'Tabela';

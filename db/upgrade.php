@@ -83,5 +83,75 @@ function xmldb_local_kopere_recert_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026081204, 'local', 'kopere_recert');
     }
 
+    if ($oldversion < 2026081300) {
+        // Rename the legacy tables created with the old local_recert_* prefix.
+        $tablerenames = [
+            'local_recert_cycle' => 'local_kopere_recert_cycle',
+            'local_recert_task' => 'local_kopere_recert_task',
+            'local_recert_history' => 'local_kopere_recert_history',
+            'local_recert_file' => 'local_kopere_recert_file',
+            'local_recert_course' => 'local_kopere_recert_course',
+            'local_recert_notice' => 'local_kopere_recert_notice',
+            'local_recert_notice_log' => 'local_kopere_recert_notice_log',
+            'local_recert_log' => 'local_kopere_recert_log',
+        ];
+
+        foreach ($tablerenames as $oldname => $newname) {
+            $oldtable = new xmldb_table($oldname);
+            $newtable = new xmldb_table($newname);
+            if ($dbman->table_exists($oldtable) && !$dbman->table_exists($newtable)) {
+                $dbman->rename_table($oldtable, $newname);
+            }
+        }
+
+        // Older upgrades looked for the final table names before the legacy tables were renamed.
+        // Ensure the fields introduced by those releases are present after the rename.
+        $table = new xmldb_table('local_kopere_recert_task');
+        $field = new xmldb_field(
+            'origin',
+            XMLDB_TYPE_CHAR,
+            '20',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            'generic',
+            'component'
+        );
+        if ($dbman->table_exists($table) && !$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table = new xmldb_table('local_kopere_recert_course');
+        $field = new xmldb_field(
+            'resetcompetencies',
+            XMLDB_TYPE_INTEGER,
+            '1',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            '0',
+            'referencecmid'
+        );
+        if ($dbman->table_exists($table) && !$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field(
+            'selfreferencetype',
+            XMLDB_TYPE_CHAR,
+            '40',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            'enrolment',
+            'selfenabled'
+        );
+        if ($dbman->table_exists($table) && !$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2026081300, 'local', 'kopere_recert');
+    }
+
     return true;
 }

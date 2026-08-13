@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/kopere_recert/db" VERSION="2026081203" COMMENT="XMLDB file for local_kopere_recert">
+<XMLDB PATH="local/kopere_recert/db" VERSION="2026081300" COMMENT="XMLDB file for local_kopere_recert">
     <TABLES>
-        <TABLE NAME="local_recert_cycle" COMMENT="Recertification cycles">
+        <TABLE NAME="local_kopere_recert_cycle" COMMENT="Recertification cycles">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
@@ -35,7 +35,7 @@
             </INDEXES>
         </TABLE>
 
-        <TABLE NAME="local_recert_task" COMMENT="Global generic task definitions">
+        <TABLE NAME="local_kopere_recert_task" COMMENT="Global generic task definitions">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true"/>
@@ -58,7 +58,7 @@
             </INDEXES>
         </TABLE>
 
-        <TABLE NAME="local_recert_history" COMMENT="Permanent kopere_recert history">
+        <TABLE NAME="local_kopere_recert_history" COMMENT="Permanent kopere_recert history">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
@@ -79,7 +79,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
+                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_kopere_recert_cycle" REFFIELDS="id"/>
                 <KEY NAME="course_fk" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
                 <KEY NAME="user_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
             </KEYS>
@@ -90,7 +90,7 @@
             </INDEXES>
         </TABLE>
 
-        <TABLE NAME="local_recert_file" COMMENT="Copied history file metadata">
+        <TABLE NAME="local_kopere_recert_file" COMMENT="Copied history file metadata">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
@@ -110,8 +110,8 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
-                <KEY NAME="history_fk" TYPE="foreign" FIELDS="historyid" REFTABLE="local_recert_history"
+                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_kopere_recert_cycle" REFFIELDS="id"/>
+                <KEY NAME="history_fk" TYPE="foreign" FIELDS="historyid" REFTABLE="local_kopere_recert_history"
                      REFFIELDS="id"/>
             </KEYS>
             <INDEXES>
@@ -119,7 +119,7 @@
             </INDEXES>
         </TABLE>
 
-        <TABLE NAME="local_recert_course" COMMENT="Course kopere_recert configuration">
+        <TABLE NAME="local_kopere_recert_course" COMMENT="Course kopere_recert configuration">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
@@ -146,7 +146,7 @@
             </INDEXES>
         </TABLE>
 
-        <TABLE NAME="local_recert_notice" COMMENT="Course notification definitions">
+        <TABLE NAME="local_kopere_recert_notice" COMMENT="Course notification definitions">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true"/>
@@ -167,7 +167,7 @@
             </INDEXES>
         </TABLE>
 
-        <TABLE NAME="local_recert_notice_log" COMMENT="Sent notification deduplication log">
+        <TABLE NAME="local_kopere_recert_notice_log" COMMENT="Sent notification deduplication log">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
@@ -177,15 +177,15 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
-                <KEY NAME="notice_fk" TYPE="foreign" FIELDS="noticeid" REFTABLE="local_recert_notice" REFFIELDS="id"/>
+                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_kopere_recert_cycle" REFFIELDS="id"/>
+                <KEY NAME="notice_fk" TYPE="foreign" FIELDS="noticeid" REFTABLE="local_kopere_recert_notice" REFFIELDS="id"/>
             </KEYS>
             <INDEXES>
                 <INDEX NAME="cycle_notice_uix" UNIQUE="true" FIELDS="cycleid,noticeid"/>
             </INDEXES>
         </TABLE>
 
-        <TABLE NAME="local_recert_log" COMMENT="Detailed execution log">
+        <TABLE NAME="local_kopere_recert_log" COMMENT="Detailed execution log">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="cycleid" TYPE="int" LENGTH="10" NOTNULL="true"/>
@@ -200,7 +200,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_recert_cycle" REFFIELDS="id"/>
+                <KEY NAME="cycle_fk" TYPE="foreign" FIELDS="cycleid" REFTABLE="local_kopere_recert_cycle" REFFIELDS="id"/>
             </KEYS>
             <INDEXES>
                 <INDEX NAME="cycle_action_ix" UNIQUE="false" FIELDS="cycleid,action"/>
