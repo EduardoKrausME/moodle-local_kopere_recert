@@ -119,11 +119,11 @@ $cycleoptions = [];
 foreach ($cycles as $cycle) {
     $course = get_course($cycle->courseid);
     $cycleoptions[] = [
-        'url' => (new moodle_url('/local/kopere_recert/history.php', [
+        'url' => new moodle_url('/local/kopere_recert/history.php', [
             'courseid' => $courseid ?: $cycle->courseid,
             'userid' => $userid,
             'cycleid' => $cycle->id,
-        ]))->out(false),
+        ]),
         'label' => format_string($course->shortname) . ' - ' . $cycle->name . ' (#' . $cycle->number . ')',
         'selected' => (int)$cycle->id === $cycleid,
     ];
@@ -144,7 +144,7 @@ foreach ($history as $row) {
                 $filemeta->filepath,
                 $filemeta->filename,
                 true
-            )->out(false),
+            ),
         ];
     }
 
@@ -163,6 +163,16 @@ foreach ($history as $row) {
 }
 
 echo $OUTPUT->header();
+if ($courseid) {
+    echo $OUTPUT->render_from_template('local_kopere_recert/course_header', [
+        'courseurl' => new moodle_url('/local/kopere_recert/course.php', ['courseid' => $courseid]),
+        'noticesurl' => new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]),
+        'bulkurl' => new moodle_url('/local/kopere_recert/bulk.php', ['courseid' => $courseid]),
+        'historyurl' => new moodle_url('/local/kopere_recert/history.php', ['courseid' => $courseid]),
+        'noticescount' => $DB->count_records('local_kopere_recert_notice', ['courseid' => $courseid]),
+        'historyactive' => true,
+    ]);
+}
 $filterform->display();
 echo $OUTPUT->render_from_template('local_kopere_recert/history', [
     'cycles' => $cycleoptions,

@@ -17,17 +17,38 @@
 {{!
     @template local_kopere_recert/course_header
 
-    Example context (json):
-    {
-        "noticesurl": "/local/kopere_recert/notices.php?courseid=10",
-        "noticescount": 3,
-        "bulkurl": "/local/kopere_recert/bulk.php?courseid=10",
-        "historyurl": "/local/kopere_recert/history.php?courseid=10"
-    }
+     Example context (json):
+     {
+        "courseurl": "/local/kopere_recert/course.php?courseid=10",
+         "noticesurl": "/local/kopere_recert/notices.php?courseid=10",
+         "noticescount": 3,
+         "bulkurl": "/local/kopere_recert/bulk.php?courseid=10",
+-        "historyurl": "/local/kopere_recert/history.php?courseid=10"
+        "historyurl": "/local/kopere_recert/history.php?courseid=10",
+        "courseactive": true,
+        "noticesactive": false,
+        "bulkactive": false,
+        "historyactive": false
+     }
 }}
 
-<div class="d-flex flex-wrap gap-2 mb-4">
-    <a class="btn btn-secondary" href="{{noticesurl}}">{{#str}}notices, local_kopere_recert{{/str}} ({{noticescount}})</a>
-    <a class="btn btn-secondary" href="{{bulkurl}}">{{#str}}bulkkopere_recert, local_kopere_recert{{/str}}</a>
-    <a class="btn btn-secondary" href="{{historyurl}}">{{#str}}history, local_kopere_recert{{/str}}</a>
-</div>
+<nav class="mb-4" aria-label="{{#str}}courseconfiguration, local_kopere_recert{{/str}}">
+    <div class="nav nav-tabs">
+        <a class="nav-link{{#courseactive}} active{{/courseactive}}"
+           href="{{courseurl}}"{{#courseactive}} aria-current="page"{{/courseactive}}>
+            {{#str}}courseconfiguration, local_kopere_recert{{/str}}
+        </a>
+        <a class="nav-link{{#noticesactive}} active{{/noticesactive}}"
+           href="{{noticesurl}}"{{#noticesactive}} aria-current="page"{{/noticesactive}}>
+            {{#str}}notices, local_kopere_recert{{/str}} ({{noticescount}})
+        </a>
+        <a class="nav-link{{#bulkactive}} active{{/bulkactive}}"
+           href="{{bulkurl}}"{{#bulkactive}} aria-current="page"{{/bulkactive}}>
+            {{#str}}bulkkopere_recert, local_kopere_recert{{/str}}
+        </a>
+        <a class="nav-link{{#historyactive}} active{{/historyactive}}"
+           href="{{historyurl}}"{{#historyactive}} aria-current="page"{{/historyactive}}>
+            {{#str}}history, local_kopere_recert{{/str}}
+        </a>
+    </div>
+</nav>

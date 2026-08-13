@@ -56,7 +56,7 @@ if ($data = $form->get_data()) {
         throw new invalid_parameter_exception(get_string('intervalmustbepositive', 'local_kopere_recert'));
     }
     if ($data->triggertype === 'certificate'
-            || (!empty($data->selfenabled) && $data->selfreferencetype === 'certificate')) {
+        || (!empty($data->selfenabled) && $data->selfreferencetype === 'certificate')) {
         if (empty($data->referencecmid)) {
             throw new invalid_parameter_exception(get_string('missingcertificatereference', 'local_kopere_recert'));
         }
@@ -95,10 +95,12 @@ $notices = $DB->get_records('local_kopere_recert_notice', ['courseid' => $course
 
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_kopere_recert/course_header', [
+    'courseurl' => (new moodle_url('/local/kopere_recert/course.php', ['courseid' => $courseid]))->out(false),
     'noticesurl' => (new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]))->out(false),
     'bulkurl' => (new moodle_url('/local/kopere_recert/bulk.php', ['courseid' => $courseid]))->out(false),
     'historyurl' => (new moodle_url('/local/kopere_recert/history.php', ['courseid' => $courseid]))->out(false),
     'noticescount' => count($notices),
+    'courseactive' => true,
 ]);
 $form->display();
 echo $OUTPUT->footer();

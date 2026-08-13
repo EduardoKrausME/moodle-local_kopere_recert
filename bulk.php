@@ -88,7 +88,8 @@ if ($search !== '') {
     $params['search2'] = $like;
     $params['search3'] = $like;
 }
-$sql = "SELECT u.id, u.firstname, u.lastname, u.email
+$sql = "SELECT u.id, u.firstname, u.lastname, u.email,
+               u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename
           FROM {user} u
           JOIN ({$enrolledsql}) eu ON eu.id = u.id
          WHERE u.deleted = 0 {$where}
@@ -121,6 +122,14 @@ foreach ($users as $user) {
 }
 
 echo $OUTPUT->header();
+echo $OUTPUT->render_from_template('local_kopere_recert/course_header', [
+    'courseurl' => new moodle_url('/local/kopere_recert/course.php', ['courseid' => $courseid]),
+    'noticesurl' => new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]),
+    'bulkurl' => new moodle_url('/local/kopere_recert/bulk.php', ['courseid' => $courseid]),
+    'historyurl' => new moodle_url('/local/kopere_recert/history.php', ['courseid' => $courseid]),
+    'noticescount' => $DB->count_records('local_kopere_recert_notice', ['courseid' => $courseid]),
+    'bulkactive' => true,
+]);
 echo $OUTPUT->render_from_template('local_kopere_recert/bulk', [
     'users' => $rows,
     'courseid' => $courseid,

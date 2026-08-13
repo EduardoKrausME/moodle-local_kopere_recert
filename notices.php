@@ -41,6 +41,12 @@ if ($delete) {
     redirect(new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]));
 }
 
+$PAGE->set_context($context);
+$PAGE->set_course($course);
+$PAGE->set_url(new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid, 'id' => $id ?: null]));
+$PAGE->set_title(get_string('notices', 'local_kopere_recert'));
+$PAGE->set_heading(format_string($course->fullname));
+
 $record = $id ? $DB->get_record('local_kopere_recert_notice', ['id' => $id, 'courseid' => $courseid], '*', MUST_EXIST) : null;
 $form = new notice_form(null, ['courseid' => $courseid]);
 if ($record) {
@@ -72,12 +78,6 @@ if ($data = $form->get_data()) {
     redirect(new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]), get_string('changessaved'));
 }
 
-$PAGE->set_context($context);
-$PAGE->set_course($course);
-$PAGE->set_url(new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid, 'id' => $id ?: null]));
-$PAGE->set_title(get_string('notices', 'local_kopere_recert'));
-$PAGE->set_heading(format_string($course->fullname));
-
 $rows = [];
 foreach ($DB->get_records('local_kopere_recert_notice', ['courseid' => $courseid], 'eventtype ASC, offsetdays DESC') as $notice) {
     $rows[] = [
@@ -93,16 +93,24 @@ foreach ($DB->get_records('local_kopere_recert_notice', ['courseid' => $courseid
         }, 'local_kopere_recert'),
         'offsetdays' => $notice->offsetdays,
         'enabled' => $notice->enabled ? get_string('yes') : get_string('no'),
-        'editurl' => (new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid, 'id' => $notice->id]))->out(false),
-        'deleteurl' => (new moodle_url('/local/kopere_recert/notices.php', [
+        'editurl' => new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid, 'id' => $notice->id]),
+        'deleteurl' => new moodle_url('/local/kopere_recert/notices.php', [
             'courseid' => $courseid,
             'delete' => $notice->id,
             'sesskey' => sesskey(),
-        ]))->out(false),
+        ]),
     ];
 }
 
 echo $OUTPUT->header();
+echo $OUTPUT->render_from_template('local_kopere_recert/course_header', [
+    'courseurl' => new moodle_url('/local/kopere_recert/course.php', ['courseid' => $courseid]),
+    'noticesurl' =>new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]),
+    'bulkurl' => new moodle_url('/local/kopere_recert/bulk.php', ['courseid' => $courseid]),
+    'historyurl' => new moodle_url('/local/kopere_recert/history.php', ['courseid' => $courseid]),
+    'noticescount' => count($rows),
+    'noticesactive' => true,
+]);
 echo $OUTPUT->render_from_template('local_kopere_recert/notices', ['rows' => $rows]);
 $form->display();
 echo $OUTPUT->footer();

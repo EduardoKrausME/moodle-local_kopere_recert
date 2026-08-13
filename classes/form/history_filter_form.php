@@ -60,7 +60,7 @@ class history_filter_form extends moodleform {
 
         if ($canselectuser) {
             $useroptions = [];
-            $user = $DB->get_record('user', ['id' => $userid], 'id,firstname,lastname');
+            $user = $DB->get_record('user', ['id' => $userid], 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename');
             if ($user) {
                 $useroptions[$user->id] = fullname($user);
             }
