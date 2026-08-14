@@ -34,34 +34,78 @@ use local_kopere_recert\task\task_plugin_interface;
  * Specialized recertification task provider for Beautiful Certificate.
  */
 final class task implements reference_date_provider_interface, task_plugin_interface {
+    /**
+     * get_component
+     *
+     * @return string
+     */
     public static function get_component(): string {
         return 'mod_certificatebeautiful';
     }
 
+    /**
+     * get_name
+     *
+     * @return string
+     * @throws \coding_exception
+     */
     public static function get_name(): string {
         return get_string('pluginname', 'recerttask_certificatebeautiful');
     }
 
+    /**
+     * supports_history
+     *
+     * @return bool
+     */
     public static function supports_history(): bool {
         return true;
     }
 
+    /**
+     * supports_files
+     *
+     * @return bool
+     */
     public static function supports_files(): bool {
         return false;
     }
 
+    /**
+     * supports_cleanup
+     *
+     * @return bool
+     */
     public static function supports_cleanup(): bool {
         return true;
     }
 
+    /**
+     * is_system_task
+     *
+     * @return bool
+     */
     public static function is_system_task(): bool {
         return false;
     }
 
+    /**
+     * get_system_order
+     *
+     * @return int
+     */
     public static function get_system_order(): int {
         return 0;
     }
 
+    /**
+     * create_history
+     *
+     * @param task_context $context
+     * @return history_result
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function create_history(task_context $context): history_result {
         global $DB, $OUTPUT;
 
@@ -94,10 +138,25 @@ final class task implements reference_date_provider_interface, task_plugin_inter
         );
     }
 
+    /**
+     * get_files
+     *
+     * @param task_context $context
+     * @param int $historyid
+     * @return array|\local_kopere_recert\task\file_descriptor[]
+     */
     public function get_files(task_context $context, int $historyid): array {
         return [];
     }
 
+    /**
+     * cleanup
+     *
+     * @param task_context $context
+     * @return cleanup_result
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public function cleanup(task_context $context): cleanup_result {
         global $DB;
 
@@ -112,6 +171,13 @@ final class task implements reference_date_provider_interface, task_plugin_inter
         return new cleanup_result($count, [get_string('removedcount', 'recerttask_certificatebeautiful', $count)]);
     }
 
+    /**
+     * describe
+     *
+     * @param task_context $context
+     * @return array
+     * @throws \dml_exception
+     */
     public function describe(task_context $context): array {
         global $DB;
 
@@ -124,11 +190,29 @@ final class task implements reference_date_provider_interface, task_plugin_inter
         ];
     }
 
+    /**
+     * get_reference_date
+     *
+     * @param int $userid
+     * @param int $courseid
+     * @param int $cmid
+     * @param int $instanceid
+     * @return int|null
+     */
     public function get_reference_date(int $userid, int $courseid, int $cmid, int $instanceid): ?int {
         $issue = $this->get_issue($userid, $cmid, $instanceid);
         return $issue && !empty($issue->timecreated) ? (int)$issue->timecreated : null;
     }
 
+    /**
+     * get_issue
+     *
+     * @param int $userid
+     * @param int $cmid
+     * @param int $instanceid
+     * @return object|false|mixed|\stdClass|null
+     * @throws \dml_exception
+     */
     private function get_issue(int $userid, int $cmid, int $instanceid): ?object {
         global $DB;
 
