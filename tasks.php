@@ -98,12 +98,25 @@ foreach ($configs as $task) {
         'status' => $installed && $task->enabled
             ? get_string('enabled', 'local_kopere_recert')
             : ($installed ? get_string('disabled', 'local_kopere_recert') : get_string('componentnotinstalled', 'local_kopere_recert')),
-        'editurl' => (new moodle_url('/local/kopere_recert/taskedit.php', ['id' => $task->id]))->out(false),
+        'editurl' => new moodle_url('/local/kopere_recert/taskedit.php', ['id' => $task->id]),
     ];
 }
 usort($rows, fn($a, $b) => strcmp($a['component'], $b['component']));
 
 echo $OUTPUT->header();
+$courseid = optional_param('courseid', false, PARAM_INT);
+if($courseid) {
+    echo $OUTPUT->render_from_template('local_kopere_recert/course_header', [
+        'courseurl' => new moodle_url('/local/kopere_recert/course.php', ['courseid' => $courseid]),
+        'noticesurl' => new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]),
+        'bulkurl' => new moodle_url('/local/kopere_recert/bulk.php', ['courseid' => $courseid]),
+        'historyurl' => new moodle_url('/local/kopere_recert/history.php', ['courseid' => $courseid]),
+        'tasksurl' => new moodle_url('/local/kopere_recert/tasks.php', ['courseid' => $courseid]),
+        'noticescount' => $DB->count_records('local_kopere_recert_notice', ['courseid' => $courseid]),
+        'tasksactive' => true,
+    ]);
+}
+
 echo $OUTPUT->render_from_template('local_kopere_recert/tasks', [
     'rows' => $rows,
     'newurl' => (new moodle_url('/local/kopere_recert/taskedit.php'))->out(false),

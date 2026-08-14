@@ -127,6 +127,7 @@ echo $OUTPUT->render_from_template('local_kopere_recert/course_header', [
     'noticesurl' => new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]),
     'bulkurl' => new moodle_url('/local/kopere_recert/bulk.php', ['courseid' => $courseid]),
     'historyurl' => new moodle_url('/local/kopere_recert/history.php', ['courseid' => $courseid]),
+    'tasksurl' => new moodle_url('/local/kopere_recert/tasks.php', ['courseid' => $courseid]),
     'noticescount' => $DB->count_records('local_kopere_recert_notice', ['courseid' => $courseid]),
     'bulkactive' => true,
 ]);

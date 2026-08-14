@@ -24,11 +24,12 @@
         "noticescount": 3,
         "bulkurl": "/local/kopere_recert/bulk.php?courseid=10",
         "historyurl": "/local/kopere_recert/history.php?courseid=10"
-        "historyurl": "/local/kopere_recert/history.php?courseid=10",
+        "tasksurl": "/local/kopere_recert/tasks.php?courseid=10",
         "courseactive": true,
         "noticesactive": false,
         "bulkactive": false,
-        "historyactive": false
+        "historyactive": false,
+        "tasksactive": false
     }
 }}
 
@@ -49,6 +50,10 @@
         <a class="nav-link{{#historyactive}} active{{/historyactive}}"
            href="{{historyurl}}"{{#historyactive}} aria-current="page"{{/historyactive}}>
             {{#str}}history, local_kopere_recert{{/str}}
+        </a>
+        <a class="nav-link{{#tasksactive}} active{{/tasksactive}}"
+           href="{{tasksurl}}"{{#tasksactive}} aria-current="page"{{/tasksactive}}>
+            {{#str}}tasks, local_kopere_recert{{/str}}
         </a>
     </div>
 </nav>
