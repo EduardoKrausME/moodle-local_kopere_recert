@@ -30,6 +30,7 @@ use core\lock\lock_config;
 use local_kopere_recert\cycle\manager;
 use local_kopere_recert\notification\manager as notification_manager;
 use local_kopere_recert\recertification\simulator;
+use local_kopere_recert\task\manager as task_manager;
 use moodle_exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Throwable;
@@ -57,8 +58,6 @@ final class transaction_and_notifications_test extends advanced_testcase {
         bool $files = false,
         bool $cleanup = false
     ): array {
-        global $DB;
-
         $page = $this->getDataGenerator()->create_module('page', [
             'course' => $courseid,
             'name' => 'History page',
@@ -81,7 +80,7 @@ final class transaction_and_notifications_test extends advanced_testcase {
             ]],
         ] : null;
 
-        $DB->insert_record('local_kopere_recert_task', (object) [
+        (new task_manager())->save((object) [
             'component' => 'mod_page',
             'origin' => 'generic',
             'enabled' => 1,
@@ -91,8 +90,6 @@ final class transaction_and_notifications_test extends advanced_testcase {
             'historytemplate' => $template,
             'fileconfigjson' => $fileconfig ? json_encode($fileconfig) : '',
             'cleanupconfigjson' => $cleanupconfig ? json_encode($cleanupconfig) : '',
-            'timecreated' => time(),
-            'timemodified' => time(),
         ]);
 
         return [$page, $cm];
