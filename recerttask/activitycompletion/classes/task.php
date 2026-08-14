@@ -83,9 +83,16 @@ final class task implements task_plugin_interface {
      */
     public function create_history(task_context $context): history_result {
         global $DB, $OUTPUT;
-        $sql = "SELECT cmc.coursemoduleid, cmc.completionstate, cmc.viewed, cmc.overrideby, cmc.timemodified
+        $sql = "SELECT cmc.coursemoduleid,
+                       cmc.completionstate,
+                       CASE WHEN cmv.id IS NULL THEN 0 ELSE 1 END AS viewed,
+                       cmc.overrideby,
+                       cmc.timemodified
                   FROM {course_modules_completion} cmc
                   JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid
+             LEFT JOIN {course_modules_viewed} cmv
+                    ON cmv.coursemoduleid = cmc.coursemoduleid
+                   AND cmv.userid = cmc.userid
                  WHERE cm.course = :courseid
                    AND cmc.userid = :userid
               ORDER BY cm.section, cm.id";
