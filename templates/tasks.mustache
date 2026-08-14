@@ -42,11 +42,9 @@
 <table class="table generaltable">
     <thead><tr>
         <th>{{#str}}component, local_kopere_recert{{/str}}</th>
-        <th>{{#str}}type, local_kopere_recert{{/str}}</th>
         <th>{{#str}}createhistory, local_kopere_recert{{/str}}</th>
         <th>{{#str}}copyfiles, local_kopere_recert{{/str}}</th>
         <th>{{#str}}cleanupdata, local_kopere_recert{{/str}}</th>
-        <th>{{#str}}origin, local_kopere_recert{{/str}}</th>
         <th>{{#str}}status{{/str}}</th>
         <th>{{#str}}actions{{/str}}</th>
     </tr></thead>
@@ -54,11 +52,9 @@
     {{#rows}}
         <tr>
             <td><code>{{component}}</code></td>
-            <td>{{type}}</td>
             <td>{{history}}</td>
             <td>{{files}}</td>
             <td>{{cleanup}}</td>
-            <td>{{origin}}</td>
             <td>{{status}}</td>
             <td>{{#editurl}}<a href="{{editurl}}">{{#str}}edit{{/str}}</a>{{/editurl}}</td>
         </tr>
