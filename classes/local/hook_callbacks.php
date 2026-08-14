@@ -57,11 +57,11 @@ class hook_callbacks {
 
         $output = $hook->renderer->render_from_template('local_kopere_recert/status_banner', [
             'message' => get_string('kopere_recertstatusmessage', 'local_kopere_recert'),
-            'historyurl' => (new moodle_url('/local/kopere_recert/history.php', [
+            'historyurl' => new moodle_url('/local/kopere_recert/history.php', [
                 'courseid' => $courseid,
                 'userid' => $USER->id,
                 'cycleid' => $cycle->id,
-            ]))->out(false),
+            ]),
             'historylabel' => get_string('viewhistory', 'local_kopere_recert'),
         ]);
         $hook->add_html($output);
