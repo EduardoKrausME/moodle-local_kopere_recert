@@ -33,7 +33,7 @@ use local_kopere_recert\task\task_plugin_interface;
 /**
  * Specialized recertification task provider for Beautiful Certificate.
  */
-final class task implements task_plugin_interface, reference_date_provider_interface {
+final class task implements reference_date_provider_interface, task_plugin_interface {
     public static function get_component(): string {
         return 'mod_certificatebeautiful';
     }
