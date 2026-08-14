@@ -105,7 +105,7 @@ usort($rows, fn($a, $b) => strcmp($a['component'], $b['component']));
 
 echo $OUTPUT->header();
 $courseid = optional_param('courseid', false, PARAM_INT);
-if($courseid) {
+if ($courseid) {
     echo $OUTPUT->render_from_template('local_kopere_recert/course_header', [
         'courseurl' => new moodle_url('/local/kopere_recert/course.php', ['courseid' => $courseid]),
         'noticesurl' => new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]),
