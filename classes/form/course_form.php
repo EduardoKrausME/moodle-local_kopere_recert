@@ -24,6 +24,7 @@
 
 namespace local_kopere_recert\form;
 
+use coding_exception;
 use local_kopere_recert\course\reference_date_provider_interface;
 use local_kopere_recert\subplugin\manager;
 use moodleform;
@@ -84,6 +85,28 @@ class course_form extends moodleform {
         $mform->addElement('text', 'selfafterdays', get_string('selfafterdays', 'local_kopere_recert'));
         $mform->setType('selfafterdays', PARAM_INT);
 
+        $mform->hideIf('triggertype', 'enabled', 'eq', 0);
+        $mform->hideIf('intervaldays', 'enabled', 'eq', 0);
+        $mform->hideIf('fixedmonth', 'enabled', 'eq', 0);
+        $mform->hideIf('fixedday', 'enabled', 'eq', 0);
+        $mform->hideIf('referencecmid', 'enabled', 'eq', 0);
+        $mform->hideIf('selfenabled', 'enabled', 'eq', 0);
+        $mform->hideIf('selfreferencetype', 'enabled', 'eq', 0);
+        $mform->hideIf('selfafterdays', 'enabled', 'eq', 0);
+        $mform->hideIf('resetcompetencies', 'enabled', 'eq', 0);
+        $mform->hideIf('resetcompetencieshelp', 'enabled', 'eq', 0);
+
+        // Interval only applies to non-fixed-date triggers.
+        $mform->hideIf('intervaldays', 'triggertype', 'eq', 'fixeddate');
+
+        // Fixed date fields.
+        $mform->hideIf('fixedmonth', 'triggertype', 'neq', 'fixeddate');
+        $mform->hideIf('fixedday', 'triggertype', 'neq', 'fixeddate');
+
+        // Student/manual recertification settings.
+        $mform->hideIf('selfreferencetype', 'selfenabled', 'eq', 0);
+        $mform->hideIf('selfafterdays', 'selfenabled', 'eq', 0);
+
         $this->add_action_buttons();
     }
 
@@ -93,6 +116,7 @@ class course_form extends moodleform {
      * @param mixed $data Structured data.
      * @param mixed $files Files.
      * @return array Structured result data.
+     * @throws coding_exception
      */
     public function validation($data, $files): array {
         $errors = parent::validation($data, $files);
@@ -102,7 +126,7 @@ class course_form extends moodleform {
         }
         if (($trigger === 'certificate'
                 || (!empty($data['selfenabled']) && ($data['selfreferencetype'] ?? '') === 'certificate'))
-                && empty($data['referencecmid'])) {
+            && empty($data['referencecmid'])) {
             $errors['referencecmid'] = get_string('missingcertificatereference', 'local_kopere_recert');
         }
         if (!empty($data['selfenabled']) && (int)($data['selfafterdays'] ?? 0) < 0) {
