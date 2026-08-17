@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * course_form.php
+ * Course configuration form.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -56,9 +56,19 @@ class course_form extends moodleform {
         $mform->addElement('text', 'intervaldays', get_string('intervaldays', 'local_kopere_recert'));
         $mform->setType('intervaldays', PARAM_INT);
 
-        $months = array_combine(range(1, 12), array_map(fn($m) => userdate(make_timestamp(2024, $m, 1), '%B'), range(1, 12)));
+        $monthnumbers = range(1, 12);
+        $monthnames = array_map(
+            fn($month) => userdate(make_timestamp(2024, $month, 1), '%B'),
+            $monthnumbers
+        );
+        $months = array_combine($monthnumbers, $monthnames);
         $mform->addElement('select', 'fixedmonth', get_string('fixedmonth', 'local_kopere_recert'), $months);
-        $mform->addElement('select', 'fixedday', get_string('fixedday', 'local_kopere_recert'), array_combine(range(1, 31), range(1, 31)));
+        $mform->addElement(
+            'select',
+            'fixedday',
+            get_string('fixedday', 'local_kopere_recert'),
+            array_combine(range(1, 31), range(1, 31))
+        );
 
         $modinfo = get_fast_modinfo($courseid);
         $options = [0 => get_string('none')];

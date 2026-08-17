@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * task_context.php
+ * task execution context.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -28,32 +28,28 @@ namespace local_kopere_recert\task;
  * Immutable execution context passed to generic tasks and subplugin providers.
  */
 class task_context {
-    /** User ID. */
+    /** @var int User ID. */
     public readonly int $userid;
 
-    /** Course ID. */
+    /** @var int Course ID. */
     public readonly int $courseid;
 
-    /** Course module ID. */
+    /** @var int|null Course module ID. */
     public readonly ?int $cmid;
 
-    /** Activity instance ID. */
+    /** @var int|null Activity instance ID. */
     public readonly ?int $instanceid;
 
-    /** Moodle context ID. */
+    /** @var int Moodle context ID. */
     public readonly int $contextid;
 
-    /** Recertification cycle ID. */
+    /** @var int Recertification cycle ID. */
     public readonly int $cycleid;
 
-    /**
-     * Recertification ID alias kept for SQL placeholder compatibility.
-     *
-     * @phpcsSuppress moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
-     */
-    public readonly int $kopere_recertid;
+    /** @var int Recertification ID alias kept for SQL placeholder compatibility. */
+    public readonly int $recertificationid;
 
-    /** Whether the operation is running in simulation mode. */
+    /** @var bool Whether the operation is running in simulation mode. */
     public readonly bool $simulation;
 
     /**
@@ -84,7 +80,7 @@ class task_context {
         $this->instanceid = $instanceid;
         $this->contextid = $contextid;
         $this->cycleid = $cycleid;
-        $this->kopere_recertid = $recertificationid;
+        $this->recertificationid = $recertificationid;
         $this->simulation = $simulation;
     }
 
@@ -101,7 +97,7 @@ class task_context {
             'instanceid' => $this->instanceid ?? 0,
             'contextid' => $this->contextid,
             'cycleid' => $this->cycleid,
-            'kopere_recertid' => $this->kopere_recertid,
+            'kopere_recertid' => $this->recertificationid,
         ];
     }
 }

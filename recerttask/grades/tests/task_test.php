@@ -26,13 +26,15 @@ namespace recerttask_grades;
 
 use advanced_testcase;
 use local_kopere_recert\task\task_plugin_interface;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests kopere_recert behavior for grades.
  */
+#[CoversClass(task::class)]
 final class task_test extends advanced_testcase {
     /**
-     * Tests that provider contract.
+     * Tests the provider contract.
      */
     public function test_provider_contract(): void {
         $this->assertSame('core_grades', task::get_component());

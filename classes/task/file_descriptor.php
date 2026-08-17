@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * file_descriptor.php
+ * task file descriptor.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -28,22 +28,22 @@ namespace local_kopere_recert\task;
  * Describes a Moodle File API source that must be preserved in history.
  */
 class file_descriptor {
-    /** Source context ID. */
+    /** @var int Source context ID. */
     public readonly int $contextid;
 
-    /** Source component. */
+    /** @var string Source component. */
     public readonly string $component;
 
-    /** Source file area. */
+    /** @var string Source file area. */
     public readonly string $filearea;
 
-    /** Source item ID. */
+    /** @var int Source item ID. */
     public readonly int $itemid;
 
-    /** Source file path. */
+    /** @var string Source file path. */
     public readonly string $filepath;
 
-    /** Optional source file name. */
+    /** @var string|null Optional source file name. */
     public readonly ?string $filename;
 
     /**

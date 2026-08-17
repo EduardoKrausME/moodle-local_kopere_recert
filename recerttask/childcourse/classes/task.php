@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * task.php
+ * Child Course recertification task provider.
  *
  * @package   recerttask_childcourse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -33,34 +33,47 @@ use local_kopere_recert\task\task_plugin_interface;
  * Specialized recertification task provider for Child Course.
  */
 final class task implements task_plugin_interface {
+    /** @return string Moodle component name. */
     public static function get_component(): string {
         return 'mod_childcourse';
     }
 
+    /** @return string Localized provider name. */
     public static function get_name(): string {
         return get_string('pluginname', 'recerttask_childcourse');
     }
 
+    /** @return bool True when history creation is supported. */
     public static function supports_history(): bool {
         return true;
     }
 
+    /** @return bool True when file preservation is supported. */
     public static function supports_files(): bool {
         return false;
     }
 
+    /** @return bool True when cleanup is supported. */
     public static function supports_cleanup(): bool {
         return true;
     }
 
+    /** @return bool True for a system-level task. */
     public static function is_system_task(): bool {
         return false;
     }
 
+    /** @return int System execution order. */
     public static function get_system_order(): int {
         return 0;
     }
 
+    /**
+     * Builds the historical snapshot for the current recertification context.
+     *
+     * @param task_context $context Execution context.
+     * @return history_result Structured history result.
+     */
     public function create_history(task_context $context): history_result {
         global $DB, $OUTPUT;
 
@@ -118,10 +131,23 @@ final class task implements task_plugin_interface {
         );
     }
 
+    /**
+     * Returns file descriptors that must be copied into historical storage.
+     *
+     * @param task_context $context Execution context.
+     * @param int $historyid History record ID.
+     * @return array File descriptors to preserve.
+     */
     public function get_files(task_context $context, int $historyid): array {
         return [];
     }
 
+    /**
+     * Removes user-specific Child Course synchronization state.
+     *
+     * @param task_context $context Execution context.
+     * @return cleanup_result Structured cleanup result.
+     */
     public function cleanup(task_context $context): cleanup_result {
         global $DB;
 
@@ -138,6 +164,12 @@ final class task implements task_plugin_interface {
         return new cleanup_result($count, [get_string('removedcount', 'recerttask_childcourse', $count)]);
     }
 
+    /**
+     * Returns a non-destructive description of affected Child Course data.
+     *
+     * @param task_context $context Execution context.
+     * @return array Structured impact description.
+     */
     public function describe(task_context $context): array {
         global $DB;
 

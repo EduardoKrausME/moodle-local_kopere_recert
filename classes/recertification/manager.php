@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * manager.php
+ * Recertification manager.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -41,10 +41,10 @@ use Throwable;
  * Coordinates manual and self-service recertification requests.
  */
 class manager {
-    /** Cycle lifecycle manager. */
+    /** @var cycle_manager Cycle lifecycle manager. */
     private readonly cycle_manager $cycles;
 
-    /** Cycle persistence repository. */
+    /** @var cycle_repository Cycle persistence repository. */
     private readonly cycle_repository $repository;
 
     /**

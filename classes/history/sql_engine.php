@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * sql_engine.php
+ * History SQL engine.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -31,7 +31,7 @@ use moodle_exception;
  * Executes validated read-only SQL used by historical Mustache helpers.
  */
 class sql_engine {
-    /** Read-only SQL validator. */
+    /** @var sql_validator Read-only SQL validator. */
     private readonly sql_validator $validator;
 
     /**

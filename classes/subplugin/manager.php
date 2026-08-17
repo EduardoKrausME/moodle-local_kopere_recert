@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * manager.php
+ * Subplugin manager.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -32,11 +32,13 @@ use local_kopere_recert\task\task_plugin_interface;
  * Discovers recerttask subplugins and resolves the component each provider represents.
  */
 class manager {
-    /** @var array<string, task_plugin_interface>|null */
+    /** @var array<string, task_plugin_interface>|null Discovered plugins. */
     private ?array $plugins = null;
 
     /**
-     * @return array<string, task_plugin_interface>
+     * Returns discovered recertification task providers indexed by represented component.
+     *
+     * @return array<string, task_plugin_interface> Discovered task providers.
      */
     public function get_plugins(): array {
         if ($this->plugins !== null) {
@@ -72,20 +74,20 @@ class manager {
     }
 
     /**
-     * Returns for component.
+     * Returns the provider for a represented component.
      *
      * @param string $component Moodle component name.
-     * @return ?task_plugin_interface Result of the operation.
+     * @return ?task_plugin_interface Provider instance or null.
      */
     public function get_for_component(string $component): ?task_plugin_interface {
         return $this->get_plugins()[$component] ?? null;
     }
 
     /**
-     * Handles the represents operation.
+     * Reports whether a component is represented by a recertification subplugin.
      *
      * @param string $component Moodle component name.
-     * @return bool Boolean result.
+     * @return bool True when represented.
      */
     public function represents(string $component): bool {
         return isset($this->get_plugins()[$component]);

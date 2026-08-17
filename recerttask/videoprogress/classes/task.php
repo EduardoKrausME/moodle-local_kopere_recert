@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * task.php
+ * Video Progress recertification task provider.
  *
  * @package   recerttask_videoprogress
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -33,34 +33,47 @@ use local_kopere_recert\task\task_plugin_interface;
  * Specialized recertification task provider for Video Progress.
  */
 final class task implements task_plugin_interface {
+    /** @return string Moodle component name. */
     public static function get_component(): string {
         return 'mod_videoprogress';
     }
 
+    /** @return string Localized provider name. */
     public static function get_name(): string {
         return get_string('pluginname', 'recerttask_videoprogress');
     }
 
+    /** @return bool True when history creation is supported. */
     public static function supports_history(): bool {
         return true;
     }
 
+    /** @return bool True when file preservation is supported. */
     public static function supports_files(): bool {
         return false;
     }
 
+    /** @return bool True when cleanup is supported. */
     public static function supports_cleanup(): bool {
         return true;
     }
 
+    /** @return bool True for a system-level task. */
     public static function is_system_task(): bool {
         return false;
     }
 
+    /** @return int System execution order. */
     public static function get_system_order(): int {
         return 0;
     }
 
+    /**
+     * Builds the historical snapshot for the current recertification context.
+     *
+     * @param task_context $context Execution context.
+     * @return history_result Structured history result.
+     */
     public function create_history(task_context $context): history_result {
         global $DB, $OUTPUT;
 
@@ -125,10 +138,23 @@ final class task implements task_plugin_interface {
         );
     }
 
+    /**
+     * Returns file descriptors that must be copied into historical storage.
+     *
+     * @param task_context $context Execution context.
+     * @param int $historyid History record ID.
+     * @return array File descriptors to preserve.
+     */
     public function get_files(task_context $context, int $historyid): array {
         return [];
     }
 
+    /**
+     * Removes the user's Video Progress tracking data.
+     *
+     * @param task_context $context Execution context.
+     * @return cleanup_result Structured cleanup result.
+     */
     public function cleanup(task_context $context): cleanup_result {
         global $DB;
 
@@ -156,6 +182,12 @@ final class task implements task_plugin_interface {
         return new cleanup_result($affected, [get_string('removedcount', 'recerttask_videoprogress', $affected)]);
     }
 
+    /**
+     * Returns a non-destructive description of affected Video Progress data.
+     *
+     * @param task_context $context Execution context.
+     * @return array Structured impact description.
+     */
     public function describe(task_context $context): array {
         global $DB;
 
@@ -172,6 +204,13 @@ final class task implements task_plugin_interface {
         ];
     }
 
+    /**
+     * Counts stored interactions for an activity and user.
+     *
+     * @param int $instanceid Activity instance ID.
+     * @param int $userid User ID.
+     * @return int Interaction count.
+     */
     private function count_interactions(int $instanceid, int $userid): int {
         global $DB;
 
@@ -184,6 +223,12 @@ final class task implements task_plugin_interface {
         return (int)$DB->count_records_sql($sql, ['instanceid' => $instanceid, 'userid' => $userid]);
     }
 
+    /**
+     * Returns interaction item IDs belonging to an activity.
+     *
+     * @param int $instanceid Activity instance ID.
+     * @return int[] Interaction item IDs.
+     */
     private function get_interaction_itemids(int $instanceid): array {
         global $DB;
 

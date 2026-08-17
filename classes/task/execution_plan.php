@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * execution_plan.php
+ * task execution plan.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -28,9 +28,10 @@ namespace local_kopere_recert\task;
  * Ordered collection of activity and system tasks for one kopere_recert run.
  */
 class execution_plan {
-    /** @var plan_item[] */
+    /** @var plan_item[] Activity plan items. */
     private array $activityitems = [];
-    /** @var plan_item[] */
+
+    /** @var plan_item[] System plan items. */
     private array $systemitems = [];
 
     /**
@@ -51,19 +52,31 @@ class execution_plan {
         $this->systemitems[] = $item;
     }
 
-    /** @return plan_item[] */
+    /**
+     * Returns activity plan items in execution order.
+     *
+     * @return plan_item[] Activity plan items.
+     */
     public function get_activity_items(): array {
         usort($this->activityitems, fn(plan_item $a, plan_item $b) => $a->sortorder <=> $b->sortorder);
         return $this->activityitems;
     }
 
-    /** @return plan_item[] */
+    /**
+     * Returns system plan items in execution order.
+     *
+     * @return plan_item[] System plan items.
+     */
     public function get_system_items(): array {
         usort($this->systemitems, fn(plan_item $a, plan_item $b) => $a->sortorder <=> $b->sortorder);
         return $this->systemitems;
     }
 
-    /** @return plan_item[] */
+    /**
+     * Returns every plan item in execution order.
+     *
+     * @return plan_item[] All plan items.
+     */
     public function get_all_items(): array {
         return array_merge($this->get_activity_items(), $this->get_system_items());
     }

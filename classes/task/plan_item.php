@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * plan_item.php
+ * task execution plan item.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -30,46 +30,46 @@ use stdClass;
  * Immutable description of one activity or system item in an execution plan.
  */
 class plan_item {
-    /** Moodle component name. */
+    /** @var string Moodle component name. */
     public readonly string $component;
 
-    /** Plan item origin. */
+    /** @var string Plan item origin. */
     public readonly string $origin;
 
-    /** Global task configuration ID. */
+    /** @var int|null Global task configuration ID. */
     public readonly ?int $taskid;
 
-    /** Course module ID. */
+    /** @var int|null Course module ID. */
     public readonly ?int $cmid;
 
-    /** Activity instance ID. */
+    /** @var int|null Activity instance ID. */
     public readonly ?int $instanceid;
 
-    /** Moodle context ID. */
+    /** @var int Moodle context ID. */
     public readonly int $contextid;
 
-    /** Activity display name. */
+    /** @var string Activity display name. */
     public readonly string $activityname;
 
-    /** Activity type. */
+    /** @var string Activity type. */
     public readonly string $activitytype;
 
-    /** Execution sort order. */
+    /** @var int Execution sort order. */
     public readonly int $sortorder;
 
-    /** Whether history creation is enabled. */
+    /** @var bool Whether history creation is enabled. */
     public readonly bool $historyenabled;
 
-    /** Whether file preservation is enabled. */
+    /** @var bool Whether file preservation is enabled. */
     public readonly bool $filesenabled;
 
-    /** Whether cleanup is enabled. */
+    /** @var bool Whether cleanup is enabled. */
     public readonly bool $cleanupenabled;
 
-    /** Optional subplugin provider. */
+    /** @var task_plugin_interface|null Optional subplugin provider. */
     public readonly ?task_plugin_interface $plugin;
 
-    /** Optional generic task configuration. */
+    /** @var stdClass|null Optional generic task configuration. */
     public readonly ?stdClass $genericconfig;
 
     /**

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * tasks.php
+ * Task configuration page.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -53,14 +53,21 @@ foreach ($subplugins as $component => $plugin) {
     $rows[] = [
         'component' => $component,
         'type' => get_string('subplugin', 'local_kopere_recert'),
-        'history' => $config && $plugin::supports_history() && $config->historyenabled ? get_string('yes') : get_string('no'),
+        'history' => $config && $plugin::supports_history() && $config->historyenabled
+            ? get_string('yes')
+            : get_string('no'),
         'files' => $config && $plugin::supports_files() && $config->filesenabled ? get_string('yes') : get_string('no'),
-        'cleanup' => $config && $plugin::supports_cleanup() && $config->cleanupenabled ? get_string('yes') : get_string('no'),
+        'cleanup' => $config && $plugin::supports_cleanup() && $config->cleanupenabled
+            ? get_string('yes')
+            : get_string('no'),
         'origin' => preg_replace('/^\\\\/', '', get_class($plugin)),
         'status' => !$installed
             ? get_string('componentnotinstalled', 'local_kopere_recert')
-            : (!$config ? get_string('notconfigured', 'local_kopere_recert')
-                : ($config->enabled ? get_string('enabled', 'local_kopere_recert') : get_string('disabled', 'local_kopere_recert'))),
+            : (!$config
+                ? get_string('notconfigured', 'local_kopere_recert')
+                : ($config->enabled
+                    ? get_string('enabled', 'local_kopere_recert')
+                    : get_string('disabled', 'local_kopere_recert'))),
         'editurl' => (new moodle_url('/local/kopere_recert/taskedit.php', $config
             ? ['id' => $config->id]
             : ['component' => $component]))->out(false),
@@ -97,7 +104,9 @@ foreach ($configs as $task) {
         'origin' => get_string('configuration', 'local_kopere_recert'),
         'status' => $installed && $task->enabled
             ? get_string('enabled', 'local_kopere_recert')
-            : ($installed ? get_string('disabled', 'local_kopere_recert') : get_string('componentnotinstalled', 'local_kopere_recert')),
+            : ($installed
+                ? get_string('disabled', 'local_kopere_recert')
+                : get_string('componentnotinstalled', 'local_kopere_recert')),
         'editurl' => new moodle_url('/local/kopere_recert/taskedit.php', ['id' => $task->id]),
     ];
 }

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * config_mapper.php
+ * Task configuration mapper.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -75,7 +75,10 @@ class config_mapper {
                 foreach (array_slice($extra, 0, 3) as $jindex => $condition) {
                     $j = $jindex + 1;
                     $data->{"cleanupcolumn_{$i}_{$j}"} = $condition['column'] ?? '';
-                    $data->{"cleanupplaceholder_{$i}_{$j}"} = ':' . ltrim((string)($condition['placeholder'] ?? ''), ':');
+                    $data->{"cleanupplaceholder_{$i}_{$j}"} = ':' . ltrim(
+                        (string)($condition['placeholder'] ?? ''),
+                        ':'
+                    );
                 }
             }
         }
@@ -100,7 +103,7 @@ class config_mapper {
             $contextid = trim((string)($data->{"filecontextid_{$i}"} ?? ':contextid'));
             $this->validate_numeric_or_placeholder($itemid);
             $this->validate_numeric_or_placeholder($contextid);
-            // stored_file has no userid column. A generic file rule is therefore only safe when
+            // The stored_file table has no userid column. A generic file rule is therefore only safe when
             // the File API itemid itself is the user id. More complex ownership belongs in a subplugin.
             if ($itemid !== ':userid') {
                 throw new invalid_parameter_exception(
@@ -112,7 +115,8 @@ class config_mapper {
             }
             if ($component !== (string)$data->component) {
                 throw new invalid_parameter_exception(
-                    'Generic file copy can only read the selected task component. Use a specialized subplugin for cross-component file ownership.'
+                    'Generic file copy can only read the selected task component. '
+                    . 'Use a specialized subplugin for cross-component file ownership.'
                 );
             }
             $rows[] = [

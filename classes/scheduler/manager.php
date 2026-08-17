@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * manager.php
+ * Scheduler manager.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -39,6 +39,18 @@ use Throwable;
  * Discovers scheduled kopere_recert candidates and queues isolated work.
  */
 class manager {
+    /** @var date_calculator Date calculator. */
+    private readonly date_calculator $calculator;
+
+    /** @var cycle_manager Cycle manager. */
+    private readonly cycle_manager $cycles;
+
+    /** @var cycle_repository Cycle repository. */
+    private readonly cycle_repository $repository;
+
+    /** @var notification_manager Notification manager. */
+    private readonly notification_manager $notifications;
+
     /**
      * Creates a new manager instance.
      *
@@ -48,11 +60,15 @@ class manager {
      * @param notification_manager $notifications Notifications.
      */
     public function __construct(
-        private readonly date_calculator $calculator = new date_calculator(),
-        private readonly cycle_manager $cycles = new cycle_manager(),
-        private readonly cycle_repository $repository = new cycle_repository(),
-        private readonly notification_manager $notifications = new notification_manager(),
+        date_calculator $calculator = new date_calculator(),
+        cycle_manager $cycles = new cycle_manager(),
+        cycle_repository $repository = new cycle_repository(),
+        notification_manager $notifications = new notification_manager(),
     ) {
+        $this->calculator = $calculator;
+        $this->cycles = $cycles;
+        $this->repository = $repository;
+        $this->notifications = $notifications;
     }
 
     /**
@@ -80,7 +96,12 @@ class manager {
     private function scan_course(stdClass $config, int $now): void {
         global $DB;
 
-        [$enrolledsql, $enrolledparams] = get_enrolled_sql(context_course::instance($config->courseid), '', 0, true);
+        [$enrolledsql, $enrolledparams] = get_enrolled_sql(
+            context_course::instance($config->courseid),
+            '',
+            0,
+            true
+        );
         $sql = "SELECT u.id
                   FROM {user} u
                   JOIN ({$enrolledsql}) eu ON eu.id = u.id
@@ -161,7 +182,15 @@ class manager {
             try {
                 $this->notifications->send_configured_event((int)$scheduled->id, 'kopere_recert_created', false);
             } catch (Throwable $e) {
-                (new \local_kopere_recert\log\manager())->add((int)$scheduled->id, null, 'notification', null, null, 'failed', $e->getMessage());
+                (new \local_kopere_recert\log\manager())->add(
+                    (int)$scheduled->id,
+                    null,
+                    'notification',
+                    null,
+                    null,
+                    'failed',
+                    $e->getMessage()
+                );
             }
         }
 

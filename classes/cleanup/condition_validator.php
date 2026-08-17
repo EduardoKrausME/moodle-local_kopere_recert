@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * condition_validator.php
+ * Cleanup condition validator.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -30,6 +30,7 @@ use invalid_parameter_exception;
  * Validates generic cleanup conditions, columns, and execution placeholders.
  */
 class condition_validator {
+    /** @var string[] Allowed execution placeholders. */
     public const ALLOWED_PLACEHOLDERS = [
         'userid', 'courseid', 'cmid', 'instanceid', 'contextid', 'cycleid', 'kopere_recertid',
     ];
@@ -63,7 +64,7 @@ class condition_validator {
      * Builds the safe SQL condition and bound values used by Moodle DML.
      *
      * @param array $conditions Configured cleanup conditions.
-     * @param array $knowncolumns Knowncolumns.
+     * @param array $knowncolumns Known columns.
      * @param array $params Bound SQL parameters.
      * @return array Safe SQL condition and bound parameters.
      * @throws invalid_parameter_exception

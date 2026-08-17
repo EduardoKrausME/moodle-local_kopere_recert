@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * manager.php
+ * Cleanup manager.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -33,6 +33,12 @@ use local_kopere_recert\task\task_context;
  * Executes generic cleanup through Moodle DML without administrator-authored DELETE SQL.
  */
 class manager {
+    /** @var table_discovery Table discovery service. */
+    private readonly table_discovery $discovery;
+
+    /** @var condition_validator Cleanup condition validator. */
+    private readonly condition_validator $validator;
+
     /**
      * Creates a new manager instance.
      *
@@ -40,9 +46,11 @@ class manager {
      * @param condition_validator $validator Validator.
      */
     public function __construct(
-        private readonly table_discovery $discovery = new table_discovery(),
-        private readonly condition_validator $validator = new condition_validator(),
+        table_discovery $discovery = new table_discovery(),
+        condition_validator $validator = new condition_validator(),
     ) {
+        $this->discovery = $discovery;
+        $this->validator = $validator;
     }
 
     /**

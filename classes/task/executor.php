@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * executor.php
+ * Task executor.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -37,6 +37,21 @@ use moodle_exception;
  * Executes history, file-copy, and cleanup phases for an ordered plan.
  */
 class executor {
+    /** @var history_manager History manager. */
+    private readonly history_manager $history;
+
+    /** @var renderer_service History renderer. */
+    private readonly renderer_service $renderer;
+
+    /** @var files_manager File manager. */
+    private readonly files_manager $files;
+
+    /** @var cleanup_manager Cleanup manager. */
+    private readonly cleanup_manager $cleanup;
+
+    /** @var log_manager Log manager. */
+    private readonly log_manager $log;
+
     /**
      * Creates a new executor instance.
      *
@@ -47,17 +62,29 @@ class executor {
      * @param log_manager $log Log.
      */
     public function __construct(
-        private readonly history_manager $history = new history_manager(),
-        private readonly renderer_service $renderer = new renderer_service(),
-        private readonly files_manager $files = new files_manager(),
-        private readonly cleanup_manager $cleanup = new cleanup_manager(),
-        private readonly log_manager $log = new log_manager(),
+        history_manager $history = new history_manager(),
+        renderer_service $renderer = new renderer_service(),
+        files_manager $files = new files_manager(),
+        cleanup_manager $cleanup = new cleanup_manager(),
+        log_manager $log = new log_manager(),
     ) {
+        $this->history = $history;
+        $this->renderer = $renderer;
+        $this->files = $files;
+        $this->cleanup = $cleanup;
+        $this->log = $log;
     }
 
     /**
      * Build a non-destructive description of the same plan which will be executed.
      * This is supplemental to simulation; simulation still runs the real methods in a rollback transaction.
+     *
+     * @param execution_plan $plan Execution plan.
+     * @param int $userid User ID.
+     * @param int $courseid Course ID.
+     * @param int $cycleid Recertification cycle ID.
+     * @param bool $simulation Whether the operation is running in simulation mode.
+     * @return array Structured plan description.
      */
     public function describe_plan(
         execution_plan $plan,
@@ -97,9 +124,22 @@ class executor {
     }
 
     /**
+     * Creates all enabled historical snapshots for an execution plan.
+     *
+     * @param execution_plan $plan Execution plan.
+     * @param int $userid User ID.
+     * @param int $courseid Course ID.
+     * @param int $cycleid Recertification cycle ID.
+     * @param bool $simulation Whether the operation is running in simulation mode.
      * @return array<int,int> Map plan sortorder => history id.
      */
-    public function create_all_histories(execution_plan $plan, int $userid, int $courseid, int $cycleid, bool $simulation): array {
+    public function create_all_histories(
+        execution_plan $plan,
+        int $userid,
+        int $courseid,
+        int $cycleid,
+        bool $simulation
+    ): array {
         $historyids = [];
         foreach ($plan->get_all_items() as $item) {
             if (!$item->historyenabled) {

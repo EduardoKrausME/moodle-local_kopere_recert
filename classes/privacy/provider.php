@@ -149,7 +149,7 @@ class provider implements
                 self::export_owned_cycle($context, $cycle);
             }
 
-            // createdby is also personal data. Export administrative actions without exposing
+            // Createdby is also personal data. Export administrative actions without exposing
             // another user's archived history in the creator's privacy export.
             $created = $DB->get_records('local_kopere_recert_cycle', [
                 'courseid' => $context->instanceid,

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * manager.php
+ * Task manager.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -36,12 +36,16 @@ use stdClass;
  * Discovers configured tasks and builds course execution plans.
  */
 class manager {
+    /** @var subplugin_manager Subplugin manager. */
+    private readonly subplugin_manager $subplugins;
+
     /**
      * Creates a new manager instance.
      *
      * @param subplugin_manager $subplugins Subplugins.
      */
-    public function __construct(private readonly subplugin_manager $subplugins = new subplugin_manager()) {
+    public function __construct(subplugin_manager $subplugins = new subplugin_manager()) {
+        $this->subplugins = $subplugins;
     }
 
     /**
@@ -57,6 +61,8 @@ class manager {
     /**
      * Generic activity components available for backend validation.
      * Components represented by a subplugin never appear here.
+     *
+     * @return array Available activity components.
      */
     public function get_available_components(): array {
         $groups = $this->get_available_component_groups();
@@ -65,6 +71,8 @@ class manager {
 
     /**
      * Components available for a new global task, grouped for the administration UI.
+     *
+     * @return array Grouped available components.
      */
     public function get_available_component_groups(): array {
         global $DB;
@@ -130,7 +138,9 @@ class manager {
         global $DB;
 
         if (!empty($record->filesenabled) && empty($record->historyenabled)) {
-            throw new invalid_parameter_exception('File copy requires history to be enabled because historyid is the archive item identifier.');
+            throw new invalid_parameter_exception(
+                'File copy requires history to be enabled because historyid is the archive item identifier.'
+            );
         }
 
         $issubplugin = ($record->origin ?? 'generic') === 'subplugin';
@@ -261,7 +271,8 @@ class manager {
                 filesenabled: $plugin::supports_files() && !empty($config->filesenabled),
                 cleanupenabled: $plugin::supports_cleanup()
                     && !empty($config->cleanupenabled)
-                    && ($component !== 'core_competency' || ($courseconfig && !empty($courseconfig->resetcompetencies))),
+                    && ($component !== 'core_competency'
+                        || ($courseconfig && !empty($courseconfig->resetcompetencies))),
                 plugin: $plugin,
             ));
         }

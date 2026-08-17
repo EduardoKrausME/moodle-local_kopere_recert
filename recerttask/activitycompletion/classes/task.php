@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * task.php
+ * Activity completion recertification task provider.
  *
  * @package   recerttask_activitycompletion
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -34,46 +34,40 @@ use local_kopere_recert\task\task_plugin_interface;
  * Specialized kopere_recert task provider for activity completion.
  */
 final class task implements task_plugin_interface {
-    /**
-     * Returns the Moodle component represented by this task provider.
-     *
-     * @return string Moodle component name.
-     */
-    public static function get_component(): string { return 'core_activitycompletion'; }
-    /**
-     * Returns the localized name of this provider.
-     */
-    public static function get_name(): string { return get_string('pluginname', 'recerttask_activitycompletion'); }
-    /**
-     * Reports whether the provider can create historical snapshots.
-     *
-     * @return bool True when history creation is supported.
-     */
-    public static function supports_history(): bool { return true; }
-    /**
-     * Reports whether the provider can preserve files.
-     *
-     * @return bool True when file preservation is supported.
-     */
-    public static function supports_files(): bool { return false; }
-    /**
-     * Reports whether the provider can clean user data.
-     *
-     * @return bool True when cleanup is supported.
-     */
-    public static function supports_cleanup(): bool { return true; }
-    /**
-     * Reports whether this provider represents a system-level task.
-     *
-     * @return bool True for a system-level task.
-     */
-    public static function is_system_task(): bool { return true; }
-    /**
-     * Returns the ordering value used for system-level execution.
-     *
-     * @return int System execution order.
-     */
-    public static function get_system_order(): int { return 20; }
+    /** @return string Moodle component name. */
+    public static function get_component(): string {
+        return 'core_activitycompletion';
+    }
+
+    /** @return string Localized provider name. */
+    public static function get_name(): string {
+        return get_string('pluginname', 'recerttask_activitycompletion');
+    }
+
+    /** @return bool True when history creation is supported. */
+    public static function supports_history(): bool {
+        return true;
+    }
+
+    /** @return bool True when file preservation is supported. */
+    public static function supports_files(): bool {
+        return false;
+    }
+
+    /** @return bool True when cleanup is supported. */
+    public static function supports_cleanup(): bool {
+        return true;
+    }
+
+    /** @return bool True for a system-level task. */
+    public static function is_system_task(): bool {
+        return true;
+    }
+
+    /** @return int System execution order. */
+    public static function get_system_order(): int {
+        return 20;
+    }
 
     /**
      * Builds the historical snapshot for the current kopere_recert context.
@@ -96,11 +90,16 @@ final class task implements task_plugin_interface {
                  WHERE cm.course = :courseid
                    AND cmc.userid = :userid
               ORDER BY cm.section, cm.id";
-        $records = $DB->get_records_sql($sql, ['courseid' => $context->courseid, 'userid' => $context->userid]);
+        $records = $DB->get_records_sql($sql, [
+            'courseid' => $context->courseid,
+            'userid' => $context->userid,
+        ]);
         $rows = [];
         $modinfo = get_fast_modinfo($context->courseid);
         foreach ($records as $row) {
-            $name = isset($modinfo->cms[$row->coursemoduleid]) ? $modinfo->cms[$row->coursemoduleid]->name : 'cmid ' . $row->coursemoduleid;
+            $name = isset($modinfo->cms[$row->coursemoduleid])
+                ? $modinfo->cms[$row->coursemoduleid]->name
+                : 'cmid ' . $row->coursemoduleid;
             $rows[] = [
                 'cmid' => $row->coursemoduleid,
                 'name' => format_string($name),
@@ -110,7 +109,10 @@ final class task implements task_plugin_interface {
             ];
         }
         return new history_result(
-            html: $OUTPUT->render_from_template('recerttask_activitycompletion/history', ['rows' => $rows, 'count' => count($rows)]),
+            html: $OUTPUT->render_from_template('recerttask_activitycompletion/history', [
+                'rows' => $rows,
+                'count' => count($rows),
+            ]),
             data: ['records' => count($rows)]
         );
     }
@@ -122,7 +124,9 @@ final class task implements task_plugin_interface {
      * @param int $historyid History record ID.
      * @return array File descriptors to preserve.
      */
-    public function get_files(task_context $context, int $historyid): array { return []; }
+    public function get_files(task_context $context, int $historyid): array {
+        return [];
+    }
 
     /**
      * Cleans the current user data after history and files have been safely preserved.
@@ -154,9 +158,14 @@ final class task implements task_plugin_interface {
      */
     public function describe(task_context $context): array {
         global $DB;
-        return ['records' => (int)$DB->get_field_sql(
-            "SELECT COUNT(1) FROM {course_modules_completion} cmc JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid WHERE cm.course = :courseid AND cmc.userid = :userid",
-            ['courseid' => $context->courseid, 'userid' => $context->userid]
-        )];
+        $sql = "SELECT COUNT(1)
+                  FROM {course_modules_completion} cmc
+                  JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid
+                 WHERE cm.course = :courseid
+                   AND cmc.userid = :userid";
+        return ['records' => (int)$DB->get_field_sql($sql, [
+            'courseid' => $context->courseid,
+            'userid' => $context->userid,
+        ])];
     }
 }

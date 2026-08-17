@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * cleanup_result.php
+ * task cleanup result.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -28,10 +28,10 @@ namespace local_kopere_recert\task;
  * Structured cleanup result returned by task providers.
  */
 class cleanup_result {
-    /** Number of affected records. */
+    /** @var int Number of affected records. */
     public int $affected;
 
-    /** Informational cleanup messages. */
+    /** @var array Informational cleanup messages. */
     public array $messages;
 
     /**

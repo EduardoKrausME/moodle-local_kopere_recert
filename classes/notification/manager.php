@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * manager.php
+ * Notification manager.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -52,8 +52,16 @@ class manager {
 
         $notice = null;
         if ($noticeid) {
-            $notice = $DB->get_record('local_kopere_recert_notice', ['id' => $noticeid, 'courseid' => $cycle->courseid], '*', MUST_EXIST);
-            if ($DB->record_exists('local_kopere_recert_notice_log', ['cycleid' => $cycleid, 'noticeid' => $noticeid])) {
+            $notice = $DB->get_record(
+                'local_kopere_recert_notice',
+                ['id' => $noticeid, 'courseid' => $cycle->courseid],
+                '*',
+                MUST_EXIST
+            );
+            if ($DB->record_exists('local_kopere_recert_notice_log', [
+                'cycleid' => $cycleid,
+                'noticeid' => $noticeid,
+            ])) {
                 return false;
             }
         }
@@ -177,8 +185,14 @@ class manager {
             'enabled' => 1,
         ], 'offsetdays DESC, id ASC');
 
+        $dueevents = [
+            'expiration_warning',
+            'kopere_recert_available',
+            'kopere_recert_due',
+            'kopere_recert_expired',
+        ];
         foreach ($notices as $notice) {
-            if (!in_array($notice->eventtype, ['expiration_warning', 'kopere_recert_available', 'kopere_recert_due', 'kopere_recert_expired'], true)) {
+            if (!in_array($notice->eventtype, $dueevents, true)) {
                 continue;
             }
 
@@ -186,7 +200,10 @@ class manager {
             if ($sendat > $now) {
                 continue;
             }
-            if ($DB->record_exists('local_kopere_recert_notice_log', ['cycleid' => $cycle->id, 'noticeid' => $notice->id])) {
+            if ($DB->record_exists('local_kopere_recert_notice_log', [
+                'cycleid' => $cycle->id,
+                'noticeid' => $notice->id,
+            ])) {
                 continue;
             }
 

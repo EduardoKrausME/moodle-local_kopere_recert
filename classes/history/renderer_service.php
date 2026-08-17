@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * renderer_service.php
+ * History renderer service.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -32,12 +32,16 @@ use Mustache_LambdaHelper;
  * Renders historical Mustache templates with safe SQL helper callbacks.
  */
 class renderer_service {
+    /** @var sql_engine SQL execution service. */
+    private readonly sql_engine $sqlengine;
+
     /**
      * Creates a new renderer service instance.
      *
-     * @param sql_engine $sqlengine Sqlengine.
+     * @param sql_engine $sqlengine SQL engine.
      */
-    public function __construct(private readonly sql_engine $sqlengine = new sql_engine()) {
+    public function __construct(sql_engine $sqlengine = new sql_engine()) {
+        $this->sqlengine = $sqlengine;
     }
 
     /**
@@ -45,7 +49,7 @@ class renderer_service {
      *
      * @param string $template Mustache template source.
      * @param task_context $context Execution context.
-     * @param array $mustachecontext Mustachecontext.
+     * @param array $mustachecontext Mustache context.
      * @return string Rendered historical HTML.
      */
     public function render(string $template, task_context $context, array $mustachecontext = []): string {
@@ -76,7 +80,7 @@ class renderer_service {
             'instanceid' => $context->instanceid,
             'contextid' => $context->contextid,
             'cycleid' => $context->cycleid,
-            'kopere_recertid' => $context->kopere_recertid,
+            'kopere_recertid' => $context->recertificationid,
         ];
 
         return $mustache->render($template, array_merge($base, $mustachecontext));

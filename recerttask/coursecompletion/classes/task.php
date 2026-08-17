@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * task.php
+ * Course completion recertification task provider.
  *
  * @package   recerttask_coursecompletion
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -36,46 +36,40 @@ use moodle_exception;
  * Specialized kopere_recert task provider for course completion.
  */
 final class task implements task_plugin_interface {
-    /**
-     * Returns the Moodle component represented by this task provider.
-     *
-     * @return string Moodle component name.
-     */
-    public static function get_component(): string { return 'core_coursecompletion'; }
-    /**
-     * Returns the localized name of this provider.
-     */
-    public static function get_name(): string { return get_string('pluginname', 'recerttask_coursecompletion'); }
-    /**
-     * Reports whether the provider can create historical snapshots.
-     *
-     * @return bool True when history creation is supported.
-     */
-    public static function supports_history(): bool { return true; }
-    /**
-     * Reports whether the provider can preserve files.
-     *
-     * @return bool True when file preservation is supported.
-     */
-    public static function supports_files(): bool { return false; }
-    /**
-     * Reports whether the provider can clean user data.
-     *
-     * @return bool True when cleanup is supported.
-     */
-    public static function supports_cleanup(): bool { return true; }
-    /**
-     * Reports whether this provider represents a system-level task.
-     *
-     * @return bool True for a system-level task.
-     */
-    public static function is_system_task(): bool { return true; }
-    /**
-     * Returns the ordering value used for system-level execution.
-     *
-     * @return int System execution order.
-     */
-    public static function get_system_order(): int { return 30; }
+    /** @return string Moodle component name. */
+    public static function get_component(): string {
+        return 'core_coursecompletion';
+    }
+
+    /** @return string Localized provider name. */
+    public static function get_name(): string {
+        return get_string('pluginname', 'recerttask_coursecompletion');
+    }
+
+    /** @return bool True when history creation is supported. */
+    public static function supports_history(): bool {
+        return true;
+    }
+
+    /** @return bool True when file preservation is supported. */
+    public static function supports_files(): bool {
+        return false;
+    }
+
+    /** @return bool True when cleanup is supported. */
+    public static function supports_cleanup(): bool {
+        return true;
+    }
+
+    /** @return bool True for a system-level task. */
+    public static function is_system_task(): bool {
+        return true;
+    }
+
+    /** @return int System execution order. */
+    public static function get_system_order(): int {
+        return 30;
+    }
 
     /**
      * Builds the historical snapshot for the current kopere_recert context.
@@ -149,7 +143,9 @@ final class task implements task_plugin_interface {
      * @param int $historyid History record ID.
      * @return array File descriptors to preserve.
      */
-    public function get_files(task_context $context, int $historyid): array { return []; }
+    public function get_files(task_context $context, int $historyid): array {
+        return [];
+    }
 
     /**
      * Cleans the current user data after history and files have been safely preserved.

@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// This file is part of Moodle - http://moodle.org/
+// Defines the subplugin version metadata.
 
 defined('MOODLE_INTERNAL') || die();
 

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * task.php
+ * Forum recertification task provider.
  *
  * @package   recerttask_forum
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -36,46 +36,40 @@ use moodle_exception;
  * Specialized kopere_recert task provider for forums.
  */
 final class task implements task_plugin_interface {
-    /**
-     * Returns the Moodle component represented by this task provider.
-     *
-     * @return string Moodle component name.
-     */
-    public static function get_component(): string { return 'mod_forum'; }
-    /**
-     * Returns the localized name of this provider.
-     */
-    public static function get_name(): string { return get_string('pluginname', 'recerttask_forum'); }
-    /**
-     * Reports whether the provider can create historical snapshots.
-     *
-     * @return bool True when history creation is supported.
-     */
-    public static function supports_history(): bool { return true; }
-    /**
-     * Reports whether the provider can preserve files.
-     *
-     * @return bool True when file preservation is supported.
-     */
-    public static function supports_files(): bool { return true; }
-    /**
-     * Reports whether the provider can clean user data.
-     *
-     * @return bool True when cleanup is supported.
-     */
-    public static function supports_cleanup(): bool { return true; }
-    /**
-     * Reports whether this provider represents a system-level task.
-     *
-     * @return bool True for a system-level task.
-     */
-    public static function is_system_task(): bool { return false; }
-    /**
-     * Returns the ordering value used for system-level execution.
-     *
-     * @return int System execution order.
-     */
-    public static function get_system_order(): int { return 0; }
+    /** @return string Moodle component name. */
+    public static function get_component(): string {
+        return 'mod_forum';
+    }
+
+    /** @return string Localized provider name. */
+    public static function get_name(): string {
+        return get_string('pluginname', 'recerttask_forum');
+    }
+
+    /** @return bool True when history creation is supported. */
+    public static function supports_history(): bool {
+        return true;
+    }
+
+    /** @return bool True when file preservation is supported. */
+    public static function supports_files(): bool {
+        return true;
+    }
+
+    /** @return bool True when cleanup is supported. */
+    public static function supports_cleanup(): bool {
+        return true;
+    }
+
+    /** @return bool True for a system-level task. */
+    public static function is_system_task(): bool {
+        return false;
+    }
+
+    /** @return int System execution order. */
+    public static function get_system_order(): int {
+        return 0;
+    }
 
     /**
      * Builds the historical snapshot for the current kopere_recert context.

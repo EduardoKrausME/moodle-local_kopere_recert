@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * date_calculator.php
+ * Date calculator.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -36,6 +36,12 @@ use stdClass;
  * Calculates kopere_recert reference, availability, and due dates.
  */
 class date_calculator {
+    /** @var cycle_repository Cycle repository. */
+    private readonly cycle_repository $cycles;
+
+    /** @var subplugin_manager Subplugin manager. */
+    private readonly subplugin_manager $subplugins;
+
     /**
      * Creates a new date calculator instance.
      *
@@ -43,9 +49,11 @@ class date_calculator {
      * @param subplugin_manager $subplugins Subplugins.
      */
     public function __construct(
-        private readonly cycle_repository $cycles = new cycle_repository(),
-        private readonly subplugin_manager $subplugins = new subplugin_manager(),
+        cycle_repository $cycles = new cycle_repository(),
+        subplugin_manager $subplugins = new subplugin_manager(),
     ) {
+        $this->cycles = $cycles;
+        $this->subplugins = $subplugins;
     }
 
     /**
@@ -174,7 +182,10 @@ class date_calculator {
     private function calculate_available_at(stdClass $config, int $dueat): int {
         global $DB;
         $maxoffset = $DB->get_field_sql(
-            "SELECT MAX(offsetdays) FROM {local_kopere_recert_notice} WHERE courseid = :courseid AND enabled = 1",
+            "SELECT MAX(offsetdays)
+               FROM {local_kopere_recert_notice}
+              WHERE courseid = :courseid
+                AND enabled = 1",
             ['courseid' => $config->courseid]
         );
         return $dueat - max(0, (int)$maxoffset) * DAYSECS;

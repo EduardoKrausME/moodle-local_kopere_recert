@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * lib.php
+ * Library callbacks.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -102,23 +102,37 @@ function local_kopere_recert_pluginfile(
  * @param stdClass $course Course record.
  * @param context_course $context Execution context.
  */
-function local_kopere_recert_extend_navigation_course(navigation_node $navigation, stdClass $course, context_course $context): void {
+function local_kopere_recert_extend_navigation_course(
+    navigation_node $navigation,
+    stdClass $course,
+    context_course $context
+): void {
     global $USER;
 
     if (has_capability('local/kopere_recert:viewownhistory', $context)) {
         $navigation->add(
             get_string('history', 'local_kopere_recert'),
-            new moodle_url('/local/kopere_recert/history.php', ['courseid' => $course->id, 'userid' => $USER->id]),
+            new moodle_url('/local/kopere_recert/history.php', [
+                'courseid' => $course->id,
+                'userid' => $USER->id,
+            ]),
             navigation_node::TYPE_CUSTOM
         );
     }
 
     if (has_capability('local/kopere_recert:recertifyself', $context)) {
-        $availability = (new \local_kopere_recert\recertification\manager())->get_self_availability((int)$course->id, (int)$USER->id);
-        if (!empty($availability['allowed']) && !(new manager())->is_kopere_recert_required((int)$course->id, (int)$USER->id)) {
+        $availability = (new \local_kopere_recert\recertification\manager())->get_self_availability(
+            (int)$course->id,
+            (int)$USER->id
+        );
+        $required = (new manager())->is_kopere_recert_required((int)$course->id, (int)$USER->id);
+        if (!empty($availability['allowed']) && !$required) {
             $navigation->add(
                 get_string('startkopere_recert', 'local_kopere_recert'),
-                new moodle_url('/local/kopere_recert/recertify.php', ['courseid' => $course->id, 'userid' => $USER->id]),
+                new moodle_url('/local/kopere_recert/recertify.php', [
+                    'courseid' => $course->id,
+                    'userid' => $USER->id,
+                ]),
                 navigation_node::TYPE_CUSTOM
             );
         }

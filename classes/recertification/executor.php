@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * executor.php
+ * Recertification executor.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -39,16 +39,16 @@ use Throwable;
  * Coordinates the transactional execution of one recertification cycle.
  */
 class executor {
-    /** Cycle lifecycle manager. */
+    /** @var cycle_manager Cycle lifecycle manager. */
     private readonly cycle_manager $cycles;
 
-    /** Task plan manager. */
+    /** @var task_manager Task plan manager. */
     private readonly task_manager $tasks;
 
-    /** Task execution service. */
+    /** @var task_executor Task execution service. */
     private readonly task_executor $executor;
 
-    /** Notification service. */
+    /** @var notification_manager Notification service. */
     private readonly notification_manager $notifications;
 
     /**

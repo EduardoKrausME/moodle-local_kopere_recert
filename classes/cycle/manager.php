@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * manager.php
+ * Recertification cycle manager.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -68,7 +68,7 @@ class manager {
     /** Cycle was requested through an API integration. */
     public const SOURCE_API = 'api';
 
-    /** Cycle persistence repository. */
+    /** @var repository Cycle persistence repository. */
     private readonly repository $repository;
 
     /**

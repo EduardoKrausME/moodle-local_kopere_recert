@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * history_filter_form.php
+ * History filter form.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -60,7 +60,8 @@ class history_filter_form extends moodleform {
 
         if ($canselectuser) {
             $useroptions = [];
-            $user = $DB->get_record('user', ['id' => $userid], 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename');
+            $userfields = 'id,firstname,lastname,firstnamephonetic,lastnamephonetic,middlename,alternatename';
+            $user = $DB->get_record('user', ['id' => $userid], $userfields);
             if ($user) {
                 $useroptions[$user->id] = fullname($user);
             }

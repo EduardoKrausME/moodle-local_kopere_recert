@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * history_result.php
+ * task history result.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -28,22 +28,22 @@ namespace local_kopere_recert\task;
  * Structured historical data returned by task providers to the parent plugin.
  */
 class history_result {
-    /** Completion timestamp. */
+    /** @var int|null Completion timestamp. */
     public ?int $completedat;
 
-    /** Grade value. */
+    /** @var float|null Grade value. */
     public ?float $grade;
 
-    /** Rendered historical HTML. */
+    /** @var string Rendered historical HTML. */
     public string $html;
 
-    /** Structured historical data. */
+    /** @var array Structured historical data. */
     public array $data;
 
-    /** File descriptors or file metadata associated with the history. */
+    /** @var array File descriptors or file metadata associated with the history. */
     public array $files;
 
-    /** Informational messages produced while creating the history. */
+    /** @var array Informational messages produced while creating the history. */
     public array $messages;
 
     /**

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * simulator.php
+ * Recertification simulator.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -36,13 +36,13 @@ use Throwable;
  * Runs the real recertification pipeline in rollback-only simulation mode.
  */
 class simulator {
-    /** Task plan manager. */
+    /** @var task_manager Task plan manager. */
     private readonly task_manager $tasks;
 
-    /** Task execution service. */
+    /** @var task_executor Task execution service. */
     private readonly task_executor $executor;
 
-    /** Lock factory used to prevent duplicate execution. */
+    /** @var lock_factory Lock factory used to prevent duplicate execution. */
     private readonly lock_factory $lockfactory;
 
     /**

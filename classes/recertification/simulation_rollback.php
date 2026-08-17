@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * simulation_rollback.php
+ * Simulation rollback exception.
  *
  * @package   local_kopere_recert
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
@@ -30,7 +30,7 @@ use moodle_exception;
  * Internal exception used to force rollback after a successful simulation.
  */
 class simulation_rollback extends moodle_exception {
-    /** Simulation report preserved by the rollback exception. */
+    /** @var array Simulation report preserved by the rollback exception. */
     private array $report = [];
 
     /**
