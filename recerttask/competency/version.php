@@ -24,9 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'recerttask_competency';
 $plugin->version = 2026081204;
-$plugin->requires = 2024100700;
-$plugin->dependencies = ['local_kopere_recert' => 2026081204];
-$plugin->maturity = MATURITY_STABLE;
 $plugin->release = '0.9.4';
+$plugin->component = 'recerttask_competency';
+$plugin->requires = 2024042200;
+$plugin->maturity = MATURITY_STABLE;
+
+$plugin->dependencies = [
+    'local_kopere_recert' => 2026081204,
+];
