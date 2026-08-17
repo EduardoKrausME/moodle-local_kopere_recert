@@ -36,37 +36,65 @@ use moodle_exception;
  * Specialized kopere_recert task provider for forums.
  */
 final class task implements task_plugin_interface {
-    /** @return string Moodle component name. */
+    /**
+     * Returns the Moodle component handled by this provider.
+     *
+     * @return string Moodle component name.
+     */
     public static function get_component(): string {
         return 'mod_forum';
     }
 
-    /** @return string Localized provider name. */
+    /**
+     * Returns the localized provider name.
+     *
+     * @return string Localized provider name.
+     */
     public static function get_name(): string {
         return get_string('pluginname', 'recerttask_forum');
     }
 
-    /** @return bool True when history creation is supported. */
+    /**
+     * Checks whether history creation is supported.
+     *
+     * @return bool True when history creation is supported.
+     */
     public static function supports_history(): bool {
         return true;
     }
 
-    /** @return bool True when file preservation is supported. */
+    /**
+     * Checks whether file preservation is supported.
+     *
+     * @return bool True when file preservation is supported.
+     */
     public static function supports_files(): bool {
         return true;
     }
 
-    /** @return bool True when cleanup is supported. */
+    /**
+     * Checks whether cleanup is supported.
+     *
+     * @return bool True when cleanup is supported.
+     */
     public static function supports_cleanup(): bool {
         return true;
     }
 
-    /** @return bool True for a system-level task. */
+    /**
+     * Checks whether this is a system-level task.
+     *
+     * @return bool True for a system-level task.
+     */
     public static function is_system_task(): bool {
         return false;
     }
 
-    /** @return int System execution order. */
+    /**
+     * Returns the system execution order.
+     *
+     * @return int System execution order.
+     */
     public static function get_system_order(): int {
         return 0;
     }

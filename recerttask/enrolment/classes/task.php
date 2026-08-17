@@ -34,37 +34,65 @@ use moodle_exception;
  * Specialized kopere_recert task provider for enrolments.
  */
 final class task implements task_plugin_interface {
-    /** @return string Moodle component name. */
+    /**
+     * Returns the Moodle component handled by this provider.
+     *
+     * @return string Moodle component name.
+     */
     public static function get_component(): string {
         return 'core_enrolment';
     }
 
-    /** @return string Localized provider name. */
+    /**
+     * Returns the localized provider name.
+     *
+     * @return string Localized provider name.
+     */
     public static function get_name(): string {
         return get_string('pluginname', 'recerttask_enrolment');
     }
 
-    /** @return bool True when history creation is supported. */
+    /**
+     * Checks whether history creation is supported.
+     *
+     * @return bool True when history creation is supported.
+     */
     public static function supports_history(): bool {
         return true;
     }
 
-    /** @return bool True when file preservation is supported. */
+    /**
+     * Checks whether file preservation is supported.
+     *
+     * @return bool True when file preservation is supported.
+     */
     public static function supports_files(): bool {
         return false;
     }
 
-    /** @return bool True when cleanup is supported. */
+    /**
+     * Checks whether cleanup is supported.
+     *
+     * @return bool True when cleanup is supported.
+     */
     public static function supports_cleanup(): bool {
         return true;
     }
 
-    /** @return bool True for a system-level task. */
+    /**
+     * Checks whether this is a system-level task.
+     *
+     * @return bool True for a system-level task.
+     */
     public static function is_system_task(): bool {
         return true;
     }
 
-    /** @return int System execution order. */
+    /**
+     * Returns the system execution order.
+     *
+     * @return int System execution order.
+     */
     public static function get_system_order(): int {
         return 50;
     }
