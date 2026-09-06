@@ -77,6 +77,7 @@ $string['filter'] = 'Filter';
 $string['fixedday'] = 'Fixed day';
 $string['fixedmonth'] = 'Fixed month';
 $string['forumcleanupfailed'] = 'Failed to remove the user forum data.';
+$string['forumdiscussionhasotherusers'] = 'A forum discussion cannot be safely removed because it contains posts from other users that must be preserved.';
 $string['forumreplyhaschildren'] = 'A forum reply cannot be safely removed because it has child replies that must be preserved.';
 $string['generic'] = 'Generic';
 $string['gradecleanupfailed'] = 'Failed to reset the user grade data.';
