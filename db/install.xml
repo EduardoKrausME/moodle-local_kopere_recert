@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/kopere_recert/db" VERSION="2026081300" COMMENT="XMLDB file for local_kopere_recert">
+<XMLDB PATH="local/kopere_recert/db" VERSION="20260813" COMMENT="XMLDB file for local_kopere_recert">
     <TABLES>
         <TABLE NAME="local_kopere_recert_cycle" COMMENT="Recertification cycles">
             <FIELDS>
