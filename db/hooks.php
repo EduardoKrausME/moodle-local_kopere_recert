@@ -23,7 +23,7 @@
  */
 
 use core\hook\output\before_standard_top_of_body_html_generation;
-use local_kopere_recert\local\hook_callbacks;
+use local_kopere_recert\hook_callbacks;
 
 defined('MOODLE_INTERNAL') || die();
 

@@ -36,7 +36,7 @@
 }}
 
 <div class="mb-3">
-    <a class="btn btn-primary" href="{{newurl}}">{{#str}}newtask, local_kopere_recert{{/str}}</a>
+    <a class="btn btn-primary" href="{{{newurl}}}">{{#str}}newtask, local_kopere_recert{{/str}}</a>
 </div>
 <div class="table-responsive">
 <table class="table generaltable">
@@ -56,7 +56,7 @@
             <td>{{files}}</td>
             <td>{{cleanup}}</td>
             <td>{{status}}</td>
-            <td>{{#editurl}}<a href="{{editurl}}">{{#str}}edit{{/str}}</a>{{/editurl}}</td>
+            <td>{{#editurl}}<a href="{{{editurl}}}">{{#str}}edit{{/str}}</a>{{/editurl}}</td>
         </tr>
     {{/rows}}
     </tbody>
