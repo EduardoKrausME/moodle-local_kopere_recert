@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 $string['archivedcount'] = 'Archived {$a} Super Video progress record(s).';
 $string['currenttime'] = 'Current position';
 $string['duration'] = 'Duration';

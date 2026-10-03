@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 $string['archivedcount'] = 'Archived {$a} Child Course state record(s).';
 $string['childcourse'] = 'Child course';
 $string['coursecompleted'] = 'Child course completed';

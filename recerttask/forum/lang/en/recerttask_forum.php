@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 $string['archivedcount'] = '{$a} forum post(s) archived.';
 $string['discussions'] = 'discussion(s)';
 $string['pluginname'] = 'Recertification task: forum';

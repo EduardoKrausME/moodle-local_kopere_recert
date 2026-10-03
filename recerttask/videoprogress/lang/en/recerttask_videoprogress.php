@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 $string['archivedcount'] = 'Archived {$a} Video Progress record(s).';
 $string['completed'] = 'Completed';
 $string['duration'] = 'Duration';

@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 $string['activecycleexists'] = 'Este usuário já possui um ciclo de recertificação pendente, processando ou ativo neste curso.';
 $string['activitycompletedat'] = 'Conclusão anterior';
 $string['additionalcondition'] = 'Condição adicional {$a}';
