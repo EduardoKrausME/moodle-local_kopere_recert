@@ -31,6 +31,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests cycle numbering and recertification date calculations.
+ *
+ * @covers \local_kopere_recert\cycle\manager
+ * @covers \local_kopere_recert\course\date_calculator
  */
 #[CoversClass(manager::class)]
 #[CoversClass(date_calculator::class)]

@@ -37,6 +37,11 @@ use Throwable;
 
 /**
  * Tests transaction rollback, locking, notifications, and cycle completion behavior.
+ *
+ * @covers \local_kopere_recert\recertification\simulator
+ * @covers \local_kopere_recert\cycle\manager
+ * @covers \local_kopere_recert\notification\manager
+ * @covers \local_kopere_recert\observer
  */
 #[CoversClass(simulator::class)]
 #[CoversClass(manager::class)]

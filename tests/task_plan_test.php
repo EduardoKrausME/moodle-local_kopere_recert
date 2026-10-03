@@ -33,6 +33,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests global task definitions and execution plan generation.
+ *
+ * @covers \local_kopere_recert\task\manager
+ * @covers \local_kopere_recert\cleanup\table_discovery
  */
 #[CoversClass(manager::class)]
 #[CoversClass(table_discovery::class)]

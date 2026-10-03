@@ -32,6 +32,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests the read-only SQL engine and validator used by history templates.
+ *
+ * @covers \local_kopere_recert\history\sql_engine
+ * @covers \local_kopere_recert\history\sql_validator
  */
 #[CoversClass(sql_engine::class)]
 #[CoversClass(sql_validator::class)]

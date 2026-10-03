@@ -30,6 +30,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests kopere_recert behavior for competency.
+ *
+ * @covers \recerttask_competency\task
  */
 #[CoversClass(task::class)]
 final class task_test extends advanced_testcase {
