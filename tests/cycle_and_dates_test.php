@@ -27,7 +27,6 @@ namespace local_kopere_recert;
 use advanced_testcase;
 use local_kopere_recert\course\date_calculator;
 use local_kopere_recert\cycle\manager;
-use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests cycle numbering and recertification date calculations.
@@ -35,8 +34,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * @covers \local_kopere_recert\cycle\manager
  * @covers \local_kopere_recert\course\date_calculator
  */
-#[CoversClass(manager::class)]
-#[CoversClass(date_calculator::class)]
 final class cycle_and_dates_test extends advanced_testcase {
     /**
      * Tests sequential cycle numbering per user and course.

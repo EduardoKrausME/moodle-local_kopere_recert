@@ -32,7 +32,6 @@ use local_kopere_recert\notification\manager as notification_manager;
 use local_kopere_recert\recertification\simulator;
 use local_kopere_recert\task\manager as task_manager;
 use moodle_exception;
-use PHPUnit\Framework\Attributes\CoversClass;
 use Throwable;
 
 /**
@@ -43,10 +42,6 @@ use Throwable;
  * @covers \local_kopere_recert\notification\manager
  * @covers \local_kopere_recert\observer
  */
-#[CoversClass(simulator::class)]
-#[CoversClass(manager::class)]
-#[CoversClass(notification_manager::class)]
-#[CoversClass(observer::class)]
 final class transaction_and_notifications_test extends advanced_testcase {
     /**
      * Creates a generic page task fixture used by transaction tests.

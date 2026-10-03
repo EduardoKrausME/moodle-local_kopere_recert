@@ -26,14 +26,12 @@ namespace recerttask_activitycompletion;
 
 use advanced_testcase;
 use local_kopere_recert\task\task_plugin_interface;
-use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests kopere_recert behavior for activitycompletion.
  *
  * @covers \recerttask_activitycompletion\task
  */
-#[CoversClass(task::class)]
 final class task_test extends advanced_testcase {
     /**
      * Tests the provider contract.

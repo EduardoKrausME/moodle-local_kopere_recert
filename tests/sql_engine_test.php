@@ -28,7 +28,6 @@ use advanced_testcase;
 use invalid_parameter_exception;
 use local_kopere_recert\history\sql_engine;
 use local_kopere_recert\history\sql_validator;
-use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests the read-only SQL engine and validator used by history templates.
@@ -36,8 +35,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * @covers \local_kopere_recert\history\sql_engine
  * @covers \local_kopere_recert\history\sql_validator
  */
-#[CoversClass(sql_engine::class)]
-#[CoversClass(sql_validator::class)]
 final class sql_engine_test extends advanced_testcase {
     /**
      * Tests that select is allowed.

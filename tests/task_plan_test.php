@@ -29,7 +29,6 @@ use invalid_parameter_exception;
 use local_kopere_recert\cleanup\table_discovery;
 use local_kopere_recert\task\manager;
 use moodle_exception;
-use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Tests global task definitions and execution plan generation.
@@ -37,8 +36,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * @covers \local_kopere_recert\task\manager
  * @covers \local_kopere_recert\cleanup\table_discovery
  */
-#[CoversClass(manager::class)]
-#[CoversClass(table_discovery::class)]
 final class task_plan_test extends advanced_testcase {
     /**
      * Tests that a global component has one task definition.
