@@ -24,7 +24,7 @@
 
 // Defines the subplugin version metadata.
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
 $plugin->version = 2026081301;
 $plugin->release = '0.1.0';
