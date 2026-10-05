@@ -24,6 +24,11 @@
 
 namespace local_kopere_recert\form;
 
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+require_once($CFG->libdir . '/formslib.php');
+
 use coding_exception;
 use local_kopere_recert\course\reference_date_provider_interface;
 use local_kopere_recert\subplugin\manager;

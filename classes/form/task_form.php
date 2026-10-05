@@ -24,6 +24,11 @@
 
 namespace local_kopere_recert\form;
 
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+require_once($CFG->libdir . '/formslib.php');
+
 use local_kopere_recert\cleanup\table_discovery;
 use moodleform;
 use MoodleQuickForm;
