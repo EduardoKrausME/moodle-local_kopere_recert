@@ -101,3 +101,81 @@ The Privacy API exports/deletes owned cycles, history, copied files, logs and no
 The package includes PHPUnit coverage for cycle numbering/date rules, component uniqueness, plan ordering, generic cleanup protection, SQL helpers/validator, rollback paths, locks, notification deduplication, simulation rollback, cycle completion, and provider contracts.
 
 See `VALIDATION.md` for checks performed while building this package and the commands that still need a real Moodle checkout/runtime.
+
+
+## Optional Moodle MCP integration (ChatGPT)
+
+When [local_mcp](https://github.com/EduardoKrausME/moodle-local_mcp)
+is installed, it discovers the optional provider
+`local_kopere_recert\mcp\\provider` in `classes/mcp/provider.php`.
+The integration adds no hard dependency, no new database fields and no change
+to existing scheduled tasks, subplugins or Moodle UI. Refresh the ChatGPT
+MCP connection after updating the plugin.
+
+The following tools are registered:
+
+| MCP tool | Scope | Behavior |
+| --- | --- | --- |
+| `kopere_recert_list_my_cycles` | READ | List your own cycles and obtain a concurrency `state_hash`. |
+| `kopere_recert_list_course_cycles` | READ | Inspect one learner's cycles with `viewallhistory` permission. |
+| `kopere_recert_get_my_history` | READ | Read your own archived cycle history. |
+| `kopere_recert_get_cycle_history` | READ | Read an authorized learner's archived cycle history. |
+| `kopere_recert_get_course_config` | READ | Review course trigger and self-service settings. |
+| `kopere_recert_get_execution_plan` | READ | Inspect the real course-ordered archival/file/cleanup plan. |
+| `kopere_recert_simulate` | WRITE | Confirm a native rollback-only recertification simulation for one learner. |
+| `kopere_recert_queue` | WRITE (destructive) | Confirm a manual learner or self-service recertification cycle. |
+| `kopere_recert_queue_bulk` | WRITE (destructive) | Confirm independent recertification requests for at most ten learners. |
+
+### Permissions and privacy
+
+All READ tools require the MCP READ scope and their corresponding **course**
+capabilities. The `viewownhistory` tools always use the connected Moodle
+user ID, and validate cycle ownership before disclosing history. Other
+learners' histories require `local/kopere_recert:viewallhistory`.
+Course settings require `local/kopere_recert:manage`; the execution plan
+requires `local/kopere_recert:simulate`. READ never archives, resets,
+schedules, notifies or invokes the AI provider. History pagination is capped
+at 40 entries per response; archived HTML and structured data are returned
+as bounded previews rather than full user-data dumps.
+
+All WRITE tools require the MCP WRITE scope, a one-time confirmation token and
+their existing Moodle permissions. `kopere_recert_queue` distinguishes the
+learner's `recertifyself` capability from the manager's `recertify`
+capability and honors self-service eligibility/date rules.
+`kopere_recert_queue_bulk` requires `bulkrecertify`, checks each learner's
+enrollment and limits each confirmed request to ten distinct IDs.
+`kopere_recert_simulate` requires `simulate` and returns a rollback-only
+report; it is a WRITE tool because it invokes the real providers in an
+uncommitted transaction.
+
+### Safe execution workflow
+
+1. Inspect `kopere_recert_get_course_config` and
+   `kopere_recert_get_execution_plan` to understand which global
+   archival and cleanup providers are configured for the course.
+2. For a learner, call `kopere_recert_list_my_cycles` (self) or
+   `kopere_recert_list_course_cycles` (authorized manager) to obtain
+   their current `state_hash`. For a bulk request, obtain a separate
+   `state_hash` for each learner.
+3. Run `kopere_recert_simulate` and examine the rollback-only
+   inspection before queuing a destructive real recertification.
+4. Call `kopere_recert_queue` with `courseid`, `userid`,
+   `reason` and `expected_state_hash`, or
+   `kopere_recert_queue_bulk` with explicit `targets`.
+   A preview identifies the course, learners, reason and side effects;
+   nothing is queued before confirmation.
+5. After confirmation, the existing `recertification\manager`
+   enforces the per-user lock, rejects an already active cycle, logs
+   creation and enqueues a Moodle ad-hoc task. The actual execution
+   occurs **later in Moodle cron**, inside its normal archive-first
+   transaction. Do not interpret a queued result as a completed reset.
+   Follow up using the cycle-history READ tools.
+
+The write tools recheck the expected cycle-state hash on execution.
+A manually requested cycle may supersede a scheduled future cycle, as
+already permitted by the native manager. Archive preservation precedes
+all cleanup; failed execution retains the original transactional
+rollback and failure logging. The MCP integration does not offer
+direct SQL cleanup, instant execution of a pending cycle, changes to
+global destructive task definitions or unrestricted access to
+historical files.
