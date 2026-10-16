@@ -33,6 +33,8 @@ use moodle_exception;
  */
 abstract class course_write extends base_tool {
     /**
+     * Resolve the course context for this tool.
+     *
      * @param array $arguments Tool input.
      * @return context
      */
@@ -41,6 +43,8 @@ abstract class course_write extends base_tool {
     }
 
     /**
+     * Validate the reason before executing a recertification request.
+     *
      * @param string $reason Text entered by the connected user.
      * @return string
      */

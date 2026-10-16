@@ -32,6 +32,8 @@ use local_mcp\read\tool\base_tool;
  */
 abstract class course_read extends base_tool {
     /**
+     * Resolve the course context for this tool.
+     *
      * @param array $arguments Tool input.
      * @return context
      */

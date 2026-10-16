@@ -48,7 +48,9 @@ use moodle_exception;
  */
 final class mcp_tools_test extends advanced_testcase {
     /**
-     * @return array Course, enrolled student and administrator.
+     * Create a course and an enrolled student for isolated recertification tests.
+     *
+     * @return array Course and enrolled student.
      */
     private function fixture(): array {
         $this->setAdminUser();
@@ -59,6 +61,8 @@ final class mcp_tools_test extends advanced_testcase {
     }
 
     /**
+     * Skip optional MCP integration checks when the dependency is not installed.
+     *
      * @return void
      */
     private function require_mcp(): void {
@@ -73,11 +77,12 @@ final class mcp_tools_test extends advanced_testcase {
      * @return void
      */
     public function test_cycle_state_hash_changes_and_is_enforced(): void {
+        global $USER;
         $this->resetAfterTest();
         [$course, $student] = $this->fixture();
         $first = report_service::state_hash((int)$course->id, (int)$student->id);
         $cycle = (new cycle_manager())->create((int)$course->id, (int)$student->id,
-            "New cycle", "Audit test", cycle_manager::SOURCE_API, (int)$this->getUser()->id);
+            "New cycle", "Audit test", cycle_manager::SOURCE_API, (int)$USER->id);
         $this->assertGreaterThan(0, $cycle->id);
         $this->assertNotSame($first, report_service::state_hash((int)$course->id, (int)$student->id));
         $result = report_service::cycles((int)$course->id, (int)$student->id, 0, 10);
@@ -93,11 +98,12 @@ final class mcp_tools_test extends advanced_testcase {
      * @return void
      */
     public function test_history_reads_reject_other_user_and_course(): void {
+        global $USER;
         $this->resetAfterTest();
         [$course, $student] = $this->fixture();
         $other = $this->getDataGenerator()->create_user();
         $cycle = (new cycle_manager())->create((int)$course->id, (int)$student->id,
-            "New cycle", "Test", cycle_manager::SOURCE_API, (int)$this->getUser()->id);
+            "New cycle", "Test", cycle_manager::SOURCE_API, (int)$USER->id);
         $result = report_service::history((int)$cycle->id, (int)$student->id,
             (int)$course->id, 0, 10);
         $this->assertSame(0, $result["total"]);
@@ -112,13 +118,14 @@ final class mcp_tools_test extends advanced_testcase {
      * @return void
      */
     public function test_my_history_denies_foreign_cycle(): void {
+        global $USER;
         $this->resetAfterTest();
         $this->require_mcp();
         [$course, $student] = $this->fixture();
         $other = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user((int)$other->id, (int)$course->id);
         $cycle = (new cycle_manager())->create((int)$course->id, (int)$student->id,
-            "Cycle", "Test", cycle_manager::SOURCE_API, (int)$this->getUser()->id);
+            "Cycle", "Test", cycle_manager::SOURCE_API, (int)$USER->id);
         $identity = new \local_mcp\security\authenticated_identity(
             (int)$other->id, "oauth", ["read"]
         );
@@ -132,12 +139,12 @@ final class mcp_tools_test extends advanced_testcase {
      * @return void
      */
     public function test_queue_preview_is_side_effect_free(): void {
-        global $DB;
+        global $DB, $USER;
         $this->resetAfterTest();
         $this->require_mcp();
         [$course, $student] = $this->fixture();
         $identity = new \local_mcp\security\authenticated_identity(
-            (int)$this->getUser()->id, "oauth", ["read", "write"]
+            (int)$USER->id, "oauth", ["read", "write"]
         );
         $before = $DB->count_records("local_kopere_recert_cycle");
         $hash = report_service::state_hash((int)$course->id, (int)$student->id);
@@ -157,11 +164,12 @@ final class mcp_tools_test extends advanced_testcase {
      * @return void
      */
     public function test_bulk_preview_rejects_duplicates(): void {
+        global $USER;
         $this->resetAfterTest();
         $this->require_mcp();
         [$course, $student] = $this->fixture();
         $identity = new \local_mcp\security\authenticated_identity(
-            (int)$this->getUser()->id, "oauth", ["read", "write"]
+            (int)$USER->id, "oauth", ["read", "write"]
         );
         $hash = report_service::state_hash((int)$course->id, (int)$student->id);
         $this->expectException(moodle_exception::class);
@@ -181,12 +189,12 @@ final class mcp_tools_test extends advanced_testcase {
      * @return void
      */
     public function test_simulation_preview_is_side_effect_free(): void {
-        global $DB;
+        global $DB, $USER;
         $this->resetAfterTest();
         $this->require_mcp();
         [$course, $student] = $this->fixture();
         $identity = new \local_mcp\security\authenticated_identity(
-            (int)$this->getUser()->id, "oauth", ["read", "write"]
+            (int)$USER->id, "oauth", ["read", "write"]
         );
         $before = $DB->count_records("local_kopere_recert_cycle");
         $preview = (new simulate_recertification())->preview([
@@ -205,12 +213,12 @@ final class mcp_tools_test extends advanced_testcase {
      * @return void
      */
     public function test_confirmed_queue_creates_pending_cycle(): void {
-        global $DB;
+        global $DB, $USER;
         $this->resetAfterTest();
         $this->require_mcp();
         [$course, $student] = $this->fixture();
         $identity = new \local_mcp\security\authenticated_identity(
-            (int)$this->getUser()->id, "oauth", ["read", "write"]
+            (int)$USER->id, "oauth", ["read", "write"]
         );
         $result = (new queue_recertification())->execute([
             "courseid" => $course->id,

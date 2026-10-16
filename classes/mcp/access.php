@@ -34,6 +34,8 @@ use stdClass;
  */
 final class access {
     /**
+     * Resolve the course context for capability checks.
+     *
      * @param int $courseid Course.
      * @return context_course
      */
@@ -43,6 +45,8 @@ final class access {
     }
 
     /**
+     * Validate course access for the connected Moodle user.
+     *
      * @param int $courseid Course.
      * @param authenticated_identity $identity Caller.
      * @param string $capability Moodle capability.
@@ -79,6 +83,8 @@ final class access {
     }
 
     /**
+     * Authorize access to the requested learner history.
+     *
      * @param int $courseid Course.
      * @param int $userid Target.
      * @param authenticated_identity $identity Connected user.
@@ -105,6 +111,8 @@ final class access {
     }
 
     /**
+     * Determine whether a renewal request is self-service or administrative.
+     *
      * @param int $courseid Course.
      * @param int $userid Target user.
      * @param authenticated_identity $identity Connected user.

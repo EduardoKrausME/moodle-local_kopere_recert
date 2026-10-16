@@ -33,6 +33,8 @@ use local_mcp\security\authenticated_identity;
  */
 final class queue_recertification extends course_write {
     /**
+     * Return this MCP tool identifier.
+     *
      * @return string
      */
     public function get_name(): string {
@@ -40,6 +42,8 @@ final class queue_recertification extends course_write {
     }
 
     /**
+     * Return the translated tool title.
+     *
      * @return string
      */
     public function get_title(): string {
@@ -47,6 +51,8 @@ final class queue_recertification extends course_write {
     }
 
     /**
+     * Return the translated tool description.
+     *
      * @return string
      */
     public function get_description(): string {
@@ -54,6 +60,8 @@ final class queue_recertification extends course_write {
     }
 
     /**
+     * Declare the Moodle capability required by the tool.
+     *
      * @return string
      */
     public function get_required_capability(): string {
@@ -62,6 +70,8 @@ final class queue_recertification extends course_write {
     }
 
     /**
+     * Mark the write operation as destructive.
+     *
      * @return bool
      */
     public function is_destructive(): bool {
@@ -69,6 +79,8 @@ final class queue_recertification extends course_write {
     }
 
     /**
+     * Declare validated MCP input parameters.
+     *
      * @return array
      */
     public function get_input_schema(): array {

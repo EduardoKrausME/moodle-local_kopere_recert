@@ -36,6 +36,8 @@ final class report_service {
     public const MAX_PAGE = 40;
 
     /**
+     * Fetch a cycle and ensure its identifiers match.
+     *
      * @param stdClass $cycle Native recertification cycle.
      * @return array
      */
@@ -60,6 +62,8 @@ final class report_service {
     }
 
     /**
+     * List a learner's recertification cycles.
+     *
      * @param int $courseid Course.
      * @param int $userid Learner.
      * @param int $offset Page.
@@ -84,6 +88,8 @@ final class report_service {
     }
 
     /**
+     * Read the archived history of a verified cycle.
+     *
      * @param int $cycleid ID of an existing cycle.
      * @param int $userid Authorized learner ID.
      * @param int $courseid Authorized course.
@@ -133,6 +139,8 @@ final class report_service {
     }
 
     /**
+     * Describe the configured recertification rules.
+     *
      * @param int $courseid Course ID.
      * @return array Course settings without modifying them.
      */
@@ -159,6 +167,8 @@ final class report_service {
     }
 
     /**
+     * Fingerprint a learner's recertification cycle state.
+     *
      * @param int $courseid Course.
      * @param int $userid Learner.
      * @return string
@@ -177,6 +187,8 @@ final class report_service {
     }
 
     /**
+     * Reject a stale recertification cycle snapshot.
+     *
      * @param int $courseid Course.
      * @param int $userid Learner.
      * @param string $expected Expected state.
@@ -190,6 +202,8 @@ final class report_service {
     }
 
     /**
+     * Describe the bounded pagination parameters.
+     *
      * @return array
      */
     public static function pagination_schema(): array {
@@ -200,6 +214,8 @@ final class report_service {
     }
 
     /**
+     * Validate requested pagination limits.
+     *
      * @param array $arguments Tool input.
      * @return array
      */
