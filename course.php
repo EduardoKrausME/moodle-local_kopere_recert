@@ -39,6 +39,8 @@ require_capability('local/kopere_recert:manage', $context);
 $PAGE->set_context($context);
 $PAGE->set_course($course);
 $PAGE->set_url(new moodle_url('/local/kopere_recert/course.php', ['courseid' => $courseid]));
+
+\local_kopere_recert\mcp_banner::dismiss_if_requested($PAGE->url);
 $PAGE->set_title(get_string('courseconfiguration', 'local_kopere_recert'));
 $PAGE->set_heading(format_string($course->fullname));
 
@@ -94,6 +96,10 @@ if ($data = $form->get_data()) {
 $notices = $DB->get_records('local_kopere_recert_notice', ['courseid' => $courseid], 'eventtype, offsetdays DESC');
 
 echo $OUTPUT->header();
+if (\local_kopere_recert\mcp_banner::should_show()) {
+    echo \local_kopere_recert\mcp_banner::render($OUTPUT, $PAGE->url);
+}
+
 echo $OUTPUT->render_from_template('local_kopere_recert/course_header', [
     'courseurl' => new moodle_url('/local/kopere_recert/course.php', ['courseid' => $courseid]),
     'noticesurl' => new moodle_url('/local/kopere_recert/notices.php', ['courseid' => $courseid]),
