@@ -121,10 +121,10 @@ final class report_service {
                 "activitytype" => (string)$row->activitytype,
                 "completedat" => $row->completedat === null ? null : (int)$row->completedat,
                 "grade" => $row->grade === null ? null : (float)$row->grade,
-                "html_preview" => \core_text::substr((string)$row->html, 0, 3000),
-                "html_truncated" => \core_text::strlen((string)$row->html) > 3000,
-                "structured_json_preview" => \core_text::substr((string)$row->datajson, 0, 3000),
-                "structured_json_truncated" => \core_text::strlen((string)$row->datajson) > 3000,
+                "html_preview" => substr((string)$row->html, 0, 3000),
+                "html_truncated" => strlen((string)$row->html) > 3000,
+                "structured_json_preview" => substr((string)$row->datajson, 0, 3000),
+                "structured_json_truncated" => strlen((string)$row->datajson) > 3000,
                 "file_count" => $files,
             ];
         }

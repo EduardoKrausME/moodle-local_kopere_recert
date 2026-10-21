@@ -49,7 +49,7 @@ abstract class course_write extends base_tool {
      * @return string
      */
     protected function validated_reason(string $reason): string {
-        if (trim($reason) === "" || \core_text::strlen($reason) > 255) {
+        if (trim($reason) === "" || strlen($reason) > 255) {
             throw new moodle_exception("mcpreasoninvalid", "local_kopere_recert");
         }
         $reason = clean_param(trim($reason), PARAM_TEXT);
