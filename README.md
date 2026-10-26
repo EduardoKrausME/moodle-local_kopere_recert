@@ -34,7 +34,7 @@ Bundled specialized providers:
 - `recerttask_competency` → `core_competency`
 - `recerttask_enrolment` → `core_enrolment`
 
-Installing a specialized provider does **not** automatically enable destructive processing. The administrator must explicitly create/configure the corresponding global task and enable History, Files and/or Cleanup. A specialized provider reserves its represented component, so a duplicate generic task cannot be created for it.
+The presence of a specialized provider does **not** automatically enable destructive processing. The administrator must explicitly create/configure the corresponding global task and enable History, Files and/or Cleanup. A specialized provider reserves its represented component, so a duplicate generic task cannot be created for it.
 
 Generic cleanup is intentionally limited to activity components, tables declared by that module's `db/install.xml`, tables containing `userid` or `user_id`, and equality conditions built from approved bound placeholders. The module's primary instance table is never eligible.
 
