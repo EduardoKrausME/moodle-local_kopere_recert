@@ -102,7 +102,6 @@ The package includes PHPUnit coverage for cycle numbering/date rules, component 
 
 See `VALIDATION.md` for checks performed while building this package and the commands that still need a real Moodle checkout/runtime.
 
-
 ## Optional Moodle MCP integration (ChatGPT)
 
 When [local_mcp](https://github.com/EduardoKrausME/moodle-local_mcp)
