@@ -2,6 +2,14 @@
 
 This changelog documents only the two latest **published** releases of `local_kopere_recert`, verified on October 24, 2026. Each entry is based on the published Git tag compared with its immediately preceding published release tag. The October 20–21 `Mustache`, `Langs Order` and `-core_text` commits were made after `1.9.17` and are intentionally excluded.
 
+## 1.9.18 - 2026-11-01
+
+- Replaced legacy `core_text` usage in recertification MCP services.
+- Reordered language strings and updated the MCP banner and recertification history Mustache templates.
+- Removed installation walkthroughs from the README and refreshed historical release documentation.
+
+**Full comparison:** [1.9.17...1.9.18](https://github.com/EduardoKrausME/moodle-local_kopere_recert/compare/1.9.17...1.9.18)
+
 ## [1.9.17] - 2026-10-19
 
 ### Optional Moodle MCP integration
