@@ -54,35 +54,15 @@ if ($form->is_cancelled()) {
 }
 if ($data = $form->get_data()) {
     require_sesskey();
-    if ($data->triggertype !== 'fixeddate' && (int)$data->intervaldays <= 0) {
-        throw new invalid_parameter_exception(get_string('intervalmustbepositive', 'local_kopere_recert'));
-    }
-    if ($data->triggertype === 'certificate'
-        || (!empty($data->selfenabled) && $data->selfreferencetype === 'certificate')) {
-        if (empty($data->referencecmid)) {
-            throw new invalid_parameter_exception(get_string('missingcertificatereference', 'local_kopere_recert'));
-        }
-        $cm = get_coursemodule_from_id('', (int)$data->referencecmid, $courseid, false, MUST_EXIST);
+    $record = course_form::build_record($courseid, $data, $current ?: null);
+    if ($record->enabled && ($record->triggertype === 'certificate'
+        || ($record->selfenabled && $record->selfreferencetype === 'certificate'))) {
+        $cm = get_coursemodule_from_id('', $record->referencecmid, $courseid, false, MUST_EXIST);
         $provider = (new manager())->get_for_component('mod_' . $cm->modname);
         if (!$provider || !$provider instanceof reference_date_provider_interface) {
             throw new moodle_exception('certificatereferenceunavailable', 'local_kopere_recert');
         }
     }
-    $record = (object)[
-        'courseid' => $courseid,
-        'enabled' => (int)$data->enabled,
-        'triggertype' => $data->triggertype,
-        'intervaldays' => (int)$data->intervaldays,
-        'fixedmonth' => (int)$data->fixedmonth,
-        'fixedday' => (int)$data->fixedday,
-        'referencecmid' => (int)$data->referencecmid ?: null,
-        'resetcompetencies' => (int)$data->resetcompetencies,
-        'selfenabled' => (int)$data->selfenabled,
-        'selfreferencetype' => $data->selfreferencetype,
-        'selfafterdays' => (int)$data->selfafterdays,
-        'configjson' => null,
-        'timemodified' => time(),
-    ];
     if ($current) {
         $record->id = $current->id;
         $DB->update_record('local_kopere_recert_course', $record);
